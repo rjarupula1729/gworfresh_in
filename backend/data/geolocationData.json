@@ -1,0 +1,1041 @@
+{
+  "regions": {
+    "north": {
+      "id": "north",
+      "name": "Northern Region",
+      "icon": "❄️",
+      "climate": "temperate",
+      "season": "winter",
+      "states": [
+        "Punjab",
+        "Haryana",
+        "Himachal Pradesh",
+        "Jammu & Kashmir",
+        "Uttarakhand",
+        "Delhi",
+        "Uttar Pradesh"
+      ],
+      "temperature": {
+        "min": -5,
+        "max": 35
+      },
+      "rainfall": "moderate",
+      "description": "Cold winters, moderate summers. Best for leafy greens and root vegetables."
+    },
+    "south": {
+      "id": "south",
+      "name": "Southern Region",
+      "icon": "🌴",
+      "climate": "tropical",
+      "season": "all-year",
+      "states": [
+        "Tamil Nadu",
+        "Karnataka",
+        "Andhra Pradesh",
+        "Telangana",
+        "Kerala"
+      ],
+      "temperature": {
+        "min": 15,
+        "max": 40
+      },
+      "rainfall": "high",
+      "description": "Tropical climate with high rainfall. Year-round growing possible."
+    },
+    "east": {
+      "id": "east",
+      "name": "Eastern Region",
+      "icon": "🌧️",
+      "climate": "subtropical",
+      "season": "monsoon",
+      "states": [
+        "West Bengal",
+        "Bihar",
+        "Jharkhand",
+        "Odisha",
+        "Assam"
+      ],
+      "temperature": {
+        "min": 5,
+        "max": 38
+      },
+      "rainfall": "very-high",
+      "description": "Very high rainfall during monsoon. Good for water-loving plants."
+    },
+    "west": {
+      "id": "west",
+      "name": "Western Region",
+      "icon": "☀️",
+      "climate": "semi-arid",
+      "season": "dry",
+      "states": [
+        "Gujarat",
+        "Maharashtra",
+        "Rajasthan",
+        "Goa"
+      ],
+      "temperature": {
+        "min": 10,
+        "max": 42
+      },
+      "rainfall": "low",
+      "description": "Dry climate with low rainfall. Focus on drought-resistant crops."
+    },
+    "central": {
+      "id": "central",
+      "name": "Central Region",
+      "icon": "⛅",
+      "climate": "subtropical-mixed",
+      "season": "moderate",
+      "states": [
+        "Madhya Pradesh",
+        "Chhattisgarh"
+      ],
+      "temperature": {
+        "min": 8,
+        "max": 40
+      },
+      "rainfall": "moderate",
+      "description": "Balanced climate with moderate rainfall. Suitable for diverse crops."
+    }
+  },
+
+  "regionalVegetables": {
+    "north": {
+      "summer": [
+        {
+          "name": "Tomato",
+          "emoji": "🍅",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 60,
+          "temperature": {
+            "min": 21,
+            "max": 32
+          },
+          "difficulty": "medium",
+          "yield": "high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Cucumber",
+          "emoji": "🥒",
+          "waterNeed": "very-high",
+          "sunlight": "full",
+          "daysToMaturity": 50,
+          "temperature": {
+            "min": 20,
+            "max": 30
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Bottle Gourd",
+          "emoji": "🍈",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 70,
+          "temperature": {
+            "min": 20,
+            "max": 30
+          },
+          "difficulty": "medium",
+          "yield": "very-high",
+          "soilType": "sandy-loam"
+        },
+        {
+          "name": "Carrot",
+          "emoji": "🥕",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 80,
+          "temperature": {
+            "min": 18,
+            "max": 28
+          },
+          "difficulty": "easy",
+          "yield": "medium",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Okra",
+          "emoji": "🫑",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 50,
+          "temperature": {
+            "min": 24,
+            "max": 35
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "sandy-loam"
+        }
+      ],
+      "monsoon": [
+        {
+          "name": "Spinach",
+          "emoji": "🥬",
+          "waterNeed": "moderate",
+          "sunlight": "partial",
+          "daysToMaturity": 45,
+          "temperature": {
+            "min": 15,
+            "max": 25
+          },
+          "difficulty": "easy",
+          "yield": "medium",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Cabbage",
+          "emoji": "🥬",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 90,
+          "temperature": {
+            "min": 15,
+            "max": 25
+          },
+          "difficulty": "medium",
+          "yield": "high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Pumpkin",
+          "emoji": "🎃",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 90,
+          "temperature": {
+            "min": 18,
+            "max": 28
+          },
+          "difficulty": "medium",
+          "yield": "very-high",
+          "soilType": "sandy-loam"
+        }
+      ],
+      "winter": [
+        {
+          "name": "Peas",
+          "emoji": "🫛",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 60,
+          "temperature": {
+            "min": 10,
+            "max": 20
+          },
+          "difficulty": "easy",
+          "yield": "medium",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Radish",
+          "emoji": "🍠",
+          "waterNeed": "moderate",
+          "sunlight": "partial",
+          "daysToMaturity": 30,
+          "temperature": {
+            "min": 10,
+            "max": 20
+          },
+          "difficulty": "very-easy",
+          "yield": "medium",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Broccoli",
+          "emoji": "🥦",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 80,
+          "temperature": {
+            "min": 10,
+            "max": 20
+          },
+          "difficulty": "medium",
+          "yield": "medium",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Cauliflower",
+          "emoji": "🥦",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 100,
+          "temperature": {
+            "min": 10,
+            "max": 20
+          },
+          "difficulty": "hard",
+          "yield": "medium",
+          "soilType": "loamy"
+        }
+      ],
+      "yearRound": [
+        {
+          "name": "Onion",
+          "emoji": "🧅",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 150,
+          "temperature": {
+            "min": 10,
+            "max": 30
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Garlic",
+          "emoji": "🧄",
+          "waterNeed": "low",
+          "sunlight": "full",
+          "daysToMaturity": 180,
+          "temperature": {
+            "min": 10,
+            "max": 25
+          },
+          "difficulty": "easy",
+          "yield": "medium",
+          "soilType": "loamy"
+        }
+      ]
+    },
+
+    "south": {
+      "summer": [
+        {
+          "name": "Eggplant",
+          "emoji": "🍆",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 90,
+          "temperature": {
+            "min": 20,
+            "max": 40
+          },
+          "difficulty": "medium",
+          "yield": "very-high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Chili",
+          "emoji": "🌶️",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 120,
+          "temperature": {
+            "min": 21,
+            "max": 30
+          },
+          "difficulty": "medium",
+          "yield": "high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Bottle Gourd",
+          "emoji": "🍈",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 70,
+          "temperature": {
+            "min": 24,
+            "max": 35
+          },
+          "difficulty": "medium",
+          "yield": "very-high",
+          "soilType": "sandy-loam"
+        }
+      ],
+      "monsoon": [
+        {
+          "name": "Bitter Gourd",
+          "emoji": "🥬",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 60,
+          "temperature": {
+            "min": 20,
+            "max": 30
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "sandy-loam"
+        },
+        {
+          "name": "Ridged Gourd",
+          "emoji": "🥒",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 50,
+          "temperature": {
+            "min": 20,
+            "max": 30
+          },
+          "difficulty": "easy",
+          "yield": "very-high",
+          "soilType": "sandy-loam"
+        },
+        {
+          "name": "Colocasia",
+          "emoji": "🥔",
+          "waterNeed": "very-high",
+          "sunlight": "partial",
+          "daysToMaturity": 180,
+          "temperature": {
+            "min": 20,
+            "max": 30
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "clay"
+        }
+      ],
+      "winter": [
+        {
+          "name": "Tomato",
+          "emoji": "🍅",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 60,
+          "temperature": {
+            "min": 15,
+            "max": 28
+          },
+          "difficulty": "medium",
+          "yield": "high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Carrot",
+          "emoji": "🥕",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 80,
+          "temperature": {
+            "min": 15,
+            "max": 25
+          },
+          "difficulty": "easy",
+          "yield": "medium",
+          "soilType": "loamy"
+        }
+      ],
+      "yearRound": [
+        {
+          "name": "Papaya",
+          "emoji": "🧡",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 180,
+          "temperature": {
+            "min": 20,
+            "max": 35
+          },
+          "difficulty": "easy",
+          "yield": "very-high",
+          "soilType": "sandy-loam"
+        },
+        {
+          "name": "Banana",
+          "emoji": "🍌",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 270,
+          "temperature": {
+            "min": 20,
+            "max": 35
+          },
+          "difficulty": "medium",
+          "yield": "very-high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Coconut",
+          "emoji": "🥥",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 365,
+          "temperature": {
+            "min": 20,
+            "max": 35
+          },
+          "difficulty": "hard",
+          "yield": "very-high",
+          "soilType": "sandy"
+        }
+      ]
+    },
+
+    "east": {
+      "summer": [
+        {
+          "name": "Tomato",
+          "emoji": "🍅",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 60,
+          "temperature": {
+            "min": 20,
+            "max": 32
+          },
+          "difficulty": "medium",
+          "yield": "high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Bottle Gourd",
+          "emoji": "🍈",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 70,
+          "temperature": {
+            "min": 20,
+            "max": 30
+          },
+          "difficulty": "medium",
+          "yield": "very-high",
+          "soilType": "sandy-loam"
+        },
+        {
+          "name": "Cucumber",
+          "emoji": "🥒",
+          "waterNeed": "very-high",
+          "sunlight": "full",
+          "daysToMaturity": 50,
+          "temperature": {
+            "min": 20,
+            "max": 30
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "loamy"
+        }
+      ],
+      "monsoon": [
+        {
+          "name": "Colocasia",
+          "emoji": "🥔",
+          "waterNeed": "very-high",
+          "sunlight": "partial",
+          "daysToMaturity": 180,
+          "temperature": {
+            "min": 18,
+            "max": 28
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "clay"
+        },
+        {
+          "name": "Pumpkin",
+          "emoji": "🎃",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 90,
+          "temperature": {
+            "min": 18,
+            "max": 28
+          },
+          "difficulty": "medium",
+          "yield": "very-high",
+          "soilType": "sandy-loam"
+        },
+        {
+          "name": "Okra",
+          "emoji": "🫑",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 50,
+          "temperature": {
+            "min": 20,
+            "max": 28
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "sandy-loam"
+        }
+      ],
+      "winter": [
+        {
+          "name": "Potato",
+          "emoji": "🥔",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 120,
+          "temperature": {
+            "min": 10,
+            "max": 20
+          },
+          "difficulty": "easy",
+          "yield": "very-high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Spinach",
+          "emoji": "🥬",
+          "waterNeed": "moderate",
+          "sunlight": "partial",
+          "daysToMaturity": 45,
+          "temperature": {
+            "min": 10,
+            "max": 20
+          },
+          "difficulty": "easy",
+          "yield": "medium",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Carrot",
+          "emoji": "🥕",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 80,
+          "temperature": {
+            "min": 10,
+            "max": 20
+          },
+          "difficulty": "easy",
+          "yield": "medium",
+          "soilType": "loamy"
+        }
+      ]
+    },
+
+    "west": {
+      "summer": [
+        {
+          "name": "Okra",
+          "emoji": "🫑",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 50,
+          "temperature": {
+            "min": 24,
+            "max": 35
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "sandy-loam"
+        },
+        {
+          "name": "Groundnut",
+          "emoji": "🥜",
+          "waterNeed": "low",
+          "sunlight": "full",
+          "daysToMaturity": 120,
+          "temperature": {
+            "min": 20,
+            "max": 30
+          },
+          "difficulty": "medium",
+          "yield": "high",
+          "soilType": "sandy"
+        },
+        {
+          "name": "Chili",
+          "emoji": "🌶️",
+          "waterNeed": "low",
+          "sunlight": "full",
+          "daysToMaturity": 120,
+          "temperature": {
+            "min": 21,
+            "max": 30
+          },
+          "difficulty": "medium",
+          "yield": "high",
+          "soilType": "loamy"
+        }
+      ],
+      "monsoon": [
+        {
+          "name": "Onion",
+          "emoji": "🧅",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 150,
+          "temperature": {
+            "min": 15,
+            "max": 28
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Potato",
+          "emoji": "🥔",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 120,
+          "temperature": {
+            "min": 15,
+            "max": 25
+          },
+          "difficulty": "easy",
+          "yield": "very-high",
+          "soilType": "loamy"
+        }
+      ],
+      "winter": [
+        {
+          "name": "Tomato",
+          "emoji": "🍅",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 60,
+          "temperature": {
+            "min": 15,
+            "max": 28
+          },
+          "difficulty": "medium",
+          "yield": "high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Cabbage",
+          "emoji": "🥬",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 90,
+          "temperature": {
+            "min": 10,
+            "max": 20
+          },
+          "difficulty": "medium",
+          "yield": "high",
+          "soilType": "loamy"
+        }
+      ]
+    },
+
+    "central": {
+      "summer": [
+        {
+          "name": "Tomato",
+          "emoji": "🍅",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 60,
+          "temperature": {
+            "min": 20,
+            "max": 32
+          },
+          "difficulty": "medium",
+          "yield": "high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Cucumber",
+          "emoji": "🥒",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 50,
+          "temperature": {
+            "min": 20,
+            "max": 30
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "loamy"
+        }
+      ],
+      "monsoon": [
+        {
+          "name": "Pumpkin",
+          "emoji": "🎃",
+          "waterNeed": "high",
+          "sunlight": "full",
+          "daysToMaturity": 90,
+          "temperature": {
+            "min": 18,
+            "max": 28
+          },
+          "difficulty": "medium",
+          "yield": "very-high",
+          "soilType": "sandy-loam"
+        },
+        {
+          "name": "Okra",
+          "emoji": "🫑",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 50,
+          "temperature": {
+            "min": 20,
+            "max": 28
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "sandy-loam"
+        }
+      ],
+      "winter": [
+        {
+          "name": "Wheat",
+          "emoji": "🌾",
+          "waterNeed": "moderate",
+          "sunlight": "full",
+          "daysToMaturity": 150,
+          "temperature": {
+            "min": 10,
+            "max": 20
+          },
+          "difficulty": "medium",
+          "yield": "very-high",
+          "soilType": "loamy"
+        },
+        {
+          "name": "Gram",
+          "emoji": "🫘",
+          "waterNeed": "low",
+          "sunlight": "full",
+          "daysToMaturity": 120,
+          "temperature": {
+            "min": 10,
+            "max": 20
+          },
+          "difficulty": "easy",
+          "yield": "high",
+          "soilType": "loamy"
+        }
+      ]
+    },
+
+    "allRegions": [
+      {
+        "name": "Mint",
+        "emoji": "🌿",
+        "waterNeed": "moderate",
+        "sunlight": "partial",
+        "daysToMaturity": 30,
+        "temperature": {
+          "min": 10,
+          "max": 30
+        },
+        "difficulty": "very-easy",
+        "yield": "very-high",
+        "soilType": "loamy"
+      },
+      {
+        "name": "Coriander",
+        "emoji": "🌿",
+        "waterNeed": "moderate",
+        "sunlight": "partial",
+        "daysToMaturity": 45,
+        "temperature": {
+          "min": 10,
+          "max": 25
+        },
+        "difficulty": "very-easy",
+        "yield": "high",
+        "soilType": "loamy"
+      },
+      {
+        "name": "Basil",
+        "emoji": "🌿",
+        "waterNeed": "moderate",
+        "sunlight": "full",
+        "daysToMaturity": 60,
+        "temperature": {
+          "min": 15,
+          "max": 30
+        },
+        "difficulty": "easy",
+        "yield": "high",
+        "soilType": "loamy"
+      },
+      {
+        "name": "Lemon",
+        "emoji": "🍋",
+        "waterNeed": "moderate",
+        "sunlight": "full",
+        "daysToMaturity": 365,
+        "temperature": {
+          "min": 15,
+          "max": 35
+        },
+        "difficulty": "medium",
+        "yield": "very-high",
+        "soilType": "loamy"
+      },
+      {
+        "name": "Turmeric",
+        "emoji": "🟨",
+        "waterNeed": "moderate",
+        "sunlight": "partial",
+        "daysToMaturity": 210,
+        "temperature": {
+          "min": 20,
+          "max": 30
+        },
+        "difficulty": "medium",
+        "yield": "high",
+        "soilType": "loamy"
+      },
+      {
+        "name": "Ginger",
+        "emoji": "🟫",
+        "waterNeed": "high",
+        "sunlight": "partial",
+        "daysToMaturity": 240,
+        "temperature": {
+          "min": 20,
+          "max": 30
+        },
+        "difficulty": "medium",
+        "yield": "high",
+        "soilType": "loamy"
+      }
+    ]
+  },
+
+  "suitabilityScores": {
+    "north": {
+      "Tomato": { "score": 85, "reason": "Excellent for north India, grows well in both summer and winter" },
+      "Spinach": { "score": 90, "reason": "Perfect for winter season in North" },
+      "Cabbage": { "score": 88, "reason": "Great winter crop with high yield" },
+      "Cucumber": { "score": 80, "reason": "Good summer crop" },
+      "Onion": { "score": 95, "reason": "Excellent year-round, staple crop" },
+      "Peas": { "score": 92, "reason": "Perfect winter vegetable" },
+      "Carrot": { "score": 87, "reason": "Great for both seasons" },
+      "Eggplant": { "score": 65, "reason": "Possible but needs protection in winter" },
+      "Chili": { "score": 70, "reason": "Requires warm climate" }
+    },
+    "south": {
+      "Tomato": { "score": 85, "reason": "Good in winter season" },
+      "Eggplant": { "score": 95, "reason": "Perfect for tropical climate" },
+      "Chili": { "score": 92, "reason": "Excellent year-round crop" },
+      "Bitter Gourd": { "score": 90, "reason": "Thrives in monsoon" },
+      "Papaya": { "score": 98, "reason": "Ideal tropical climate" },
+      "Banana": { "score": 96, "reason": "Perfect tropical fruit" },
+      "Coconut": { "score": 94, "reason": "Excellent tropical crop" },
+      "Spinach": { "score": 70, "reason": "Needs cooler climate" },
+      "Peas": { "score": 60, "reason": "Limited to cool season" }
+    },
+    "east": {
+      "Potato": { "score": 95, "reason": "Excellent for winter" },
+      "Spinach": { "score": 90, "reason": "Great winter crop" },
+      "Colocasia": { "score": 92, "reason": "Thrives in high rainfall" },
+      "Tomato": { "score": 82, "reason": "Good in both seasons" },
+      "Carrot": { "score": 85, "reason": "Great winter vegetable" },
+      "Pumpkin": { "score": 88, "reason": "Good monsoon crop" },
+      "Onion": { "score": 75, "reason": "Possible but needs management" },
+      "Cucumber": { "score": 85, "reason": "Good monsoon crop" }
+    },
+    "west": {
+      "Onion": { "score": 98, "reason": "Perfect for western climate" },
+      "Potato": { "score": 92, "reason": "Great monsoon crop" },
+      "Chili": { "score": 90, "reason": "Excellent for dry season" },
+      "Groundnut": { "score": 94, "reason": "Ideal crop for semi-arid" },
+      "Tomato": { "score": 82, "reason": "Good in winter" },
+      "Garlic": { "score": 88, "reason": "Great crop" },
+      "Cabbage": { "score": 80, "reason": "Good winter crop" },
+      "Spinach": { "score": 75, "reason": "Limited season" }
+    },
+    "central": {
+      "Wheat": { "score": 95, "reason": "Perfect winter crop" },
+      "Gram": { "score": 94, "reason": "Excellent rabi crop" },
+      "Tomato": { "score": 85, "reason": "Great summer crop" },
+      "Onion": { "score": 90, "reason": "Very suitable" },
+      "Potato": { "score": 88, "reason": "Good crop" },
+      "Cucumber": { "score": 78, "reason": "Summer crop" }
+    }
+  },
+
+  "careInstructions": {
+    "Tomato": {
+      "watering": "Water deeply 2-3 times per week, keep soil consistently moist",
+      "sunlight": "Requires 6-8 hours of direct sunlight daily",
+      "soil": "Well-draining loamy soil with organic matter",
+      "fertilizer": "NPK 5-10-10 every 2 weeks",
+      "pestControl": "Use neem spray for pest control, watch for blight",
+      "staking": "Support with stakes or cages as plant grows"
+    },
+    "Spinach": {
+      "watering": "Water moderately, keep soil moist but not waterlogged",
+      "sunlight": "Can tolerate partial shade, 4-5 hours of sunlight ideal",
+      "soil": "Rich loamy soil with good organic content",
+      "fertilizer": "Nitrogen-rich fertilizer every 2-3 weeks",
+      "pestControl": "Generally pest-free, watch for caterpillars",
+      "harvesting": "Pick outer leaves when 2-3 inches long"
+    },
+    "Cucumber": {
+      "watering": "Water frequently, soil should stay moist during growing season",
+      "sunlight": "Requires full sun, 6-8 hours minimum",
+      "soil": "Well-draining sandy-loam soil",
+      "fertilizer": "NPK 5-10-10 every 2 weeks",
+      "pestControl": "Use neem spray, watch for powdery mildew",
+      "pruning": "Remove damaged leaves, encourage horizontal growth"
+    },
+    "Carrot": {
+      "watering": "Water regularly to keep soil evenly moist",
+      "sunlight": "Full sun required, 6 hours minimum",
+      "soil": "Loose, well-draining loamy soil without rocks",
+      "fertilizer": "NPK 5-10-10 every 3-4 weeks",
+      "pestControl": "Use neem spray for carrot flies",
+      "spacing": "Thin seedlings to 5-6cm apart"
+    },
+    "Onion": {
+      "watering": "Water regularly, reduce frequency as bulbs mature",
+      "sunlight": "Requires full sun for good bulb development",
+      "soil": "Well-draining loamy soil, no clay",
+      "fertilizer": "NPK 10-10-10, reduce nitrogen as bulbs form",
+      "pestControl": "Watch for onion thrips and smut",
+      "harvesting": "When tops begin to yellow, stop watering"
+    },
+    "Potato": {
+      "watering": "Water regularly during growing season",
+      "sunlight": "Partial shade acceptable, 4-5 hours sufficient",
+      "soil": "Well-draining soil, slightly acidic (pH 6.0)",
+      "fertilizer": "NPK 10-10-20 every 3-4 weeks",
+      "pestControl": "Watch for blight and beetles",
+      "hilling": "Mound soil around plants as they grow"
+    },
+    "Chili": {
+      "watering": "Water moderately, avoid waterlogging",
+      "sunlight": "Requires full sun, 8+ hours preferred",
+      "soil": "Well-draining loamy soil",
+      "fertilizer": "NPK 5-10-10, boost phosphorus during flowering",
+      "pestControl": "Watch for thrips and anthracnose",
+      "support": "Use stakes for tall varieties"
+    }
+  },
+
+  "difficultyLevels": {
+    "veryEasy": {
+      "description": "Perfect for complete beginners",
+      "characteristics": ["Quick to harvest", "Forgiving of mistakes", "Grows in any soil"],
+      "examples": ["Mint", "Radish", "Coriander"],
+      "daysToMaturity": "<45 days",
+      "waterRequirement": "Moderate"
+    },
+    "easy": {
+      "description": "Suitable for beginners with some care",
+      "characteristics": ["Moderate growing period", "Easy to care for", "Good yield"],
+      "examples": ["Spinach", "Cucumber", "Carrot", "Okra"],
+      "daysToMaturity": "45-80 days",
+      "waterRequirement": "Moderate to High"
+    },
+    "medium": {
+      "description": "Requires some experience and attention",
+      "characteristics": ["Longer growing period", "Specific requirements", "Good productivity"],
+      "examples": ["Tomato", "Onion", "Cabbage", "Eggplant"],
+      "daysToMaturity": "80-150 days",
+      "waterRequirement": "High"
+    },
+    "hard": {
+      "description": "For experienced gardeners",
+      "characteristics": ["Very specific needs", "Long growing period", "Requires expertise"],
+      "examples": ["Cauliflower", "Broccoli", "Potato"],
+      "daysToMaturity": ">150 days",
+      "waterRequirement": "Very High"
+    }
+  }
+}

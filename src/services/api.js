@@ -10,10 +10,24 @@ API.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem("token");
 
   if (token) {
-    config.headers.Authorization = JSON.parse(token);
+    const parsedToken = typeof token === 'string' ? JSON.parse(token) : token;
+    config.headers.Authorization = `Bearer ${parsedToken}`;
   }
 
   return config;
 });
+
+// Handle errors
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Unauthorized - token might be invalid, clear storage
+      AsyncStorage.removeItem("token");
+      AsyncStorage.removeItem("user");
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default API;
