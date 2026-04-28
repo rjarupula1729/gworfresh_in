@@ -135,12 +135,14 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 .cart-badge{position:absolute;top:-4px;right:-4px;background:var(--orange);color:white;font-size:10px;font-weight:900;min-width:17px;height:17px;border-radius:9px;display:none;align-items:center;justify-content:center;padding:0 3px;}
 .cart-badge.show{display:flex;}
 .user-avatar{width:32px;height:32px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;cursor:pointer;flex-shrink:0;}
-.bottom-nav{background:var(--white);border-top:1px solid var(--border);display:flex;padding:6px 0 13px;flex-shrink:0;box-shadow:0 -3px 14px rgba(0,0,0,0.05);}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:3px 0;position:relative;}
-.nav-icon{font-size:19px;transition:transform 0.2s;}
-.nav-label{font-size:9px;font-weight:800;color:var(--muted);}
-.nav-item.active .nav-label{color:var(--green);}
-.nav-item.active .nav-icon{transform:scale(1.12);}
+.bottom-nav{background:var(--white);border-top:1px solid var(--border);display:flex;padding:8px 0 14px;flex-shrink:0;box-shadow:0 -3px 14px rgba(0,0,0,0.08);position:relative;z-index:100;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;position:relative;transition:all 0.2s;}
+.nav-icon{font-size:22px;transition:transform 0.2s;}
+.nav-label{font-size:10px;font-weight:800;color:var(--muted);}
+.nav-item.active{background:var(--green-pale);border-radius:12px;margin:0 4px;}
+.nav-item.active .nav-label{color:var(--green);font-weight:900;}
+.nav-item.active .nav-icon{transform:scale(1.15);}
+.nav-item.active::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:20px;height:3px;background:var(--green);border-radius:3px;}
 
 /* SHOP */
 .shop-body{padding:12px 14px 16px;}
@@ -169,8 +171,10 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 .strip-btn{background:var(--green);color:white;border:none;border-radius:var(--radius-sm);padding:11px 16px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;}
 
 /* CART */
-.page-header{background:var(--white);padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;box-shadow:var(--shadow-sm);}
-.back-btn{width:34px;height:34px;background:var(--green-pale);border-radius:9px;border:none;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.page-header{background:var(--white);padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;box-shadow:var(--shadow-sm);position:relative;}
+.back-btn{width:40px;height:40px;background:var(--green);color:white;border-radius:50%;border:none;font-size:20px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(82,199,125,0.4);transition:transform 0.15s,box-shadow 0.15s;}
+.back-btn:hover{transform:scale(1.05);box-shadow:0 4px 12px rgba(82,199,125,0.5);}
+.back-btn:active{transform:scale(0.95);}
 .page-title{font-size:17px;font-weight:900;color:var(--text);}
 .page-subtitle{font-size:12px;color:var(--muted);font-weight:700;margin-left:auto;}
 .cart-body{padding:13px;}
@@ -543,12 +547,11 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
       <div class="home-weather">☀️ Hyderabad · 31°C · Great growing day!</div>
     </div>
     <div class="home-quick">
-      <div class="home-qa" onclick="switchTab('shop')"><div class="qa-icon">🛒</div><div class="qa-label">Shop</div></div>
       <div class="home-qa" onclick="switchTab('calendar')"><div class="qa-icon">📅</div><div class="qa-label">Calendar</div></div>
-      <div class="home-qa" onclick="switchTab('analyzer')"><div class="qa-icon">��</div><div class="qa-label">Analyzer</div></div>
+      <div class="home-qa" onclick="switchTab('analyzer')"><div class="qa-icon">🤖</div><div class="qa-label">Analyzer</div></div>
+      <div class="home-qa" onclick="switchTab('subs')"><div class="qa-icon">📦</div><div class="qa-label">Kits</div></div>
       <div class="home-qa" onclick="switchTab('more')"><div class="qa-icon">⋯</div><div class="qa-label">More</div></div>
     </div>
-    <div class="home-streak">
       <div class="streak-fire">🔥</div>
       <div class="streak-info">
         <div class="streak-title">Garden Streak!</div>
@@ -868,6 +871,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
       <div class="expert-footer"><div class="expert-price">₹499 <span>/ home visit</span></div><button class="book-btn" onclick="showBooking('Suresh Reddy','₹499')">Book Now</button></div>
     </div>
   </div></div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item active" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
 </div>
 
 <!-- SEASONAL CALENDAR -->
@@ -914,6 +918,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
       <button class="add-all-btn" onclick="addAllAnalyzer()">🛒 Add All to Cart — ₹192</button>
     </div>
   </div></div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
 </div>
 
 <!-- SUBSCRIPTIONS -->
@@ -958,6 +963,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
       <button class="sub-btn" onclick="subscribePlan('Full Garden Kit','₹699')">Subscribe ₹699/month</button>
     </div>
   </div></div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
 </div>
 
 <!-- MORE FEATURES -->
@@ -1058,6 +1064,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
       </div>
     </div>
   </div></div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item active" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
 </div>
 
 <!-- ADD PLANT MODAL -->
