@@ -543,9 +543,9 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
       <div class="home-weather">☀️ Hyderabad · 31°C · Great growing day!</div>
     </div>
     <div class="home-quick">
-      <div class="home-qa" onclick="switchTab('shop')"><div class="qa-icon">🛒</div><div class="qa-label">Shop</div></div>
-      <div class="home-qa" onclick="switchTab('garden')"><div class="qa-icon">🌿</div><div class="qa-label">Garden</div></div>
-      <div class="home-qa" onclick="switchTab('expert')"><div class="qa-icon">👨‍🌾</div><div class="qa-label">Expert</div></div>
+      <div class="home-qa" onclick="switchTab('community')"><div class="qa-icon">�</div><div class="qa-label">Community</div></div>
+      <div class="home-qa" onclick="switchTab('expert')"><div class="qa-icon">👨‍�</div><div class="qa-label">Expert</div></div>
+      <div class="home-qa" onclick="switchTab('calendar')"><div class="qa-icon">�</div><div class="qa-label">Calendar</div></div>
       <div class="home-qa" onclick="switchTab('more')"><div class="qa-icon">⋯</div><div class="qa-label">More</div></div>
     </div>
     <div class="home-streak">
@@ -556,6 +556,45 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
       </div>
       <div class="streak-days" id="streak-days">0</div>
     </div>
+    <div class="home-section">
+      <div class="section-hdr"><div class="section-title">🔥 Flash Deal Today</div><div class="section-link" onclick="switchTab('shop')">Shop now →</div></div>
+      <div style="background:linear-gradient(135deg,#FF6B6B,#FF8E72);border-radius:var(--radius);padding:12px;margin-bottom:8px;color:white;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:11px;font-weight:700;opacity:0.9">Limited Time - 40% OFF</div>
+            <div style="font-size:16px;font-weight:900;margin-top:4px">Balcony Starter Kit</div>
+            <div style="font-size:12px;font-weight:700;margin-top:6px">₹<span style="text-decoration:line-through;font-size:10px">449</span> <strong style="font-size:18px">₹349</strong></div>
+          </div>
+          <div style="font-size:40px">📦</div>
+        </div>
+        <div style="font-size:10px;opacity:0.85;margin-top:6px;font-weight:600">⏰ Offer ends in 4 hours</div>
+      </div>
+    </div>
+
+    <div class="home-section">
+      <div class="section-hdr"><div class="section-title">📍 Hyderabad Picks For You</div><div class="section-link" onclick="switchTab('shop')">See all →</div></div>
+      <div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:8px;padding-bottom:4px;scrollbar-width:none">
+        <div style="background:var(--white);border-radius:var(--radius);padding:10px;flex-shrink:0;min-width:140px;box-shadow:var(--shadow-sm);cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:28px;margin-bottom:6px;text-align:center">🌶️</div>
+          <div style="font-size:11px;font-weight:900;color:var(--text);text-align:center">Chilli Sapling</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:2px">Perfect for Hyderabad</div>
+          <div style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:3px 6px;border-radius:8px;text-align:center;margin-top:6px">TRENDING</div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);padding:10px;flex-shrink:0;min-width:140px;box-shadow:var(--shadow-sm);cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:28px;margin-bottom:6px;text-align:center">🍅</div>
+          <div style="font-size:11px;font-weight:900;color:var(--text);text-align:center">Tomato Seeds</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:2px">Spring Planting</div>
+          <div style="background:var(--orange-pale);color:var(--orange);font-size:10px;font-weight:800;padding:3px 6px;border-radius:8px;text-align:center;margin-top:6px">NEW</div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);padding:10px;flex-shrink:0;min-width:140px;box-shadow:var(--shadow-sm);cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:28px;margin-bottom:6px;text-align:center">🪴</div>
+          <div style="font-size:11px;font-weight:900;color:var(--text);text-align:center">Grow Pots</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:2px">UV Protected</div>
+          <div style="background:var(--blue-pale);color:var(--blue);font-size:10px;font-weight:800;padding:3px 6px;border-radius:8px;text-align:center;margin-top:6px">STOCK UP</div>
+        </div>
+      </div>
+    </div>
+
     <div class="home-section">
       <div class="section-hdr">
         <div class="section-title">🌱 My Plants</div>
@@ -569,13 +608,133 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
       </div>
     </div>
     <div class="home-section">
-      <div class="section-hdr"><div class="section-title">🌞 Today's Tip</div></div>
+      <div class="section-hdr"><div class="section-title">💡 Today's Smart Tips</div></div>
     </div>
-    <div class="home-tip" style="margin:8px 14px 20px">
-      <div class="tip-icon">💡</div>
-      <div>
-        <div class="tip-title">March — Plant Chilli Now!</div>
-        <div class="tip-text">Hyderabad weather is perfect this month for chilli and brinjal. Plant saplings this week for a June harvest!</div>
+    <div id="home-tips-container" style="margin:0 14px 20px"></div>
+
+    <div class="home-section">
+      <div class="section-hdr"><div class="section-title">🥗 Nutrition Facts - What You'll Grow</div><div class="section-link" onclick="switchTab('shop')">Grow now →</div></div>
+      <div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:8px;padding-bottom:4px;scrollbar-width:none">
+        <div style="background:var(--white);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:155px;box-shadow:var(--shadow-sm)">
+          <div style="font-size:24px;margin-bottom:6px">🍅</div>
+          <div style="font-size:12px;font-weight:900;color:var(--text)">Tomato (100g)</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6">
+            <div>18 calories</div>
+            <div>🔥 Lycopene antioxidant</div>
+            <div>Vitamin C: 17% DV</div>
+            <div style="color:var(--green);font-weight:700;margin-top:4px">✓ Heart healthy</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:155px;box-shadow:var(--shadow-sm)">
+          <div style="font-size:24px;margin-bottom:6px">🌶️</div>
+          <div style="font-size:12px;font-weight:900;color:var(--text)">Chilli (100g)</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6">
+            <div>40 calories</div>
+            <div>🔥 Metabolism booster</div>
+            <div>Vitamin A: 48% DV</div>
+            <div style="color:var(--orange);font-weight:700;margin-top:4px">✓ Immune support</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:155px;box-shadow:var(--shadow-sm)">
+          <div style="font-size:24px;margin-bottom:6px">🥬</div>
+          <div style="font-size:12px;font-weight:900;color:var(--text)">Spinach (100g)</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6">
+            <div>23 calories</div>
+            <div>🧠 Iron rich</div>
+            <div>Calcium: 99% DV</div>
+            <div style="color:var(--green);font-weight:700;margin-top:4px">✓ Bone strength</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:155px;box-shadow:var(--shadow-sm)">
+          <div style="font-size:24px;margin-bottom:6px">🌿</div>
+          <div style="font-size:12px;font-weight:900;color:var(--text)">Coriander (5g)</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6">
+            <div>1.4 calories</div>
+            <div>✨ Detox aid</div>
+            <div>Fiber: 0.1g</div>
+            <div style="color:var(--green);font-weight:700;margin-top:4px">✓ Digestion help</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-section">
+      <div class="section-hdr"><div class="section-title">💰 Your Savings This Month</div></div>
+      <div style="background:linear-gradient(135deg,#52C77D,#43A047);border-radius:var(--radius);padding:14px;color:white;box-shadow:var(--shadow-md);text-align:center">
+        <div style="font-size:11px;opacity:0.85;font-weight:700">Total Fresh Produce Value</div>
+        <div style="font-size:28px;font-weight:900;margin:8px 0;display:flex;align-items:center;justify-content:center">
+          <div style="font-size:24px;margin-right:4px">₹</div><div id="monthly-savings">820</div>
+        </div>
+        <div style="font-size:10px;opacity:0.8;font-weight:700">vs Market Price</div>
+        <div style="display:flex;justify-content:space-around;margin-top:14px;font-size:10px;font-weight:700;opacity:0.95">
+          <div style="text-align:center;line-height:1.6">
+            <div>🍅</div>
+            <div>₹240</div>
+            <div style="font-size:9px;opacity:0.8">Tomato</div>
+          </div>
+          <div style="text-align:center;line-height:1.6">
+            <div>🌶️</div>
+            <div>₹320</div>
+            <div style="font-size:9px;opacity:0.8">Chilli</div>
+          </div>
+          <div style="text-align:center;line-height:1.6">
+            <div>🥬</div>
+            <div>₹180</div>
+            <div style="font-size:9px;opacity:0.8">Spinach</div>
+          </div>
+          <div style="text-align:center;line-height:1.6">
+            <div>🌿</div>
+            <div>₹80</div>
+            <div style="font-size:9px;opacity:0.8">Coriander</div>
+          </div>
+        </div>
+        <div style="font-size:11px;margin-top:12px;opacity:0.9;font-weight:700">🔥 Based on Hyderabad market prices</div>
+      </div>
+    </div>
+
+    <div class="home-section">
+      <div class="section-hdr"><div class="section-title">🌱 Compost & Minerals - Seasonal Guide</div><div class="section-link" onclick="switchTab('shop');filterCat(event.target.closest('.section-link'),'compost')">Shop now →</div></div>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-bottom:8px">
+        <div style="background:linear-gradient(135deg,#FFC837,#FF9800);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:160px;box-shadow:var(--shadow-sm);color:white;cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:13px;font-weight:900;margin-bottom:6px">🐄 Cow Dung</div>
+          <div style="font-size:10px;line-height:1.5">
+            <div style="font-weight:700">All Season</div>
+            <div style="opacity:0.9;margin-top:4px">Nitrogen rich · Tomato, Chilli</div>
+            <div style="font-weight:700;margin-top:6px">₹149</div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,#4DD0E1,#00BCD4);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:160px;box-shadow:var(--shadow-sm);color:white;cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:13px;font-weight:900;margin-bottom:6px">🐟 Fish Waste</div>
+          <div style="font-size:10px;line-height:1.5">
+            <div style="font-weight:700">Growth Phase</div>
+            <div style="opacity:0.9;margin-top:4px">Phosphorus boost · Fruiting</div>
+            <div style="font-weight:700;margin-top:6px">₹199</div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,#A1887F,#8D6E63);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:160px;box-shadow:var(--shadow-sm);color:white;cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:13px;font-weight:900;margin-bottom:6px">🥥 Coconut Coir</div>
+          <div style="font-size:10px;line-height:1.5">
+            <div style="font-weight:700">Summer Special</div>
+            <div style="opacity:0.9;margin-top:4px">Water retention · Cooling</div>
+            <div style="font-weight:700;margin-top:6px">₹129</div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,#90A4AE,#607D8B);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:160px;box-shadow:var(--shadow-sm);color:white;cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:13px;font-weight:900;margin-bottom:6px">🪨 Wood Charcoal</div>
+          <div style="font-size:10px;line-height:1.5">
+            <div style="font-weight:700">All Season</div>
+            <div style="opacity:0.9;margin-top:4px">Drainage + pH balance</div>
+            <div style="font-weight:700;margin-top:6px">₹179</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius);padding:11px;margin-bottom:8px;border-left:4px solid var(--orange)">
+        <div style="font-size:11px;font-weight:900;color:var(--text);margin-bottom:6px">📅 Hyderabad Seasonal Tips:</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.6">
+          <div>🌞 <strong>Summer (Apr-Jun):</strong> Use Coconut Coir for retention, Fish Waste for blooming</div>
+          <div>🌧️ <strong>Monsoon (Jul-Sep):</strong> Neem Cake to prevent fungal, Cow Dung for nutrients</div>
+          <div>❄️ <strong>Winter (Oct-Mar):</strong> Vermicompost for microbes, NPK Mix for growth</div>
+        </div>
       </div>
     </div>
   </div>
@@ -592,7 +751,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 <div class="screen" id="screen-shop">
   <div class="top-header"><div class="header-brand"><div class="brand-logo">🌱</div><div><div class="brand-name">GrowFresh</div><span class="brand-tag">Fresh starts at home</span></div></div><div class="header-right"><button class="icon-btn" onclick="goToCart()">🛒<div class="cart-badge" id="cart-count">0</div></button><div class="user-avatar" id="shop-avatar" onclick="switchTab('profile')">P</div></div></div>
   <div class="scroll-body"><div class="shop-body">
-    <div class="cat-strip"><div class="cat-pill active" onclick="filterCat(this,'all')">🌾 All</div><div class="cat-pill" onclick="filterCat(this,'seeds')">🌱 Seeds</div><div class="cat-pill" onclick="filterCat(this,'saplings')">🌿 Saplings</div><div class="cat-pill" onclick="filterCat(this,'kits')">📦 Kits</div><div class="cat-pill" onclick="filterCat(this,'pots')">🪴 Pots</div></div>
+    <div class="cat-strip"><div class="cat-pill active" onclick="filterCat(this,'all')">🌾 All</div><div class="cat-pill" onclick="filterCat(this,'seeds')">🌱 Seeds</div><div class="cat-pill" onclick="filterCat(this,'saplings')">🌿 Saplings</div><div class="cat-pill" onclick="filterCat(this,'kits')">📦 Kits</div><div class="cat-pill" onclick="filterCat(this,'pots')">🪴 Pots</div><div class="cat-pill" onclick="filterCat(this,'compost')">🌍 Compost</div></div>
     <div class="sec-label">🛒 Choose Your Plants</div>
     <div class="product-grid" id="product-grid">
       <div class="product-card" data-cat="seeds"><div class="product-img">🍅<div class="product-badge">SEEDS</div></div><div class="product-body"><div class="product-name">Tomato Seeds</div><div class="product-desc">Hybrid · 60 day harvest</div><div class="product-footer"><div><div class="price-now">₹59</div><div class="price-old">₹79</div></div><div id="ctrl-1"></div></div></div></div>
@@ -605,6 +764,17 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
       <div class="product-card" data-cat="kits"><div class="product-img">🌿<div class="product-badge">FAMILY</div></div><div class="product-body"><div class="product-name">Family Fresh Bundle</div><div class="product-desc">3 pots + soil + 3 saplings</div><div class="product-footer"><div><div class="price-now">₹699</div><div class="price-old">₹850</div></div><div id="ctrl-8"></div></div></div></div>
       <div class="product-card" data-cat="pots"><div class="product-img">🪴<div class="product-badge">POT</div></div><div class="product-body"><div class="product-name">Medium Grow Pot</div><div class="product-desc">UV resistant · Balcony safe</div><div class="product-footer"><div><div class="price-now">₹149</div><div class="price-old">₹179</div></div><div id="ctrl-9"></div></div></div></div>
       <div class="product-card" data-cat="pots"><div class="product-img">🌱<div class="product-badge">SOIL</div></div><div class="product-body"><div class="product-name">Potting Soil 2kg</div><div class="product-desc">Organic blend · Nutrient rich</div><div class="product-footer"><div><div class="price-now">₹99</div><div class="price-old">₹119</div></div><div id="ctrl-10"></div></div></div></div>
+      
+      <!-- COMPOST & MINERALS -->
+      <div class="product-card" data-cat="compost"><div class="product-img">🐄<div class="product-badge">COMPOST</div></div><div class="product-body"><div class="product-name">Cow Dung Compost 5kg</div><div class="product-desc">Rich nitrogen · All season</div><div style="font-size:9px;color:var(--green);font-weight:700;margin-top:4px">✓ Best for: Tomato, Chilli</div><div class="product-footer"><div><div class="price-now">₹149</div><div class="price-old">₹189</div></div><div id="ctrl-11"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🐟<div class="product-badge">MINERAL</div></div><div class="product-body"><div class="product-name">Fish Waste Emulsion 1L</div><div class="product-desc">Phosphorus boost · Growth enhancer</div><div style="font-size:9px;color:var(--orange);font-weight:700;margin-top:4px">✓ Best for: Fruiting plants</div><div class="product-footer"><div><div class="price-now">₹199</div><div class="price-old">₹249</div></div><div id="ctrl-12"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🥥<div class="product-badge">ORGANIC</div></div><div class="product-body"><div class="product-name">Coconut Coir Dust 3kg</div><div class="product-desc">Water retention · Hyderabad approved</div><div style="font-size:9px;color:var(--green);font-weight:700;margin-top:4px">✓ Best for: Summer gardening</div><div class="product-footer"><div><div class="price-now">₹129</div><div class="price-old">₹159</div></div><div id="ctrl-13"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🪨<div class="product-badge">MINERAL</div></div><div class="product-body"><div class="product-name">Wood Charcoal Powder 2kg</div><div class="product-desc">Drainage improver · Drainage + pH</div><div style="font-size:9px;color:var(--green);font-weight:700;margin-top:4px">✓ Best for: All plants</div><div class="product-footer"><div><div class="price-now">₹179</div><div class="price-old">₹219</div></div><div id="ctrl-14"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🌾<div class="product-badge">COMPOST</div></div><div class="product-body"><div class="product-name">Vermicompost 3kg</div><div class="product-desc">Microbial rich · Winter special</div><div style="font-size:9px;color:var(--blue);font-weight:700;margin-top:4px">✓ Best for: Oct-Feb planting</div><div class="product-footer"><div><div class="price-now">₹159</div><div class="price-old">₹199</div></div><div id="ctrl-15"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🧪<div class="product-badge">MINERAL</div></div><div class="product-body"><div class="product-name">NPK Mix 1kg (15:15:15)</div><div class="product-desc">Balanced nutrient · All purpose</div><div style="font-size:9px;color:var(--orange);font-weight:700;margin-top:4px">✓ Best for: Growth phase</div><div class="product-footer"><div><div class="price-now">₹249</div><div class="price-old">₹299</div></div><div id="ctrl-16"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🌿<div class="product-badge">ORGANIC</div></div><div class="product-body"><div class="product-name">Neem Cake Powder 1kg</div><div class="product-desc">Pest repellent · Soil conditioner</div><div style="font-size:9px;color:var(--green);font-weight:700;margin-top:4px">✓ Best for: Monsoon season</div><div class="product-footer"><div><div class="price-now">₹179</div><div class="price-old">₹219</div></div><div id="ctrl-17"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">⚪<div class="product-badge">MINERAL</div></div><div class="product-body"><div class="product-name">Bone Meal Powder 1kg</div><div class="product-desc">Calcium + Phosphorus · Flowering</div><div style="font-size:9px;color:var(--purple);font-weight:700;margin-top:4px">✓ Best for: Blooming stage</div><div class="product-footer"><div><div class="price-now">₹189</div><div class="price-old">₹239</div></div><div id="ctrl-18"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🪴<div class="product-badge">COMBO</div></div><div class="product-body"><div class="product-name">Complete Compost Kit 5kg</div><div class="product-desc">All minerals mix · Season ready</div><div style="font-size:9px;color:var(--green);font-weight:700;margin-top:4px">✓ Best for: First-time growers</div><div class="product-footer"><div><div class="price-now">₹399</div><div class="price-old">₹499</div></div><div id="ctrl-19"></div></div></div></div>
     </div>
   </div></div>
   <div class="checkout-strip" id="checkout-strip"><div style="flex:1"><div style="font-size:11px;color:var(--muted);font-weight:700" id="strip-items">0 items</div><div style="font-size:16px;font-weight:900;color:var(--text)" id="strip-total">₹0</div></div><button class="strip-btn" onclick="goToCart()">View Cart →</button></div>
@@ -701,16 +871,26 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 
 <!-- SEASONAL CALENDAR -->
 <div class="screen" id="screen-calendar">
-  <div class="page-header"><button class="back-btn" onclick="showScreen('more')">←</button><div class="page-title">Seasonal Calendar</div></div>
-  <div class="cal-hero"><div class="cal-hero-title">📅 Hyderabad Planting Guide</div><div class="cal-hero-sub">Month-by-month · What to plant when</div></div>
-  <div class="cal-now-card"><div class="cal-now-emoji">🌸</div><div><div class="cal-now-title">March — Plant Now!</div><div class="cal-now-sub">Chilli, Brinjal & Capsicum thrive this month. Morning sunlight is perfect!</div></div></div>
-  <div class="scroll-body"><div class="cal-body">
-    <div class="month-card"><div class="month-card-top"><div class="month-name">🌸 March – April</div><div class="season-pill season-spring">Pre-Summer</div></div><div class="veggie-chips"><div class="veggie-chip">🌶️ Chilli</div><div class="veggie-chip">🍆 Brinjal</div><div class="veggie-chip">🫑 Capsicum</div><div class="veggie-chip">🍅 Tomato</div></div></div>
-    <div class="month-card"><div class="month-card-top"><div class="month-name">☀️ May – June</div><div class="season-pill season-summer">Summer</div></div><div class="veggie-chips"><div class="veggie-chip">🥒 Cucumber</div><div class="veggie-chip">🌽 Ridge Gourd</div><div class="veggie-chip">🎃 Bitter Gourd</div></div></div>
-    <div class="month-card"><div class="month-card-top"><div class="month-name">🌧️ July – September</div><div class="season-pill season-monsoon">Monsoon</div></div><div class="veggie-chips"><div class="veggie-chip">🌿 Methi</div><div class="veggie-chip">🥬 Spinach</div><div class="veggie-chip">🍃 Curry Leaf</div></div></div>
-    <div class="month-card" style="border:2px solid var(--green)"><div class="month-card-top"><div class="month-name">🍂 October – January</div><div class="season-pill season-winter">⭐ Best Season</div></div><div class="veggie-chips"><div class="veggie-chip">🍅 Tomato</div><div class="veggie-chip">🥬 Spinach</div><div class="veggie-chip">🌿 Coriander</div><div class="veggie-chip">🫛 Peas</div><div class="veggie-chip">🥕 Carrot</div></div></div>
-    <div class="month-card"><div class="month-card-top"><div class="month-name">🌺 February – March</div><div class="season-pill season-spring">Spring</div></div><div class="veggie-chips"><div class="veggie-chip">🌶️ Chilli</div><div class="veggie-chip">🍆 Brinjal</div><div class="veggie-chip">🌿 Coriander</div></div></div>
-  </div></div>
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Your Plant Timeline</div></div>
+  <div class="scroll-body">
+    <div style="padding:14px">
+      <!-- MY PLANTS TIMELINE -->
+      <div id="my-plants-timeline" style="margin-bottom:20px"></div>
+      
+      <!-- SEASONAL GUIDE -->
+      <div style="margin-top:20px">
+        <div style="font-size:14px;font-weight:900;color:var(--text);margin-bottom:12px">📅 Hyderabad Planting Guide</div>
+        <div class="cal-hero-sub" style="margin-bottom:12px">Month-by-month · What to plant when</div>
+        
+        <div class="month-card"><div class="month-card-top"><div class="month-name">🌸 March – April</div><div class="season-pill season-spring">Pre-Summer</div></div><div class="veggie-chips"><div class="veggie-chip">🌶️ Chilli</div><div class="veggie-chip">🍆 Brinjal</div><div class="veggie-chip">🫑 Capsicum</div><div class="veggie-chip">🍅 Tomato</div></div></div>
+        <div class="month-card"><div class="month-card-top"><div class="month-name">☀️ May – June</div><div class="season-pill season-summer">Summer</div></div><div class="veggie-chips"><div class="veggie-chip">🥒 Cucumber</div><div class="veggie-chip">🌽 Ridge Gourd</div><div class="veggie-chip">🎃 Bitter Gourd</div></div></div>
+        <div class="month-card"><div class="month-card-top"><div class="month-name">🌧️ July – September</div><div class="season-pill season-monsoon">Monsoon</div></div><div class="veggie-chips"><div class="veggie-chip">🌿 Methi</div><div class="veggie-chip">🥬 Spinach</div><div class="veggie-chip">🍃 Curry Leaf</div></div></div>
+        <div class="month-card" style="border:2px solid var(--green)"><div class="month-card-top"><div class="month-name">🍂 October – January</div><div class="season-pill season-winter">⭐ Best Season</div></div><div class="veggie-chips"><div class="veggie-chip">🍅 Tomato</div><div class="veggie-chip">🥬 Spinach</div><div class="veggie-chip">🌿 Coriander</div><div class="veggie-chip">🫛 Peas</div><div class="veggie-chip">🥕 Carrot</div></div></div>
+        <div class="month-card"><div class="month-card-top"><div class="month-name">🌺 February – March</div><div class="season-pill season-spring">Spring</div></div><div class="veggie-chips"><div class="veggie-chip">🌶️ Chilli</div><div class="veggie-chip">🍆 Brinjal</div><div class="veggie-chip">🌿 Coriander</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
 </div>
 
 <!-- SPACE ANALYZER -->
@@ -805,7 +985,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 <div class="screen" id="screen-community">
   <div class="community-hero"><div class="community-hero-title">👥 GrowFresh Community</div><div class="community-hero-sub">Share · Learn · Grow together</div><div class="community-stats"><div class="community-stat"><div class="cstat-num">1.2k</div><div class="cstat-label">Members</div></div><div class="community-stat"><div class="cstat-num" id="post-count-stat">12</div><div class="cstat-label">Posts</div></div><div class="community-stat"><div class="cstat-num">247</div><div class="cstat-label">Harvests</div></div></div></div>
   <div class="compose-bar"><div class="compose-avatar" id="compose-avatar">P</div><div class="compose-input" onclick="showWritePost()">Share your garden story or tip... 🌱</div><button class="compose-post-btn" onclick="showWritePost()">Post</button></div>
-  <div class="feed-tabs"><button class="feed-tab active" onclick="switchFeed('all',this)">🌾 All</button><button class="feed-tab" onclick="switchFeed('tips',this)">💡 Tips</button><button class="feed-tab" onclick="switchFeed('harvest',this)">🍅 Harvests</button><button class="feed-tab" onclick="switchFeed('questions',this)">❓ Q&A</button></div>
+  <div class="feed-tabs"><button class="feed-tab active" onclick="switchFeed('all',this)">🌾 All</button><button class="feed-tab" onclick="switchFeed('tips',this)">💡 Tips</button><button class="feed-tab" onclick="switchFeed('harvest',this)">🍅 Harvests</button><button class="feed-tab" onclick="switchFeed('questions',this)">❓ Q&A</button><button class="feed-tab" onclick="switchTab('expert')">�‍🌾 Expert</button></div>
   <div class="scroll-body"><div class="community-body" id="community-feed"></div></div>
   <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item active" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
 </div>
@@ -814,12 +994,67 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 <div class="screen" id="screen-profile">
   <div class="profile-header"><div class="profile-top"><div class="profile-avatar" id="profile-avatar">P</div><div><div class="profile-name" id="profile-name">User</div><div class="profile-phone" id="profile-phone">—</div><div class="profile-method" id="profile-method">—</div></div></div></div>
   <div class="profile-body">
-    <div class="profile-section"><div class="profile-section-label">My Activity</div><div class="profile-card"><div class="profile-row" onclick="switchTab('garden')"><div class="profile-row-icon">🌿</div><div class="profile-row-text"><div class="profile-row-title">My Garden</div><div class="profile-row-sub">Plants & daily care reminders</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="switchTab('community')"><div class="profile-row-icon">👥</div><div class="profile-row-text"><div class="profile-row-title">Community</div><div class="profile-row-sub">Your posts & saved tips</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="showScreen('more')"><div class="profile-row-icon">✨</div><div class="profile-row-text"><div class="profile-row-title">All Features</div><div class="profile-row-sub">Explore everything GrowFresh offers</div></div><div class="profile-row-arrow">›</div></div></div></div>
+    <div class="profile-section"><div class="profile-section-label">My Activity</div><div class="profile-card"><div class="profile-row" onclick="switchTab('garden')"><div class="profile-row-icon">🌿</div><div class="profile-row-text"><div class="profile-row-title">My Garden</div><div class="profile-row-sub">Plants & daily care reminders</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="showScreen('orders')"><div class="profile-row-icon">📦</div><div class="profile-row-text"><div class="profile-row-title">Order Tracking</div><div class="profile-row-sub">Track your deliveries & history</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="switchTab('community')"><div class="profile-row-icon">👥</div><div class="profile-row-text"><div class="profile-row-title">Community</div><div class="profile-row-sub">Your posts & saved tips</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="showScreen('more')"><div class="profile-row-icon">✨</div><div class="profile-row-text"><div class="profile-row-title">All Features</div><div class="profile-row-sub">Explore everything GrowFresh offers</div></div><div class="profile-row-arrow">›</div></div></div></div>
     <div class="profile-section"><div class="profile-section-label">Account</div><div class="profile-card"><div class="profile-row" style="cursor:default"><div class="profile-row-icon">🔒</div><div class="profile-row-text"><div class="profile-row-title">Stay Logged In</div><div class="profile-row-sub" id="session-info-text">Active</div></div><div style="font-size:10px;font-weight:800;color:var(--green);background:var(--green-pale);padding:3px 8px;border-radius:8px;">ON</div></div></div></div>
     <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
     <div style="text-align:center;font-size:11px;color:var(--muted);font-weight:700;margin-top:10px">GrowFresh v5.0 Complete Stages 1-5 · Hyderabad 🌱</div>
   </div>
   <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item active" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
+</div>
+
+<!-- ORDER TRACKING -->
+<div class="screen" id="screen-orders">
+  <div class="page-header"><button class="back-btn" onclick="switchTab('profile')">←</button><div class="page-title">Order Tracking</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px">Active Orders</div>
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px">
+      <div style="padding:14px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:900;color:var(--text)">Order #GF00042</div>
+          <div style="background:var(--orange-pale);color:var(--orange);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">🚚 Out for Delivery</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:8px">Tomato Seeds × 1, Chilli Sapling × 2</div>
+        <div style="background:var(--bg);border-radius:9px;padding:9px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:6px">
+            <span>📍 Your Location</span><span>🔄 2 stops left</span>
+          </div>
+          <div style="background:var(--green-pale);border-radius:8px;height:5px;overflow:hidden"><div style="height:100%;background:var(--green);width:60%"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--green);font-weight:800">✅ Arriving in 45 mins · Driver 5⭐</div>
+      </div>
+    </div>
+    
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;margin-top:16px">Past Orders</div>
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:10px">
+      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--text)">Order #GF00041</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">23 Apr 2026 · ₹399 · 2 items</div>
+        </div>
+        <div style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">✅ Delivered</div>
+      </div>
+    </div>
+    
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:10px">
+      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--text)">Order #GF00040</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">18 Apr 2026 · ₹249 · 1 item</div>
+        </div>
+        <div style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">✅ Delivered</div>
+      </div>
+    </div>
+    
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden">
+      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--text)">Order #GF00039</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">10 Apr 2026 · ₹599 · 3 items</div>
+        </div>
+        <div style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">✅ Delivered</div>
+      </div>
+    </div>
+  </div></div>
 </div>
 
 <!-- ADD PLANT MODAL -->
@@ -882,7 +1117,8 @@ const ld=(k,d)=>{try{const r=localStorage.getItem(k);return r?JSON.parse(r):(win
 const cl=k=>{try{localStorage.removeItem(k);}catch(e){}delete window['_'+k];};
 
 // INIT
-window.onload=()=>{
+window.onload=async ()=>{
+  await loadProductsFromJSON();
   const s=ld(SK,null);
   if(s){applySession(s);goHome();}
   else showScreen('splash');
@@ -892,7 +1128,7 @@ window.onload=()=>{
 };
 
 function goHome(){
-  renderGarden();renderHomePlants();
+  renderGarden();renderHomePlants();renderHomeTips();
   const h=new Date().getHours();
   const g=h<12?'Good morning 🌅':h<17?'Good afternoon ☀️':'Good evening 🌙';
   setEl('home-greeting',g);
@@ -925,7 +1161,21 @@ function loginSuccess(){clearInterval(otpTimer);goHome();}
 function logoutUser(){if(!confirm('Logout from GrowFresh?'))return;cl(SK);document.getElementById('mobile-input').value='';['otp1','otp2','otp3','otp4'].forEach(id=>document.getElementById(id).value='');document.getElementById('otp-section').classList.remove('show');document.getElementById('send-otp-btn').textContent='Send OTP →';document.getElementById('google-name').value='';document.getElementById('google-email').value='';Object.keys(cart).forEach(k=>{delete cart[k];renderCtrl(k);});updateCartUI();showScreen('splash');}
 
 // SHOP & CART
-const products={1:{name:'Tomato Seeds',price:59,emoji:'🍅'},2:{name:'Chilli Seeds',price:49,emoji:'🌶️'},3:{name:'Coriander Seeds',price:39,emoji:'🌿'},4:{name:'Spinach Seeds',price:45,emoji:'🥬'},5:{name:'Tomato Sapling',price:99,emoji:'🍅'},6:{name:'Chilli Sapling',price:89,emoji:'🌶️'},7:{name:'Balcony Starter Kit',price:349,emoji:'📦'},8:{name:'Family Fresh Bundle',price:699,emoji:'🌿'},9:{name:'Medium Grow Pot',price:149,emoji:'🪴'},10:{name:'Potting Soil 2kg',price:99,emoji:'🌱'}};
+let products={1:{name:'Tomato Seeds',price:59,emoji:'🍅'},2:{name:'Chilli Seeds',price:49,emoji:'🌶️'},3:{name:'Coriander Seeds',price:39,emoji:'🌿'},4:{name:'Spinach Seeds',price:45,emoji:'🥬'},5:{name:'Tomato Sapling',price:99,emoji:'🍅'},6:{name:'Chilli Sapling',price:89,emoji:'🌶️'},7:{name:'Balcony Starter Kit',price:349,emoji:'📦'},8:{name:'Family Fresh Bundle',price:699,emoji:'🌿'},9:{name:'Medium Grow Pot',price:149,emoji:'🪴'},10:{name:'Potting Soil 2kg',price:99,emoji:'🌱'},11:{name:'Cow Dung Compost 5kg',price:149,emoji:'🐄'},12:{name:'Fish Waste Emulsion 1L',price:199,emoji:'🐟'},13:{name:'Coconut Coir Dust 3kg',price:129,emoji:'🥥'},14:{name:'Wood Charcoal Powder 2kg',price:179,emoji:'🪨'},15:{name:'Vermicompost 3kg',price:159,emoji:'🌾'},16:{name:'NPK Mix 1kg (15:15:15)',price:249,emoji:'🧪'},17:{name:'Neem Cake Powder 1kg',price:179,emoji:'🌿'},18:{name:'Bone Meal Powder 1kg',price:189,emoji:'⚪'},19:{name:'Complete Compost Kit 5kg',price:399,emoji:'🪴'}};
+
+// Load products from JSON file
+async function loadProductsFromJSON(){
+  try{
+    const resp=await fetch('products.json');
+    const data=await resp.json();
+    products={};
+    data.products.forEach(p=>{products[p.id]={...p,price:p.priceNow}});
+    console.log('✅ Products loaded from JSON:',products);
+  }catch(e){
+    console.log('📝 Using default products (JSON not available)');
+  }
+}
+
 const cart={};
 function renderCtrl(id){const el=document.getElementById('ctrl-'+id);if(!el)return;const qty=cart[id]?cart[id].qty:0;el.innerHTML=qty===0?`<button class="add-btn" onclick="addItem(${id})">+</button>`:`<div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${id},-1)">−</button><div class="qty-num">${qty}</div><button class="qty-btn" onclick="changeQty(${id},1)">+</button></div>`;}
 function addItem(id){cart[id]={qty:1,...products[id]};renderCtrl(id);updateCartUI();}
@@ -951,6 +1201,93 @@ function saveGarden(){sv(GK,myPlants);}
 function renderGarden(){loadGarden();const list=document.getElementById('plants-list'),empty=document.getElementById('empty-garden'),banner=document.getElementById('reminders-banner');if(myPlants.length===0){list.innerHTML='';empty.style.display='flex';banner.style.display='none';updateGardenStats();return;}empty.style.display='none';const todayR=[];myPlants.forEach(p=>{const def=plantDefaults[p.type];if(def)def.reminders.forEach(r=>todayR.push({emoji:p.emoji,r,id:p.id}));});if(todayR.length>0){banner.style.display='block';let rHtml='';todayR.slice(0,4).forEach(r=>{rHtml+=`<span class="reminder-chip" onclick="this.classList.toggle('done');showToast(this.classList.contains('done')?'✅ Task done!':'Task unmarked')">${r.emoji} ${r.r}</span>`;});setEl('reminders-list','');document.getElementById('reminders-list').innerHTML=rHtml;}let html='';myPlants.forEach(p=>{const prog=Math.min(100,Math.round((p.daysPlanted/p.totalDays)*100));const left=Math.max(0,p.totalDays-p.daysPlanted);const sc=left<=5?'pill-harvest':left<=10?'pill-attention':'pill-growing';const st=left<=5?'🍅 Harvest Soon!':left<=10?'⚠️ Almost Ready':'🌱 Growing';html+=`<div class="plant-card-full"><div class="plant-card-top"><div class="plant-emoji-big">${p.emoji}</div><div class="plant-info"><div class="plant-name-big">${p.type}</div><div class="plant-meta">📍 ${p.location} · Day ${p.daysPlanted} of ${p.totalDays}</div></div><div class="plant-status-pill ${sc}">${st}</div></div><div class="progress-label"><span class="progress-text">Growth Progress</span><span class="progress-pct">${prog}% · ${left} days left</span></div><div class="progress-bar"><div class="progress-fill" style="width:${prog}%"></div></div><div class="plant-actions"><button class="plant-action-btn btn-water" onclick="logCare('💧 Watered')">💧 Water</button><button class="plant-action-btn btn-fertilize" onclick="logCare('🌿 Fertilized')">🌿 Fert</button><button class="plant-action-btn btn-sun" onclick="logCare('☀️ Sun logged')">☀️ Sun</button><button class="plant-action-btn btn-remove" onclick="removePlant(${p.id})">🗑</button></div></div>`;});list.innerHTML=html;updateGardenStats();renderHomePlants();}
 function updateGardenStats(){const h=myPlants.filter(p=>(p.totalDays-p.daysPlanted)<=7).length;const s=myPlants.reduce((a,p)=>a+(plantDefaults[p.type]?.savings||0),0);setEl('stat-plants',myPlants.length);setEl('stat-harvest',h);setEl('stat-savings','₹'+s);}
 function renderHomePlants(){loadGarden();const c=document.getElementById('home-plants-scroll');if(!c)return;let h=`<div class="home-plant-mini" style="border:2px dashed var(--border);box-shadow:none" onclick="switchTab('garden')"><div class="hpm-emoji">➕</div><div class="hpm-name" style="color:var(--muted)">Add Plant</div></div>`;myPlants.slice(0,4).forEach(p=>{const prog=Math.min(100,Math.round((p.daysPlanted/p.totalDays)*100));h+=`<div class="home-plant-mini" onclick="switchTab('garden')"><div class="hpm-emoji">${p.emoji}</div><div class="hpm-name">${p.type}</div><div class="hpm-bar"><div class="hpm-fill" style="width:${prog}%"></div></div><div class="hpm-days">${Math.max(0,p.totalDays-p.daysPlanted)}d left</div></div>`;});c.innerHTML=h;}
+function renderHomeTips(){const tips=[{emoji:'🌶️',title:'Chilli Season Alert!',desc:'Perfect month to plant chilli in Hyderabad. Get saplings today & harvest in 4 months!',action:'Shop Chilli Saplings',color:'#FF6B6B'},{emoji:'💧',title:'Watering Guide',desc:'Hyderabad heat: Water early morning or evening. Avoid noon watering in summer.',color:'#4ECDC4'},{emoji:'🌤️',title:'Weather Perfect Today',desc:'31°C · 40% humidity · Ideal for planting tomato & brinjal saplings!',color:'#95E1D3'},{emoji:'🏆',title:'Community Favorite',desc:'1200+ gardeners in Hyderabad growing tomatoes. Join & share your harvest!',color:'#A8E6CF'},{emoji:'🌙',title:'Night Harvest Tips',desc:'Cool evenings are best for harvesting leafy greens. Keep them fresh in fridge.',color:'#C7CEEA'}];const tc=document.getElementById('home-tips-container');if(!tc)return;const tip=tips[Math.floor(Math.random()*tips.length)];tc.innerHTML=`<div class="home-tip" style="background:linear-gradient(135deg,${tip.color}dd,${tip.color}aa);margin:0;border-bottom:3px solid ${tip.color};cursor:pointer" onclick="switchTab('community')"><div class="tip-icon">${tip.emoji}</div><div><div class="tip-title">${tip.title}</div><div class="tip-text">${tip.desc}</div><div style="font-size:10px;font-weight:800;color:white;opacity:0.9;margin-top:8px">→ ${tip.action}</div></div></div>`;}
+
+// RENDER PLANT TIMELINE FOR CALENDAR
+function renderPlantTimeline(){
+  loadGarden();
+  const container=document.getElementById('my-plants-timeline');
+  if(!container)return;
+  if(myPlants.length===0){
+    container.innerHTML='<div style="background:var(--bg);border-radius:var(--radius);padding:14px;text-align:center;color:var(--muted);font-size:13px;font-weight:700">📅 No plants yet. Add plants from your Garden to see timeline!</div>';
+    return;
+  }
+  let html='<div style="font-size:14px;font-weight:900;color:var(--text);margin-bottom:12px">🌱 Your Plant Timelines</div>';
+  myPlants.forEach(p=>{
+    const plantInfo={
+      'Tomato':{harvestDays:60,waterFreq:'Every 2 days',sun:'6-8 hrs',tips:['Water early morning','Add NPK fertilizer at flower stage','Support with stake at 30cm']},
+      'Chilli':{harvestDays:45,waterFreq:'Every 2-3 days',sun:'8+ hrs',tips:['Keep soil moist but not waterlogged','Prune side branches for better yield','Watch for pests in monsoon']},
+      'Coriander':{harvestDays:21,waterFreq:'Every day',sun:'4-6 hrs',tips:['Quick harvest - starts in 3 weeks','Pinch leaves from top for bushier growth','Perfect for balcony']},
+      'Spinach':{harvestDays:30,waterFreq:'Every day',sun:'4-5 hrs',tips:['Harvest leaves from bottom first','Keep soil consistently moist','Great for partial shade']},
+      'Brinjal':{harvestDays:55,waterFreq:'Every 2 days',sun:'8+ hrs',tips:['Heavy feeder - add NPK monthly','Support with stake','Can give harvest for 6+ months']},
+      'Capsicum':{harvestDays:60,waterFreq:'Every 2 days',sun:'8+ hrs',tips:['Hand pollinate flowers if needed','Takes longer to mature than chilli','Very high value crop']}
+    };
+    const info=plantInfo[p.type]||{harvestDays:45,waterFreq:'Every 2 days',sun:'6-8 hrs',tips:['Regular watering','Add fertilizer monthly','Monitor for pests']};
+    const daysLeft=Math.max(0,info.harvestDays-p.daysPlanted);
+    const progress=Math.min(100,Math.round((p.daysPlanted/info.harvestDays)*100));
+    const harvestStatus=daysLeft===0?'🎉 HARVEST NOW!':daysLeft<=7?'🔥 READY SOON':daysLeft<=14?'⏰ Almost there':'🌱 Still growing';
+    const harvestColor=daysLeft===0?'#4CAF50':daysLeft<=7?'#FF9800':daysLeft<=14?'#FFC107':'#2196F3';
+    html+=`
+      <div style="background:var(--white);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:var(--shadow-sm);border-left:4px solid ${harvestColor}">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+          <div style="display:flex;gap:10px">
+            <div style="font-size:32px">${p.emoji}</div>
+            <div>
+              <div style="font-size:13px;font-weight:900;color:var(--text)">${p.type}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">📍 ${p.location}</div>
+              <div style="font-size:10px;color:${harvestColor};font-weight:700;margin-top:6px">${harvestStatus}</div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:12px;font-weight:900;color:var(--text)">${p.daysPlanted}/${info.harvestDays}</div>
+            <div style="font-size:10px;color:var(--muted)">days</div>
+          </div>
+        </div>
+        
+        <!-- PROGRESS BAR -->
+        <div style="background:var(--border);height:6px;border-radius:3px;margin-bottom:10px;overflow:hidden">
+          <div style="background:linear-gradient(90deg,${harvestColor}aa,${harvestColor});height:100%;width:${progress}%;transition:width 0.3s"></div>
+        </div>
+        
+        <!-- HARVEST COUNTDOWN -->
+        <div style="background:linear-gradient(135deg,${harvestColor}15,${harvestColor}08);border-radius:8px;padding:10px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:11px;color:var(--muted);font-weight:700">Harvest in:</div>
+              <div style="font-size:20px;font-weight:900;color:${harvestColor};margin-top:2px">${daysLeft} days</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:10px;color:var(--muted);font-weight:700">Expected Harvest</div>
+              <div style="font-size:12px;font-weight:900;color:var(--text)">${new Date(p.addedAt+info.harvestDays*86400000).toLocaleDateString('en-IN',{month:'short',day:'numeric'})}</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- CARE GUIDE -->
+        <div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px">
+          <div style="font-size:11px;font-weight:900;color:var(--text);margin-bottom:8px">💡 Care Guide</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+            <div style="background:var(--blue-pale);border-radius:6px;padding:8px;text-align:center">
+              <div style="font-size:10px;color:var(--muted);font-weight:700">💧 Water</div>
+              <div style="font-size:12px;font-weight:900;color:var(--blue);margin-top:4px">${info.waterFreq}</div>
+            </div>
+            <div style="background:var(--orange-pale);border-radius:6px;padding:8px;text-align:center">
+              <div style="font-size:10px;color:var(--muted);font-weight:700">☀️ Sunlight</div>
+              <div style="font-size:12px;font-weight:900;color:var(--orange);margin-top:4px">${info.sun}</div>
+            </div>
+          </div>
+          
+          <!-- TIPS -->
+          <div style="font-size:10px;color:var(--muted);line-height:1.6;background:var(--bg);padding:8px;border-radius:6px">
+            <strong style="color:var(--text)">📝 Tips:</strong><br>
+            ${info.tips.map(t=>'✓ '+t).join('<br>')}
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  container.innerHTML=html;
+}
 function logCare(action){updateStreak();showToast(action+' ✅');}
 function removePlant(id){if(!confirm('Remove this plant?'))return;myPlants=myPlants.filter(p=>p.id!==id);saveGarden();renderGarden();showToast('Plant removed');}
 function showAddPlant(){document.getElementById('add-plant-modal').classList.add('show');document.querySelectorAll('.plant-option').forEach(o=>o.classList.remove('selected'));selectedPlantData=null;document.getElementById('plant-location').value='';document.getElementById('plant-days').value='';}
@@ -995,7 +1332,7 @@ function submitPost(){const text=document.getElementById('post-text').value.trim
 
 // NAV
 function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const el=document.getElementById('screen-'+name);if(el)el.classList.add('active');if(name==='garden')renderGarden();if(name==='community')renderCommunityFeed();}
-function switchTab(tab){const map={home:'home',shop:'shop',garden:'garden',community:'community',profile:'profile',expert:'expert',calendar:'calendar',analyzer:'analyzer',subs:'subs',more:'more'};showScreen(map[tab]||tab);}
+function switchTab(tab){const map={home:'home',shop:'shop',garden:'garden',community:'community',profile:'profile',expert:'expert',calendar:'calendar',analyzer:'analyzer',subs:'subs',more:'more'};showScreen(map[tab]||tab);if(tab==='calendar')renderPlantTimeline();}
 function filterCat(pill,cat){document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active'));pill.classList.add('active');document.querySelectorAll('.product-card').forEach(c=>{c.style.display=(cat==='all'||c.dataset.cat===cat)?'flex':'none';});}
 
 // UTILS
