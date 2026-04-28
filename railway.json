@@ -1,11 +1,9 @@
 {
   "build": {
-    "builder": "nixpacks",
-    "buildCommand": "cd backend && npm install",
-    "startCommand": "cd backend && npm start"
+    "builder": "dockerfile",
+    "dockerfile": "./Dockerfile"
   },
   "deploy": {
-    "startCommand": "cd backend && npm start",
     "restartPolicyType": "on_failure",
     "restartPolicyMaxRetries": 5
   }
