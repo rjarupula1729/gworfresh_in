@@ -3,6 +3,8 @@
     "name": "GrowFresh",
     "slug": "growfresh",
     "version": "1.0.0",
+    "runtimeVersion": "1.0.0",
+    "scheme": "growfresh",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -12,27 +14,48 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "enabled": true,
+      "fallbackToCacheTimeout": 30000,
+      "checkAutomatically": "ON_LOAD"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTabletMode": true
+      "supportsTabletMode": true,
+      "bundleIdentifier": "com.growfresh.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.growfresh.app"
+      "package": "com.growfresh.app",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
+      ],
+      "useNextNotificationFormat": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [],
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermissions": "Allow GrowFresh to access your location to show nearby products."
+        }
+      ]
+    ],
     "extra": {
-      "apiUrl": "http://10.0.2.2:5000/api"
-    }
+      "apiUrl": "http://10.0.2.2:5000/api",
+      "eas": {
+        "projectId": "growfresh-android-build"
+      }
+    },
+    "owner": "growfresh"
   }
 }
