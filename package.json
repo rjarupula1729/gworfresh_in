@@ -1,0 +1,15 @@
+{
+  "name": "growfresh",
+  "version": "1.0.0",
+  "description": "GrowFresh Agriculture E-commerce App",
+  "private": true,
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "install-all": "npm install && cd backend && npm install"
+  },
+  "engines": {
+    "node": "18.x",
+    "npm": "9.x"
+  }
+}
