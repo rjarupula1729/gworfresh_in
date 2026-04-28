@@ -543,9 +543,9 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
       <div class="home-weather">☀️ Hyderabad · 31°C · Great growing day!</div>
     </div>
     <div class="home-quick">
-      <div class="home-qa" onclick="switchTab('community')"><div class="qa-icon">�</div><div class="qa-label">Community</div></div>
-      <div class="home-qa" onclick="switchTab('expert')"><div class="qa-icon">👨‍�</div><div class="qa-label">Expert</div></div>
-      <div class="home-qa" onclick="switchTab('calendar')"><div class="qa-icon">�</div><div class="qa-label">Calendar</div></div>
+      <div class="home-qa" onclick="switchTab('shop')"><div class="qa-icon">🛒</div><div class="qa-label">Shop</div></div>
+      <div class="home-qa" onclick="switchTab('calendar')"><div class="qa-icon">📅</div><div class="qa-label">Calendar</div></div>
+      <div class="home-qa" onclick="switchTab('analyzer')"><div class="qa-icon">��</div><div class="qa-label">Analyzer</div></div>
       <div class="home-qa" onclick="switchTab('more')"><div class="qa-icon">⋯</div><div class="qa-label">More</div></div>
     </div>
     <div class="home-streak">
@@ -749,7 +749,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 
 <!-- SHOP -->
 <div class="screen" id="screen-shop">
-  <div class="top-header"><div class="header-brand"><div class="brand-logo">🌱</div><div><div class="brand-name">GrowFresh</div><span class="brand-tag">Fresh starts at home</span></div></div><div class="header-right"><button class="icon-btn" onclick="goToCart()">🛒<div class="cart-badge" id="cart-count">0</div></button><div class="user-avatar" id="shop-avatar" onclick="switchTab('profile')">P</div></div></div>
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Shop</div><button class="icon-btn" style="position:absolute;right:14px;top:50%;transform:translateY(-50%)" onclick="goToCart()">🛒<div class="cart-badge" id="cart-count">0</div></button></div>
   <div class="scroll-body"><div class="shop-body">
     <div class="cat-strip"><div class="cat-pill active" onclick="filterCat(this,'all')">🌾 All</div><div class="cat-pill" onclick="filterCat(this,'seeds')">🌱 Seeds</div><div class="cat-pill" onclick="filterCat(this,'saplings')">🌿 Saplings</div><div class="cat-pill" onclick="filterCat(this,'kits')">📦 Kits</div><div class="cat-pill" onclick="filterCat(this,'pots')">🪴 Pots</div><div class="cat-pill" onclick="filterCat(this,'compost')">🌍 Compost</div></div>
     <div class="sec-label">🛒 Choose Your Plants</div>
@@ -833,6 +833,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 
 <!-- GARDEN -->
 <div class="screen" id="screen-garden">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">My Garden</div></div>
   <div class="garden-hero">
     <div class="garden-hero-top"><div><div class="garden-hero-title">🌿 My Garden</div><div class="garden-hero-sub">Track your plants daily</div></div><button class="add-plant-btn" onclick="showAddPlant()">＋ Add Plant</button></div>
     <div class="garden-stats"><div class="garden-stat"><div class="stat-num" id="stat-plants">0</div><div class="stat-label">Plants</div></div><div class="garden-stat"><div class="stat-num" id="stat-harvest">0</div><div class="stat-label">Harvest Soon</div></div><div class="garden-stat"><div class="stat-num" id="stat-savings">₹0</div><div class="stat-label">Est. Savings</div></div></div>
@@ -847,7 +848,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 
 <!-- EXPERT BOOKING -->
 <div class="screen" id="screen-expert">
-  <div class="page-header"><button class="back-btn" onclick="showScreen('more')">←</button><div class="page-title">Expert Connect</div></div>
+  <div class="page-header"><button class="back-btn" onclick="showScreen('community')">←</button><div class="page-title">Expert Connect</div></div>
   <div class="expert-hero"><div class="expert-hero-title">👨‍🌾 Book a Garden Expert</div><div class="expert-hero-sub">Home visits & video calls · Hyderabad</div></div>
   <div class="how-works"><div class="hw-step"><div class="hw-icon">📋</div><div class="hw-text">Pick Expert</div></div><div class="hw-step"><div class="hw-icon">📅</div><div class="hw-text">Book Slot</div></div><div class="hw-step"><div class="hw-icon">🏡</div><div class="hw-text">Home Visit</div></div><div class="hw-step"><div class="hw-icon">🌱</div><div class="hw-text">Grow Better</div></div></div>
   <div class="scroll-body"><div style="padding:13px">
@@ -895,7 +896,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 
 <!-- SPACE ANALYZER -->
 <div class="screen" id="screen-analyzer">
-  <div class="page-header"><button class="back-btn" onclick="showScreen('more')">←</button><div class="page-title">Space Analyzer</div></div>
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Space Analyzer</div></div>
   <div class="analyzer-hero"><div class="analyzer-hero-title">📸 AI Space Analyzer</div><div class="analyzer-hero-sub">Photo your balcony → Get plant recommendations</div></div>
   <div class="scroll-body"><div class="analyzer-body">
     <div class="upload-zone" onclick="runAnalyzer()">
@@ -917,7 +918,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 
 <!-- SUBSCRIPTIONS -->
 <div class="screen" id="screen-subs">
-  <div class="page-header"><button class="back-btn" onclick="showScreen('more')">←</button><div class="page-title">Monthly Kits</div></div>
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Monthly Kits</div></div>
   <div class="subs-hero"><div class="subs-hero-title">📦 Monthly Garden Kits</div><div class="subs-hero-sub">Auto-delivered every month · Cancel anytime</div></div>
   <div class="scroll-body"><div class="subs-body">
     <div class="sub-card">
@@ -961,7 +962,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 
 <!-- MORE FEATURES -->
 <div class="screen" id="screen-more">
-  <div class="top-header"><div class="brand-name" style="font-size:16px">More Features</div></div>
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">More Features</div></div>
   <div class="scroll-body"><div style="padding:14px">
     <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">Stage 5 Features</div>
     <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:16px">
@@ -983,6 +984,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 
 <!-- COMMUNITY -->
 <div class="screen" id="screen-community">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Community</div></div>
   <div class="community-hero"><div class="community-hero-title">👥 GrowFresh Community</div><div class="community-hero-sub">Share · Learn · Grow together</div><div class="community-stats"><div class="community-stat"><div class="cstat-num">1.2k</div><div class="cstat-label">Members</div></div><div class="community-stat"><div class="cstat-num" id="post-count-stat">12</div><div class="cstat-label">Posts</div></div><div class="community-stat"><div class="cstat-num">247</div><div class="cstat-label">Harvests</div></div></div></div>
   <div class="compose-bar"><div class="compose-avatar" id="compose-avatar">P</div><div class="compose-input" onclick="showWritePost()">Share your garden story or tip... 🌱</div><button class="compose-post-btn" onclick="showWritePost()">Post</button></div>
   <div class="feed-tabs"><button class="feed-tab active" onclick="switchFeed('all',this)">🌾 All</button><button class="feed-tab" onclick="switchFeed('tips',this)">💡 Tips</button><button class="feed-tab" onclick="switchFeed('harvest',this)">🍅 Harvests</button><button class="feed-tab" onclick="switchFeed('questions',this)">❓ Q&A</button><button class="feed-tab" onclick="switchTab('expert')">�‍🌾 Expert</button></div>
@@ -992,6 +994,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display
 
 <!-- PROFILE -->
 <div class="screen" id="screen-profile">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Profile</div></div>
   <div class="profile-header"><div class="profile-top"><div class="profile-avatar" id="profile-avatar">P</div><div><div class="profile-name" id="profile-name">User</div><div class="profile-phone" id="profile-phone">—</div><div class="profile-method" id="profile-method">—</div></div></div></div>
   <div class="profile-body">
     <div class="profile-section"><div class="profile-section-label">My Activity</div><div class="profile-card"><div class="profile-row" onclick="switchTab('garden')"><div class="profile-row-icon">🌿</div><div class="profile-row-text"><div class="profile-row-title">My Garden</div><div class="profile-row-sub">Plants & daily care reminders</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="showScreen('orders')"><div class="profile-row-icon">📦</div><div class="profile-row-text"><div class="profile-row-title">Order Tracking</div><div class="profile-row-sub">Track your deliveries & history</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="switchTab('community')"><div class="profile-row-icon">👥</div><div class="profile-row-text"><div class="profile-row-title">Community</div><div class="profile-row-sub">Your posts & saved tips</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="showScreen('more')"><div class="profile-row-icon">✨</div><div class="profile-row-text"><div class="profile-row-title">All Features</div><div class="profile-row-sub">Explore everything GrowFresh offers</div></div><div class="profile-row-arrow">›</div></div></div></div>
