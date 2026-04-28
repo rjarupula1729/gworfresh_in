@@ -1,0 +1,460 @@
+{
+  "userLocation": {
+    "region": "Hyderabad",
+    "state": "Telangana",
+    "climate": "Semi-arid to Semi-humid",
+    "soilType": "Black soil (High pH 7.5-8.5)",
+    "avgTemperature": "28-32°C",
+    "avgRainfall": "558mm",
+    "latitude": 17.3850,
+    "longitude": 78.4867
+  },
+  "products": [
+    {
+      "id": 1,
+      "name": "Tomato Seeds",
+      "emoji": "🍅",
+      "category": "seeds",
+      "description": "Hybrid · 60 day harvest",
+      "priceNow": 59,
+      "priceOld": 79,
+      "badge": "SEEDS",
+      "tags": ["all-season", "hybrid", "fruiting"],
+      "regions": ["Hyderabad", "Bangalore", "Chennai", "Pune"],
+      "bestRegions": ["Hyderabad", "Bangalore"]
+    },
+    {
+      "id": 2,
+      "name": "Chilli Seeds",
+      "emoji": "🌶️",
+      "category": "seeds",
+      "description": "Hot variety · 45 days",
+      "priceNow": 49,
+      "priceOld": 65,
+      "badge": "SEEDS",
+      "tags": ["all-season", "spicy", "fruiting"]
+    },
+    {
+      "id": 3,
+      "name": "Coriander Seeds",
+      "emoji": "🌿",
+      "category": "seeds",
+      "description": "Fast grow · 21 days",
+      "priceNow": 39,
+      "priceOld": 55,
+      "badge": "SEEDS",
+      "tags": ["quick-harvest", "herbs", "culinary"]
+    },
+    {
+      "id": 4,
+      "name": "Spinach Seeds",
+      "emoji": "🥬",
+      "category": "seeds",
+      "description": "Nutrient rich · 30 days",
+      "priceNow": 45,
+      "priceOld": 60,
+      "badge": "SEEDS",
+      "tags": ["leafy", "healthy", "winter"]
+    },
+    {
+      "id": 5,
+      "name": "Tomato Sapling",
+      "emoji": "🍅",
+      "category": "saplings",
+      "description": "Ready to plant · 2wk start",
+      "priceNow": 99,
+      "priceOld": 129,
+      "badge": "SAPLING",
+      "tags": ["ready-to-plant", "fruiting", "popular"]
+    },
+    {
+      "id": 6,
+      "name": "Chilli Sapling",
+      "emoji": "🌶️",
+      "category": "saplings",
+      "description": "Healthy roots · Pot ready",
+      "priceNow": 89,
+      "priceOld": 119,
+      "badge": "SAPLING",
+      "tags": ["ready-to-plant", "spicy", "healthy-roots"]
+    },
+    {
+      "id": 7,
+      "name": "Balcony Starter Kit",
+      "emoji": "📦",
+      "category": "kits",
+      "description": "1 pot + soil + 2 seed packs",
+      "priceNow": 349,
+      "priceOld": 449,
+      "badge": "BEST VALUE",
+      "tags": ["beginner", "combo", "all-season"]
+    },
+    {
+      "id": 8,
+      "name": "Family Fresh Bundle",
+      "emoji": "🌿",
+      "category": "kits",
+      "description": "3 pots + soil + 3 saplings",
+      "priceNow": 699,
+      "priceOld": 850,
+      "badge": "FAMILY",
+      "tags": ["family", "large-space", "combo"]
+    },
+    {
+      "id": 9,
+      "name": "Medium Grow Pot",
+      "emoji": "🪴",
+      "category": "pots",
+      "description": "UV resistant · Balcony safe",
+      "priceNow": 149,
+      "priceOld": 179,
+      "badge": "POT",
+      "tags": ["container", "uv-resistant", "standard"]
+    },
+    {
+      "id": 10,
+      "name": "Potting Soil 2kg",
+      "emoji": "🌱",
+      "category": "pots",
+      "description": "Organic blend · Nutrient rich",
+      "priceNow": 99,
+      "priceOld": 119,
+      "badge": "SOIL",
+      "tags": ["soil", "organic", "all-season"]
+    },
+    {
+      "id": 11,
+      "name": "Cow Dung Compost 5kg",
+      "emoji": "🐄",
+      "category": "compost",
+      "description": "Rich nitrogen · All season",
+      "priceNow": 149,
+      "priceOld": 189,
+      "badge": "COMPOST",
+      "tags": ["compost", "nitrogen", "organic", "all-season"],
+      "bestFor": ["Tomato", "Chilli"],
+      "season": "all-season",
+      "benefits": "Rich nitrogen for growth",
+      "regions": {
+        "Hyderabad": { "available": true, "note": "Excellent for black soil nitrogen boost", "priceAdjustment": 0, "priority": "HIGH" },
+        "Rajasthan": { "available": false, "note": "Scarce in desert - not recommended. Use: Vermicompost instead" },
+        "Kashmir": { "available": true, "note": "Good for temperate gardening", "priceAdjustment": 20, "priority": "MEDIUM" }
+      }
+    },
+    {
+      "id": 12,
+      "name": "Fish Waste Emulsion 1L",
+      "emoji": "🐟",
+      "category": "compost",
+      "description": "Phosphorus boost · Growth enhancer",
+      "priceNow": 199,
+      "priceOld": 249,
+      "badge": "MINERAL",
+      "tags": ["mineral", "phosphorus", "fruiting", "growth"],
+      "bestFor": ["Fruiting plants", "Brinjal", "Tomato"],
+      "season": "growth-phase",
+      "benefits": "Phosphorus boost for flowering & fruiting",
+      "regions": {
+        "Hyderabad": { "available": true, "note": "Good for fruiting season", "priceAdjustment": 0, "priority": "HIGH" },
+        "Rajasthan": { "available": false, "note": "Expensive transport from coast - avoid" },
+        "Kashmir": { "available": false, "note": "Climate incompatible - skip" }
+      }
+    },
+    {
+      "id": 13,
+      "name": "Coconut Coir Dust 3kg",
+      "emoji": "🥥",
+      "category": "compost",
+      "description": "Water retention · Hyderabad approved",
+      "priceNow": 129,
+      "priceOld": 159,
+      "badge": "ORGANIC",
+      "tags": ["compost", "water-retention", "summer", "hyderabad"],
+      "bestFor": ["All plants", "Summer gardening"],
+      "season": "summer",
+      "benefits": "Water retention & humidity for hot climate",
+      "regions": {
+        "Hyderabad": { "available": true, "note": "Perfect for summer (Apr-Jun) - MUST HAVE", "priceAdjustment": 0, "priority": "CRITICAL" },
+        "Rajasthan": { "available": true, "note": "CRITICAL for desert - extreme water scarcity. Price +30% due to demand", "priceAdjustment": 30, "priority": "CRITICAL" },
+        "Kashmir": { "available": false, "note": "Not needed - high soil moisture already. Skip it" }
+      }
+    },
+    {
+      "id": 14,
+      "name": "Wood Charcoal Powder 2kg",
+      "emoji": "🪨",
+      "category": "compost",
+      "description": "Drainage improver · Drainage + pH",
+      "priceNow": 179,
+      "priceOld": 219,
+      "badge": "MINERAL",
+      "tags": ["mineral", "drainage", "ph-balance", "all-season"],
+      "bestFor": ["All plants"],
+      "season": "all-season",
+      "benefits": "Improves drainage & pH balance",
+      "regions": {
+        "Hyderabad": { "available": true, "note": "Essential for black soil - high pH management", "priceAdjustment": 0, "priority": "HIGH" },
+        "Rajasthan": { "available": false, "note": "Red soil needs different pH approach - use bone meal instead" },
+        "Kashmir": { "available": true, "note": "Good for acidic soil correction", "priceAdjustment": 15, "priority": "MEDIUM" }
+      }
+    },
+    {
+      "id": 15,
+      "name": "Vermicompost 3kg",
+      "emoji": "🌾",
+      "category": "compost",
+      "description": "Microbial rich · Winter special",
+      "priceNow": 159,
+      "priceOld": 199,
+      "badge": "COMPOST",
+      "tags": ["compost", "vermi", "microbes", "winter"],
+      "bestFor": ["All plants", "Winter planting"],
+      "season": "winter",
+      "benefits": "Microbial rich for soil health",
+      "regions": {
+        "Hyderabad": { "available": true, "note": "Great for Oct-Mar planting season", "priceAdjustment": 0, "priority": "HIGH" },
+        "Rajasthan": { "available": true, "note": "ESSENTIAL for winter crops - only viable season", "priceAdjustment": 10, "priority": "CRITICAL" },
+        "Kashmir": { "available": true, "note": "CRITICAL for short season growth acceleration", "priceAdjustment": 20, "priority": "CRITICAL" }
+      }
+    },
+    {
+      "id": 16,
+      "name": "NPK Mix 1kg (15:15:15)",
+      "emoji": "🧪",
+      "category": "compost",
+      "description": "Balanced nutrient · All purpose",
+      "priceNow": 249,
+      "priceOld": 299,
+      "badge": "MINERAL",
+      "tags": ["mineral", "npk", "balanced", "growth"],
+      "bestFor": ["All plants", "Growth phase"],
+      "season": "growth-phase",
+      "benefits": "Balanced nutrients for healthy growth",
+      "regions": {
+        "Hyderabad": { "available": true, "note": "Universal - works for all regions", "priceAdjustment": 0, "priority": "MEDIUM" },
+        "Rajasthan": { "available": true, "note": "Standard - universal compatibility", "priceAdjustment": 0, "priority": "MEDIUM" },
+        "Kashmir": { "available": true, "note": "Works universally for all climates", "priceAdjustment": 0, "priority": "MEDIUM" }
+      }
+    },
+    {
+      "id": 17,
+      "name": "Neem Cake Powder 1kg",
+      "emoji": "🌿",
+      "category": "compost",
+      "description": "Pest repellent · Soil conditioner",
+      "priceNow": 179,
+      "priceOld": 219,
+      "badge": "ORGANIC",
+      "tags": ["organic", "neem", "pest-control", "monsoon"],
+      "bestFor": ["All plants", "Pest prevention"],
+      "season": "monsoon",
+      "benefits": "Natural pest repellent & soil conditioner",
+      "regions": {
+        "Hyderabad": { "available": true, "note": "Perfect for monsoon (Jul-Sep) pest prevention", "priceAdjustment": 0, "priority": "HIGH" },
+        "Rajasthan": { "available": false, "note": "Neem not native - expensive import. Skip it" },
+        "Kashmir": { "available": false, "note": "Cold climate - pests less active. Not applicable" }
+      }
+    },
+    {
+      "id": 18,
+      "name": "Bone Meal Powder 1kg",
+      "emoji": "⚪",
+      "category": "compost",
+      "description": "Calcium + Phosphorus · Flowering",
+      "priceNow": 189,
+      "priceOld": 239,
+      "badge": "MINERAL",
+      "tags": ["mineral", "bone-meal", "calcium", "flowering"],
+      "bestFor": ["Flowering plants", "Fruiting"],
+      "season": "blooming",
+      "benefits": "Calcium & phosphorus for strong blooms",
+      "regions": {
+        "Hyderabad": { "available": true, "note": "Good for fruiting season (Oct-Jan)", "priceAdjustment": 0, "priority": "MEDIUM" },
+        "Rajasthan": { "available": true, "note": "Helps acidify high pH red soil", "priceAdjustment": 10, "priority": "MEDIUM" },
+        "Kashmir": { "available": true, "note": "Good for soil pH management", "priceAdjustment": 0, "priority": "MEDIUM" }
+      }
+    },
+    {
+      "id": 19,
+      "name": "Complete Compost Kit 5kg",
+      "emoji": "🪴",
+      "category": "compost",
+      "description": "All minerals mix · Season ready",
+      "priceNow": 399,
+      "priceOld": 499,
+      "badge": "COMBO",
+      "tags": ["combo", "complete", "beginner", "all-in-one"],
+      "bestFor": ["First-time growers", "All plants"],
+      "season": "all-season",
+      "benefits": "Complete nutrient mix for balanced growth",
+      "regions": {
+        "Hyderabad": { "available": true, "note": "Balanced for Hyderabad black soil", "priceAdjustment": 0, "priority": "MEDIUM" },
+        "Rajasthan": { "available": true, "note": "Adapted for arid climate - high water retention focus", "priceAdjustment": 50, "priority": "HIGH" },
+        "Kashmir": { "available": true, "note": "Adapted for cold climate - high microbe focus", "priceAdjustment": 30, "priority": "MEDIUM" }
+      }
+    }
+  ],
+  "compostCombinations": [
+    {
+      "name": "Summer Season Bundle",
+      "season": "summer",
+      "emoji": "☀️",
+      "description": "Perfect for hot Hyderabad summers",
+      "products": [13, 14, 16],
+      "totalCost": 558,
+      "benefit": "Water retention + drainage + balanced nutrients"
+    },
+    {
+      "name": "Monsoon Season Bundle",
+      "season": "monsoon",
+      "emoji": "🌧️",
+      "description": "Pest prevention + soil care",
+      "products": [17, 11, 15],
+      "totalCost": 488,
+      "benefit": "Pest control + nitrogen + microbes"
+    },
+    {
+      "name": "Winter Season Bundle",
+      "season": "winter",
+      "emoji": "❄️",
+      "description": "Microbes + balanced growth",
+      "products": [15, 16, 18],
+      "totalCost": 598,
+      "benefit": "Microbial rich + balanced + calcium boost"
+    },
+    {
+      "name": "Fruiting Booster Pack",
+      "season": "all-season",
+      "emoji": "🍅",
+      "description": "For tomato, chilli, brinjal",
+      "products": [12, 18, 11],
+      "totalCost": 537,
+      "benefit": "Phosphorus + calcium + nitrogen for fruits"
+    },
+    {
+      "name": "Beginner's Complete Kit",
+      "season": "all-season",
+      "emoji": "🌱",
+      "description": "All essentials for new gardeners",
+      "products": [11, 13, 14, 16],
+      "totalCost": 656,
+      "benefit": "Complete soil + nutrients + drainage"
+    }
+  ],
+  "seasonalRecommendations": {
+    "summer": {
+      "month": ["April", "May", "June"],
+      "temperature": "32-40°C",
+      "humidity": "20-40%",
+      "recommendedProducts": [13, 14, 16],
+      "advice": "Use coconut coir for water retention, wood charcoal for drainage, NPK for growth"
+    },
+    "monsoon": {
+      "month": ["July", "August", "September"],
+      "temperature": "28-32°C",
+      "humidity": "60-80%",
+      "recommendedProducts": [17, 11, 15],
+      "advice": "Use neem for pest prevention, cow dung for nutrients, vermicompost for microbes"
+    },
+    "winter": {
+      "month": ["October", "November", "December"],
+      "temperature": "18-25°C",
+      "humidity": "40-60%",
+      "recommendedProducts": [15, 16, 18],
+      "advice": "Use vermicompost for microbial activity, NPK for growth, bone meal for flowering"
+    },
+    "spring": {
+      "month": ["January", "February", "March"],
+      "temperature": "22-30°C",
+      "humidity": "40-60%",
+      "recommendedProducts": [11, 16, 18],
+      "advice": "Use cow dung for nitrogen, NPK for growth, bone meal for flowering prep"
+    }
+  },
+  "regionSpecific": {
+    "Hyderabad": {
+      "region": "Deccan Plateau",
+      "state": "Telangana",
+      "climate": "Semi-arid to semi-humid",
+      "soilType": "Black soil (Vertisol) - pH 7.5-8.5 (Alkaline)",
+      "elevation": "505m",
+      "rainfall": "558mm annually",
+      "avgSummer": "32-40°C",
+      "avgWinter": "18-25°C",
+      "challenge": "High pH alkaline soil, clay-heavy, water logging in monsoon",
+      "soilCharacteristic": "High in clay content, high cation exchange capacity, tends to be waterlogged in monsoon, cracks in summer",
+      "recommendedMinerals": [13, 14, 16],
+      "mustHave": [13],
+      "avoid": [],
+      "bestProducts": [1, 2, 5, 6, 11],
+      "bestSeasonForPlanting": "October-March (Winter)",
+      "recommendations": {
+        "summer": "Coconut coir CRITICAL for water retention and cooling",
+        "monsoon": "Wood charcoal for drainage, Neem for pest control",
+        "winter": "Best season - Vermicompost + NPK",
+        "spring": "Prepare for summer heat"
+      },
+      "specialTip": "Black soil needs pH management - use coconut coir to lower pH, charcoal for drainage, avoid over-watering"
+    },
+    "Rajasthan": {
+      "region": "Thar Desert & Semi-arid",
+      "state": "Rajasthan",
+      "climate": "Arid",
+      "soilType": "Red soil (Latosol) & Sandy loam - pH 6.5-7.5 (Slightly acidic to neutral)",
+      "elevation": "300-700m",
+      "rainfall": "250-500mm annually",
+      "avgSummer": "35-45°C",
+      "avgWinter": "5-25°C",
+      "challenge": "Severe water scarcity, sandy loose soil, extreme heat, poor water retention",
+      "soilCharacteristic": "Low in organic matter, sandy texture, high drainage but loses nutrients quickly, low water retention",
+      "recommendedMinerals": [13, 14, 15, 16, 19],
+      "mustHave": [13, 15, 16],
+      "avoid": [12, 17],
+      "bestProducts": [3, 13, 15, 16],
+      "bestSeasonForPlanting": "October-February (Winter - only viable long season)",
+      "recommendations": {
+        "summer": "Coconut coir CRITICAL - prevents total water loss. Price will be 30% higher due to demand",
+        "monsoon": "Limited rainfall - use NPK + Vermicompost. Prepare for next winter",
+        "winter": "Best season for planting. Use vermicompost for quick nutrient delivery",
+        "spring": "Prepare soil with compost for next winter. Summer is dormant"
+      },
+      "specialTip": "Coconut coir NON-NEGOTIABLE - invest heavily in water retention. Red soil is acidic, works well with bone meal. Neem NOT native - expensive. Fish waste - not practical due to distance",
+      "priceAdjustments": {
+        "coconutCoir": "+30%",
+        "vermicompost": "+10%",
+        "boneeal": "+10%",
+        "NPK": "standard"
+      }
+    },
+    "Kashmir": {
+      "region": "Himalayan Valley",
+      "state": "Jammu & Kashmir",
+      "climate": "Temperate",
+      "soilType": "Acidic loam & Sandy loam - pH 5.0-6.5 (Acidic)",
+      "elevation": "1600m",
+      "rainfall": "750-1500mm annually",
+      "avgSummer": "15-25°C",
+      "avgWinter": "-5 to 10°C",
+      "challenge": "Short growing season (Feb-Oct only), high moisture, acidic soil, frost risk",
+      "soilCharacteristic": "High moisture retention, acidic pH needs correction, rich in organic matter, loose texture",
+      "recommendedMinerals": [15, 16, 18],
+      "mustHave": [15, 16],
+      "avoid": [12, 13, 17],
+      "bestProducts": [4, 15, 16, 18],
+      "bestSeasonForPlanting": "February-May (Spring - intense growing season)",
+      "recommendations": {
+        "summer": "High moisture already - skip coconut coir. Focus on vermicompost + NPK for rapid growth",
+        "autumn": "Prepare for frost - apply bone meal to raise soil pH",
+        "winter": "Dormant season - minimal activity",
+        "spring": "CRITICAL season - intensive planting. Vermicompost for microbes + NPK"
+      },
+      "specialTip": "Vermicompost CRITICAL - short season means rapid nutrient delivery needed. Acidic soil needs bone meal to raise pH. Coconut coir NOT needed - high moisture. Neem ineffective in cold. Fish emulsion not practical at high altitude",
+      "priceAdjustments": {
+        "vermicompost": "+20%",
+        "boneMeal": "+10%",
+        "NPK": "standard",
+        "coconutCoir": "NOT AVAILABLE"
+      }
+    }
+  }
+}
