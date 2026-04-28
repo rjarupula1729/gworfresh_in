@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GrowFresh — Complete Stages 1-5 (All Features)</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --green:#2E7D32;--green-mid:#388E3C;--green-light:#4CAF50;
+  --green-pale:#E8F5E9;--green-deep:#1B5E20;
+  --orange:#F4631E;--orange-pale:#FFF3EE;
+  --blue:#1565C0;--blue-pale:#E3F2FD;
+  --purple:#6A1B9A;--purple-pale:#F3E5F5;
+  --yellow:#F9A825;--yellow-pale:#FFFDE7;
+  --teal:#00695C;--teal-pale:#E0F2F1;
+  --text:#1C2B1D;--muted:#6B7C6C;--border:#DCE8DC;
+  --bg:#F4F8F4;--white:#FFFFFF;--red:#C62828;--red-pale:#FFEBEE;
+  --shadow-sm:0 2px 8px rgba(46,125,50,0.08);
+  --shadow-md:0 4px 20px rgba(46,125,50,0.13);
+  --radius:14px;--radius-sm:10px;--radius-xs:8px;
+}
+html,body{height:100%;font-family:'Nunito',sans-serif;background:#c8d8c8;display:flex;justify-content:center;align-items:center;}
+.phone{width:390px;height:820px;background:var(--bg);border-radius:48px;
+  box-shadow:0 0 0 8px #111,0 0 0 10px #2a2a2a,0 32px 80px rgba(0,0,0,0.28);
+  overflow:hidden;display:flex;flex-direction:column;position:relative;}
+.status-bar{background:var(--green);padding:14px 22px 8px;display:flex;justify-content:space-between;color:white;font-size:11px;font-weight:800;flex-shrink:0;position:relative;z-index:100;}
+.screen{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;display:none;flex-direction:column;overflow:hidden;z-index:1;background:inherit;pointer-events:none;}
+.screen.active{display:flex;z-index:10;pointer-events:auto;animation:fadeIn 0.25s ease both;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+.scroll-body::-webkit-scrollbar{display:none;}
+
+/* SPLASH */
+#screen-splash{background:linear-gradient(170deg,#1B5E20 0%,#2E7D32 55%,#43A047 100%);display:flex;align-items:center;justify-content:center;padding:36px 28px;text-align:center;}
+#screen-splash.active{display:flex;flex-direction:column;}
+#screen-splash:not(.active){display:none;}
+.splash-logo{width:88px;height:88px;background:rgba(255,255,255,0.15);border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:20px;animation:popIn 0.6s cubic-bezier(0.175,0.885,0.32,1.275) both;border:2px solid rgba(255,255,255,0.25);}
+@keyframes popIn{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+.splash-name{font-size:34px;font-weight:900;color:white;letter-spacing:-1px;animation:slideUp 0.5s 0.2s ease both;}
+.splash-tag{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;margin-top:5px;animation:slideUp 0.5s 0.3s ease both;}
+.splash-feats{margin:22px 0;display:flex;flex-direction:column;gap:10px;width:100%;animation:slideUp 0.5s 0.4s ease both;}
+.splash-feat{background:rgba(255,255,255,0.12);border-radius:12px;padding:11px 14px;display:flex;align-items:center;gap:12px;color:white;text-align:left;border:1px solid rgba(255,255,255,0.15);}
+.feat-icon{font-size:22px;flex-shrink:0;}
+.feat-title{font-size:13px;font-weight:800;}
+.feat-sub{font-size:10px;opacity:0.75;font-weight:600;}
+.splash-btn{width:100%;padding:16px;background:white;color:var(--green);border:none;border-radius:var(--radius);font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;animation:slideUp 0.5s 0.5s ease both;box-shadow:0 4px 20px rgba(0,0,0,0.15);}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* LOGIN */
+#screen-login{background:var(--white);display:flex;flex-direction:column;}
+#screen-login:not(.active){display:none;}
+#screen-login.active{display:flex;flex-direction:column;}
+.login-top{background:linear-gradient(160deg,#1B5E20,#2E7D32);padding:30px 24px 28px;flex-shrink:0;}
+.login-back{background:rgba(255,255,255,0.18);border:none;border-radius:10px;width:36px;height:36px;color:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+.login-title{font-size:24px;font-weight:900;color:white;}
+.login-sub{font-size:12px;color:rgba(255,255,255,0.75);font-weight:600;margin-top:4px;}
+.login-scroll{flex:1;overflow-y:auto;scrollbar-width:none;background:var(--white);}
+.login-scroll::-webkit-scrollbar{display:none;}
+.login-body{padding:24px 22px 32px;}
+.login-tabs{display:flex;background:var(--bg);border-radius:12px;padding:4px;gap:4px;margin-bottom:24px;}
+.login-tab{flex:1;padding:10px 8px;border-radius:9px;border:none;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:var(--muted);background:none;transition:all 0.2s;}
+.login-tab.active{background:var(--white);color:var(--green);box-shadow:var(--shadow-sm);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fadeIn 0.2s ease;}
+.input-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:7px;}
+.input-group{margin-bottom:18px;}
+.phone-input-wrap{display:flex;align-items:center;background:var(--bg);border-radius:var(--radius-sm);border:2px solid var(--border);overflow:hidden;transition:border-color 0.2s;}
+.phone-input-wrap:focus-within{border-color:var(--green);}
+.country-code{padding:0 12px;background:var(--green-pale);font-size:13px;font-weight:800;color:var(--green);border-right:2px solid var(--border);height:48px;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+.text-input{flex:1;border:none;background:none;padding:12px 14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);outline:none;}
+.text-input::placeholder{color:var(--muted);font-weight:600;}
+.full-input{width:100%;border:2px solid var(--border);background:var(--bg);border-radius:var(--radius-sm);padding:13px 14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);outline:none;transition:border-color 0.2s;}
+.full-input:focus{border-color:var(--green);}
+.primary-btn{width:100%;padding:15px;background:var(--green);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.15s;box-shadow:0 4px 14px rgba(46,125,50,0.25);}
+.primary-btn:active{background:var(--green-mid);transform:scale(0.98);}
+.otp-section{display:none;margin-top:6px;}
+.otp-section.show{display:block;animation:slideUp 0.3s ease both;}
+.otp-info{background:var(--green-pale);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:18px;font-size:12px;font-weight:700;color:var(--green);line-height:1.6;}
+.otp-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:18px;}
+.otp-digit{width:50px;height:54px;border:2px solid var(--border);border-radius:12px;background:var(--bg);text-align:center;font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;color:var(--text);outline:none;transition:border-color 0.2s;}
+.otp-digit:focus{border-color:var(--green);background:var(--white);}
+.resend-row{text-align:center;margin-bottom:18px;}
+.resend-btn{background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--green);text-decoration:underline;}
+.resend-timer{font-size:13px;font-weight:700;color:var(--muted);}
+.error-msg{background:var(--red-pale);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:14px;font-size:12px;font-weight:800;color:var(--red);display:none;align-items:center;gap:8px;}
+.error-msg.show{display:flex;animation:fadeIn 0.2s ease;}
+.google-btn{width:100%;padding:14px;background:var(--white);color:var(--text);border:2px solid var(--border);border-radius:var(--radius);font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.15s;margin-bottom:14px;}
+.terms-note{text-align:center;margin-top:20px;font-size:11px;color:var(--muted);font-weight:600;line-height:1.6;}
+.terms-link{color:var(--green);font-weight:800;cursor:pointer;}
+
+/* HOME SCREEN */
+.home-header{background:linear-gradient(160deg,var(--green-deep),var(--green));padding:18px 18px 22px;flex-shrink:0;position:relative;overflow:hidden;}
+.home-header::after{content:'🌿';position:absolute;right:-8px;top:-8px;font-size:90px;opacity:0.07;}
+.home-greeting{font-size:13px;color:rgba(255,255,255,0.75);font-weight:700;}
+.home-name{font-size:22px;font-weight:900;color:white;margin-top:2px;}
+.home-weather{background:rgba(255,255,255,0.14);border-radius:10px;padding:8px 12px;display:inline-flex;align-items:center;gap:8px;color:white;font-size:11px;font-weight:800;margin-top:12px;backdrop-filter:blur(4px);}
+.home-quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 14px 0;}
+.home-qa{background:var(--white);border-radius:12px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform 0.15s;}
+.home-qa:active{transform:scale(0.95);}
+.qa-icon{font-size:22px;}
+.qa-label{font-size:10px;font-weight:800;color:var(--text);text-align:center;}
+.home-streak{margin:12px 14px 0;background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:12px;}
+.streak-fire{font-size:36px;}
+.streak-info{flex:1;}
+.streak-title{font-size:14px;font-weight:900;color:var(--text);}
+.streak-sub{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px;}
+.streak-days{font-size:22px;font-weight:900;color:var(--orange);background:var(--orange-pale);padding:6px 14px;border-radius:10px;}
+.home-section{margin:14px 14px 0;}
+.section-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.section-title{font-size:14px;font-weight:900;color:var(--text);}
+.section-link{font-size:11px;font-weight:800;color:var(--green);cursor:pointer;}
+.home-plants-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.home-plants-scroll::-webkit-scrollbar{display:none;}
+.home-plant-mini{background:var(--white);border-radius:12px;padding:12px 10px;min-width:110px;flex-shrink:0;box-shadow:var(--shadow-sm);cursor:pointer;text-align:center;}
+.hpm-emoji{font-size:28px;}
+.hpm-name{font-size:11px;font-weight:800;color:var(--text);margin-top:5px;}
+.hpm-bar{background:var(--green-pale);border-radius:10px;height:4px;margin-top:6px;overflow:hidden;}
+.hpm-fill{height:100%;background:var(--green);border-radius:10px;}
+.hpm-days{font-size:10px;color:var(--muted);font-weight:700;margin-top:4px;}
+.home-tip{margin:14px 14px 20px;background:linear-gradient(135deg,var(--green-deep),var(--green));border-radius:var(--radius);padding:14px;color:white;display:flex;align-items:center;gap:12px;}
+.tip-icon{font-size:32px;flex-shrink:0;}
+.tip-title{font-size:13px;font-weight:900;}
+.tip-text{font-size:11px;opacity:0.85;font-weight:600;margin-top:3px;line-height:1.5;}
+
+/* SHARED HEADER / NAV */
+.top-header{background:var(--white);padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--shadow-sm);z-index:10;}
+.header-brand{display:flex;align-items:center;gap:8px;}
+.brand-logo{width:32px;height:32px;background:var(--green);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+.brand-name{font-size:17px;font-weight:900;color:var(--text);}
+.brand-tag{font-size:9px;color:var(--muted);font-weight:600;display:block;margin-top:-2px;}
+.header-right{display:flex;align-items:center;gap:7px;}
+.icon-btn{position:relative;width:38px;height:38px;background:var(--green-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;border:none;}
+.cart-badge{position:absolute;top:-4px;right:-4px;background:var(--orange);color:white;font-size:10px;font-weight:900;min-width:17px;height:17px;border-radius:9px;display:none;align-items:center;justify-content:center;padding:0 3px;}
+.cart-badge.show{display:flex;}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;cursor:pointer;flex-shrink:0;}
+.bottom-nav{background:var(--white);border-top:1px solid var(--border);display:flex;padding:6px 0 13px;flex-shrink:0;box-shadow:0 -3px 14px rgba(0,0,0,0.05);}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:3px 0;position:relative;}
+.nav-icon{font-size:19px;transition:transform 0.2s;}
+.nav-label{font-size:9px;font-weight:800;color:var(--muted);}
+.nav-item.active .nav-label{color:var(--green);}
+.nav-item.active .nav-icon{transform:scale(1.12);}
+
+/* SHOP */
+.shop-body{padding:12px 14px 16px;}
+.cat-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;margin-bottom:12px;scrollbar-width:none;}
+.cat-strip::-webkit-scrollbar{display:none;}
+.cat-pill{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer;border:2px solid var(--border);background:var(--white);color:var(--muted);transition:all 0.18s;flex-shrink:0;}
+.cat-pill.active{background:var(--green);color:var(--white);border-color:var(--green);}
+.sec-label{font-size:13px;font-weight:900;color:var(--text);margin-bottom:10px;}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.product-card{background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;transition:transform 0.15s;}
+.product-card:active{transform:scale(0.97);}
+.product-img{background:var(--green-pale);height:84px;display:flex;align-items:center;justify-content:center;font-size:40px;position:relative;}
+.product-badge{position:absolute;top:6px;right:6px;background:var(--orange);color:white;font-size:9px;font-weight:900;padding:2px 6px;border-radius:20px;}
+.product-body{padding:9px 10px 11px;flex:1;display:flex;flex-direction:column;}
+.product-name{font-size:12px;font-weight:800;color:var(--text);}
+.product-desc{font-size:10px;color:var(--muted);font-weight:600;margin-top:2px;line-height:1.4;flex:1;}
+.product-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+.price-now{font-size:14px;font-weight:900;color:var(--green);}
+.price-old{font-size:10px;color:var(--muted);text-decoration:line-through;font-weight:600;}
+.qty-ctrl{display:flex;align-items:center;background:var(--green-pale);border-radius:7px;overflow:hidden;}
+.qty-btn{width:24px;height:24px;background:none;border:none;font-size:14px;font-weight:900;color:var(--green);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.qty-num{font-size:12px;font-weight:900;color:var(--text);min-width:17px;text-align:center;}
+.add-btn{width:27px;height:27px;background:var(--green);border:none;border-radius:7px;font-size:18px;font-weight:900;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.checkout-strip{background:var(--white);border-top:1px solid var(--border);padding:10px 14px;flex-shrink:0;box-shadow:0 -4px 14px rgba(0,0,0,0.06);display:none;}
+.checkout-strip.show{display:flex;align-items:center;gap:12px;}
+.strip-btn{background:var(--green);color:white;border:none;border-radius:var(--radius-sm);padding:11px 16px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+/* CART */
+.page-header{background:var(--white);padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;box-shadow:var(--shadow-sm);}
+.back-btn{width:34px;height:34px;background:var(--green-pale);border-radius:9px;border:none;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.page-title{font-size:17px;font-weight:900;color:var(--text);}
+.page-subtitle{font-size:12px;color:var(--muted);font-weight:700;margin-left:auto;}
+.cart-body{padding:13px;}
+.cart-item{background:var(--white);border-radius:var(--radius);padding:12px;display:flex;align-items:center;gap:11px;margin-bottom:9px;box-shadow:var(--shadow-sm);}
+.cart-item-emoji{font-size:32px;flex-shrink:0;}
+.cart-item-info{flex:1;}
+.cart-item-name{font-size:13px;font-weight:800;color:var(--text);}
+.cart-item-price{font-size:12px;font-weight:700;color:var(--green);margin-top:2px;}
+.cart-item-remove{width:26px;height:26px;background:var(--red-pale);border-radius:7px;border:none;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--red);}
+.cart-summary{background:var(--white);border-radius:var(--radius);padding:13px;margin-top:8px;box-shadow:var(--shadow-sm);}
+.summary-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--muted);}
+.summary-row.total{color:var(--text);font-size:15px;font-weight:900;border-top:1px solid var(--border);padding-top:8px;margin-bottom:0;margin-top:3px;}
+.summary-row.total span:last-child{color:var(--green);}
+.delivery-note{background:var(--green-pale);border-radius:var(--radius-sm);padding:8px 12px;display:flex;align-items:center;gap:8px;margin:10px 0;font-size:11px;font-weight:700;color:var(--green);}
+.action-btn{width:100%;background:var(--green);color:white;border:none;border-radius:var(--radius);padding:14px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:13px;box-shadow:0 4px 14px rgba(46,125,50,0.28);transition:all 0.15s;}
+.action-btn:active{background:var(--green-mid);transform:scale(0.98);}
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 22px;text-align:center;}
+.empty-icon{font-size:56px;margin-bottom:12px;opacity:0.4;}
+.empty-title{font-size:16px;font-weight:900;color:var(--text);margin-bottom:5px;}
+.empty-sub{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:18px;line-height:1.5;}
+.empty-btn{background:var(--green);color:white;border:none;border-radius:var(--radius-sm);padding:11px 22px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+/* UPI PAYMENT */
+.upi-amount-card{background:linear-gradient(135deg,var(--green),var(--green-mid));border-radius:16px;padding:20px;color:white;text-align:center;margin-bottom:18px;box-shadow:0 6px 22px rgba(46,125,50,0.28);}
+.upi-to{font-size:11px;opacity:0.8;font-weight:700;letter-spacing:0.5px;}
+.upi-merchant{font-size:18px;font-weight:900;margin:3px 0;}
+.upi-amount-label{font-size:11px;opacity:0.8;font-weight:700;margin-top:10px;}
+.upi-amount-value{font-size:30px;font-weight:900;letter-spacing:-1px;}
+.upi-items-info{font-size:11px;opacity:0.7;font-weight:600;margin-top:3px;}
+.upi-section-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:9px;}
+.upi-apps{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px;}
+.upi-app-btn{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:all 0.18s;font-family:'Nunito',sans-serif;}
+.upi-app-btn.selected{border-color:var(--green);background:var(--green-pale);}
+.upi-app-icon{font-size:26px;}
+.upi-app-name{font-size:11px;font-weight:800;color:var(--text);}
+.upi-input-row{display:flex;align-items:center;gap:8px;background:var(--white);border-radius:var(--radius);border:2px solid var(--border);padding:11px 13px;margin-bottom:14px;transition:border-color 0.18s;}
+.upi-input-row:focus-within{border-color:var(--green);}
+.upi-input{flex:1;border:none;background:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text);outline:none;}
+.upi-input::placeholder{color:var(--muted);font-weight:600;}
+.upi-verify-btn{background:var(--green-pale);color:var(--green);border:none;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;}
+.pay-now-btn{width:100%;background:var(--green);color:white;border:none;border-radius:var(--radius);padding:15px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 18px rgba(46,125,50,0.3);transition:all 0.15s;}
+.pay-now-btn:active{background:var(--green-mid);transform:scale(0.98);}
+.secure-note{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:10px;font-size:11px;color:var(--muted);font-weight:700;}
+
+/* SUCCESS */
+.success-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px 22px;text-align:center;background:var(--bg);}
+.success-anim{width:92px;height:92px;background:var(--green-pale);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:18px;animation:popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;}
+.success-title{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px;animation:slideUp 0.4s 0.2s ease both;}
+.success-sub{font-size:13px;color:var(--muted);font-weight:700;line-height:1.5;animation:slideUp 0.4s 0.3s ease both;}
+.order-card{background:var(--white);border-radius:var(--radius);padding:15px;width:100%;margin:18px 0;box-shadow:var(--shadow-md);text-align:left;animation:slideUp 0.4s 0.4s ease both;}
+.order-row{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:7px;}
+.order-row:last-child{margin-bottom:0;}
+.order-row span:last-child{color:var(--text);font-weight:800;}
+.order-row.hl span:last-child{color:var(--green);}
+.redirect-bar{width:100%;background:var(--border);border-radius:10px;height:4px;margin-top:16px;overflow:hidden;animation:slideUp 0.4s 0.5s ease both;}
+.redirect-fill{height:100%;background:var(--green);border-radius:10px;animation:redirectFill 3s linear forwards;}
+@keyframes redirectFill{from{width:0%;}to{width:100%;}}
+.redirect-note{font-size:11px;color:var(--muted);font-weight:700;margin-top:6px;animation:slideUp 0.4s 0.5s ease both;}
+
+/* MY GARDEN */
+.garden-hero{background:linear-gradient(160deg,var(--green-deep),var(--green));padding:18px 16px 22px;flex-shrink:0;position:relative;overflow:hidden;}
+.garden-hero::before{content:'🌿';position:absolute;right:-8px;top:-8px;font-size:90px;opacity:0.07;}
+.garden-hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.garden-hero-title{font-size:20px;font-weight:900;color:white;}
+.garden-hero-sub{font-size:11px;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px;}
+.add-plant-btn{background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.3);border-radius:9px;padding:7px 12px;color:white;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;}
+.garden-stats{display:flex;gap:8px;}
+.garden-stat{background:rgba(255,255,255,0.14);border-radius:11px;padding:9px 12px;flex:1;text-align:center;}
+.stat-num{font-size:19px;font-weight:900;color:white;}
+.stat-label{font-size:9px;color:rgba(255,255,255,0.7);font-weight:800;text-transform:uppercase;}
+.reminders-banner{background:var(--orange-pale);border-radius:var(--radius);padding:12px;margin:12px 13px 0;box-shadow:var(--shadow-sm);}
+.reminders-title{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:900;color:var(--orange);margin-bottom:8px;}
+.reminder-chip{display:inline-flex;align-items:center;gap:5px;background:white;border-radius:20px;padding:5px 10px;font-size:10px;font-weight:800;color:var(--text);margin:0 5px 5px 0;box-shadow:var(--shadow-sm);cursor:pointer;}
+.reminder-chip.done{opacity:0.45;text-decoration:line-through;}
+.garden-body{padding:13px;}
+.plant-card-full{background:var(--white);border-radius:var(--radius);padding:13px;margin-bottom:11px;box-shadow:var(--shadow-sm);}
+.plant-card-top{display:flex;align-items:center;gap:11px;margin-bottom:11px;}
+.plant-emoji-big{font-size:40px;flex-shrink:0;}
+.plant-info{flex:1;}
+.plant-name-big{font-size:15px;font-weight:900;color:var(--text);}
+.plant-meta{font-size:10px;color:var(--muted);font-weight:600;margin-top:2px;}
+.plant-status-pill{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:800;flex-shrink:0;}
+.pill-growing{background:var(--green-pale);color:var(--green);}
+.pill-harvest{background:var(--orange-pale);color:var(--orange);}
+.pill-attention{background:var(--red-pale);color:var(--red);}
+.progress-label{display:flex;justify-content:space-between;margin-bottom:4px;}
+.progress-text{font-size:10px;font-weight:700;color:var(--muted);}
+.progress-pct{font-size:10px;font-weight:900;color:var(--green);}
+.progress-bar{background:var(--green-pale);border-radius:10px;height:6px;overflow:hidden;margin-bottom:11px;}
+.progress-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--green),var(--green-light));transition:width 0.5s;}
+.plant-actions{display:flex;gap:7px;}
+.plant-action-btn{flex:1;padding:7px 4px;border-radius:var(--radius-xs);border:none;font-size:10px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all 0.15s;font-family:'Nunito',sans-serif;}
+.btn-water{background:var(--blue-pale);color:var(--blue);}
+.btn-fertilize{background:var(--purple-pale);color:var(--purple);}
+.btn-sun{background:var(--yellow-pale);color:var(--yellow);}
+.btn-remove{background:var(--red-pale);color:var(--red);}
+.plant-action-btn:active{transform:scale(0.94);}
+
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.show{display:flex;animation:fadeIn 0.2s ease;}
+.modal-sheet{background:var(--white);border-radius:22px 22px 0 0;padding:18px 18px 28px;width:100%;max-width:390px;animation:slideUp 0.3s ease both;max-height:85vh;overflow-y:auto;}
+.modal-handle{width:38px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 14px;}
+.modal-title{font-size:17px;font-weight:900;color:var(--text);margin-bottom:14px;}
+.plant-options{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:18px;}
+.plant-option{background:var(--green-pale);border-radius:var(--radius-sm);padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;border:2px solid transparent;transition:all 0.15s;}
+.plant-option.selected{border-color:var(--green);background:white;}
+.plant-option-emoji{font-size:26px;}
+.plant-option-name{font-size:10px;font-weight:800;color:var(--text);}
+.modal-input{width:100%;border:2px solid var(--border);background:var(--bg);border-radius:var(--radius-sm);padding:11px 13px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text);outline:none;margin-bottom:12px;transition:border-color 0.2s;}
+.modal-input:focus{border-color:var(--green);}
+.modal-btn{width:100%;padding:13px;background:var(--green);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;}
+.modal-cancel{width:100%;padding:10px;background:none;color:var(--muted);border:none;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:7px;}
+
+/* EXPERT BOOKING */
+.expert-hero{background:linear-gradient(160deg,#00695C,#00897B);padding:18px 16px 20px;flex-shrink:0;}
+.expert-hero-title{font-size:20px;font-weight:900;color:white;}
+.expert-hero-sub{font-size:12px;color:rgba(255,255,255,0.8);font-weight:600;margin-top:3px;}
+.how-works{background:var(--teal-pale);border-radius:var(--radius);padding:13px;margin:12px 13px 0;display:flex;justify-content:space-between;}
+.hw-step{text-align:center;flex:1;}
+.hw-icon{font-size:22px;}
+.hw-text{font-size:10px;font-weight:800;color:var(--teal);margin-top:3px;}
+.expert-card{background:var(--white);border-radius:var(--radius);padding:14px;margin-bottom:11px;box-shadow:var(--shadow-sm);}
+.expert-top{display:flex;align-items:center;gap:12px;margin-bottom:11px;}
+.expert-avatar{width:50px;height:50px;border-radius:50%;background:var(--teal-pale);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.expert-name{font-size:14px;font-weight:900;color:var(--text);}
+.expert-spec{font-size:11px;color:var(--muted);font-weight:600;}
+.expert-rating{display:flex;align-items:center;gap:4px;margin-top:3px;}
+.expert-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px;}
+.expert-tag{background:var(--teal-pale);color:var(--teal);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px;}
+.expert-footer{display:flex;justify-content:space-between;align-items:center;}
+.expert-price{font-size:14px;font-weight:900;color:var(--text);}
+.expert-price span{font-size:11px;color:var(--muted);font-weight:600;}
+.book-btn{background:var(--teal);color:white;border:none;border-radius:9px;padding:8px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:background 0.15s;}
+.book-btn:active{background:var(--teal-pale);color:var(--teal);}
+
+.booking-sheet{background:var(--white);border-radius:22px 22px 0 0;padding:18px 18px 30px;width:100%;max-width:390px;animation:slideUp 0.3s ease both;}
+.time-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.time-slot{padding:9px 5px;border-radius:9px;border:2px solid var(--border);background:var(--bg);text-align:center;font-size:11px;font-weight:800;color:var(--muted);cursor:pointer;transition:all 0.15s;font-family:'Nunito',sans-serif;}
+.time-slot.selected{border-color:var(--teal);background:var(--teal-pale);color:var(--teal);}
+.time-slot.booked{opacity:0.4;cursor:not-allowed;}
+.date-btns{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;scrollbar-width:none;}
+.date-btns::-webkit-scrollbar{display:none;}
+.date-btn{padding:8px 14px;border-radius:20px;border:2px solid var(--border);background:var(--bg);font-size:11px;font-weight:800;color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;font-family:'Nunito',sans-serif;}
+.date-btn.selected{border-color:var(--teal);background:var(--teal-pale);color:var(--teal);}
+.confirm-book-btn{width:100%;padding:14px;background:var(--teal);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+/* SEASONAL CALENDAR */
+.cal-hero{background:linear-gradient(160deg,#E65100,#F57C00);padding:18px 16px 20px;flex-shrink:0;}
+.cal-hero-title{font-size:20px;font-weight:900;color:white;}
+.cal-hero-sub{font-size:12px;color:rgba(255,255,255,0.8);font-weight:600;margin-top:3px;}
+.cal-now-card{background:var(--white);border-radius:var(--radius);padding:14px;margin:12px 13px 0;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:12px;}
+.cal-now-emoji{font-size:36px;flex-shrink:0;}
+.cal-now-title{font-size:14px;font-weight:900;color:var(--text);}
+.cal-now-sub{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px;line-height:1.5;}
+.cal-body{padding:13px;}
+.month-card{background:var(--white);border-radius:var(--radius);padding:13px;margin-bottom:10px;box-shadow:var(--shadow-sm);cursor:pointer;}
+.month-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.month-name{font-size:13px;font-weight:900;color:var(--text);}
+.season-pill{font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px;}
+.season-summer{background:#FFF9C4;color:#F57F17;}
+.season-monsoon{background:var(--blue-pale);color:var(--blue);}
+.season-winter{background:var(--green-pale);color:var(--green);}
+.season-spring{background:var(--orange-pale);color:var(--orange);}
+.veggie-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.veggie-chip{background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:4px 9px;border-radius:20px;}
+
+/* SPACE ANALYZER */
+.analyzer-hero{background:linear-gradient(160deg,var(--purple),#8E24AA);padding:18px 16px 20px;flex-shrink:0;}
+.analyzer-hero-title{font-size:20px;font-weight:900;color:white;}
+.analyzer-hero-sub{font-size:12px;color:rgba(255,255,255,0.8);font-weight:600;margin-top:3px;}
+.analyzer-body{padding:13px;}
+.upload-zone{background:var(--white);border-radius:var(--radius);border:2px dashed var(--purple);padding:28px 20px;text-align:center;margin-bottom:14px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow-sm);}
+.upload-zone:active{background:var(--purple-pale);}
+.upload-icon{font-size:48px;margin-bottom:10px;}
+.upload-title{font-size:14px;font-weight:800;color:var(--text);}
+.upload-sub{font-size:11px;color:var(--muted);font-weight:600;margin-top:4px;}
+.analyze-btn{width:100%;padding:14px;background:var(--purple);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.analyzer-result{background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);display:none;}
+.analyzer-result.show{display:block;animation:slideUp 0.4s ease both;}
+.result-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:12px;}
+.result-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.result-row:last-child{border-bottom:none;}
+.result-emoji{font-size:26px;flex-shrink:0;}
+.result-info{flex:1;}
+.result-plant{font-size:13px;font-weight:800;color:var(--text);}
+.result-pots{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px;}
+.result-add-btn{background:var(--green-pale);color:var(--green);border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;}
+.add-all-btn{width:100%;padding:13px;background:var(--green);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:13px;display:flex;align-items:center;justify-content:center;gap:8px;}
+
+/* SUBSCRIPTIONS */
+.subs-hero{background:linear-gradient(160deg,#AD1457,#C2185B);padding:18px 16px 20px;flex-shrink:0;}
+.subs-hero-title{font-size:20px;font-weight:900;color:white;}
+.subs-hero-sub{font-size:12px;color:rgba(255,255,255,0.8);font-weight:600;margin-top:3px;}
+.subs-body{padding:13px;}
+.sub-card{background:var(--white);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm);border:2px solid transparent;cursor:pointer;transition:all 0.2s;}
+.sub-card.popular{border-color:#C2185B;}
+.sub-card:active{transform:scale(0.98);}
+.sub-popular-badge{background:#C2185B;color:white;font-size:10px;font-weight:900;padding:3px 9px;border-radius:20px;display:inline-block;margin-bottom:9px;}
+.sub-name{font-size:16px;font-weight:900;color:var(--text);}
+.sub-price{font-size:24px;font-weight:900;color:#C2185B;margin:4px 0;}
+.sub-price span{font-size:13px;color:var(--muted);font-weight:600;}
+.sub-features{margin-top:10px;}
+.sub-feature{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.sub-feature:last-child{margin-bottom:0;}
+.sub-btn{width:100%;padding:12px;background:var(--green);color:white;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:13px;}
+.sub-card.popular .sub-btn{background:#C2185B;}
+
+/* COMMUNITY */
+.community-hero{background:linear-gradient(160deg,#1565C0,#1976D2);padding:16px 16px 18px;flex-shrink:0;}
+.community-hero-title{font-size:20px;font-weight:900;color:white;}
+.community-hero-sub{font-size:12px;color:rgba(255,255,255,0.8);font-weight:600;margin-top:3px;}
+.community-stats{display:flex;gap:8px;margin-top:12px;}
+.community-stat{background:rgba(255,255,255,0.14);border-radius:10px;padding:7px 10px;flex:1;text-align:center;}
+.cstat-num{font-size:17px;font-weight:900;color:white;}
+.cstat-label{font-size:9px;color:rgba(255,255,255,0.7);font-weight:800;text-transform:uppercase;}
+.compose-bar{background:var(--white);padding:9px 13px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.compose-avatar{width:32px;height:32px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;}
+.compose-input{flex:1;background:var(--bg);border:none;border-radius:18px;padding:8px 13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;color:var(--muted);outline:none;cursor:pointer;}
+.compose-post-btn{background:var(--blue);color:white;border:none;border-radius:18px;padding:7px 13px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;}
+.feed-tabs{display:flex;background:var(--white);border-bottom:2px solid var(--border);flex-shrink:0;}
+.feed-tab{flex:1;padding:9px 6px;border:none;background:none;font-size:11px;font-weight:800;color:var(--muted);cursor:pointer;font-family:'Nunito',sans-serif;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;}
+.feed-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+.community-body{padding:11px 13px;}
+.post-card{background:var(--white);border-radius:var(--radius);padding:13px;margin-bottom:11px;box-shadow:var(--shadow-sm);animation:slideUp 0.3s ease both;}
+.post-header{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.post-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:white;flex-shrink:0;}
+.post-author-name{font-size:12px;font-weight:800;color:var(--text);}
+.post-author-meta{font-size:10px;color:var(--muted);font-weight:600;}
+.post-badge{margin-left:auto;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:800;}
+.badge-tip{background:var(--green-pale);color:var(--green);}
+.badge-harvest{background:var(--orange-pale);color:var(--orange);}
+.badge-question{background:var(--blue-pale);color:var(--blue);}
+.badge-idea{background:var(--purple-pale);color:var(--purple);}
+.post-plant-tag{display:inline-flex;align-items:center;gap:5px;background:var(--green-pale);border-radius:20px;padding:3px 9px;font-size:10px;font-weight:800;color:var(--green);margin-bottom:8px;}
+.post-content{font-size:12px;font-weight:600;color:var(--text);line-height:1.6;margin-bottom:9px;}
+.post-image{background:linear-gradient(135deg,var(--green-pale),var(--border));border-radius:var(--radius-sm);height:120px;display:flex;align-items:center;justify-content:center;font-size:56px;margin-bottom:9px;}
+.post-actions{display:flex;align-items:center;border-top:1px solid var(--border);padding-top:9px;}
+.post-action-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:5px;border:none;background:none;font-size:11px;font-weight:800;color:var(--muted);cursor:pointer;border-radius:7px;transition:background 0.15s;font-family:'Nunito',sans-serif;}
+.post-action-btn:active{background:var(--bg);}
+.post-action-btn.liked{color:var(--red);}
+.post-action-btn.bookmarked{color:var(--yellow);}
+
+.write-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.write-modal.show{display:flex;animation:fadeIn 0.2s ease;}
+.write-sheet{background:var(--white);border-radius:22px 22px 0 0;padding:18px 17px 28px;width:100%;max-width:390px;animation:slideUp 0.3s ease both;}
+.write-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;}
+.write-title{font-size:16px;font-weight:900;color:var(--text);}
+.write-close{background:var(--bg);border:none;border-radius:7px;width:28px;height:28px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.post-type-pills{display:flex;gap:7px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none;}
+.post-type-pills::-webkit-scrollbar{display:none;}
+.post-type-pill{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer;border:2px solid var(--border);background:var(--white);color:var(--muted);flex-shrink:0;transition:all 0.15s;font-family:'Nunito',sans-serif;}
+.post-type-pill.active{background:var(--blue);color:white;border-color:var(--blue);}
+.write-textarea{width:100%;border:2px solid var(--border);background:var(--bg);border-radius:var(--radius-sm);padding:11px 13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;color:var(--text);outline:none;min-height:90px;resize:none;margin-bottom:11px;line-height:1.5;transition:border-color 0.2s;}
+.write-textarea:focus{border-color:var(--blue);}
+.write-plant-select{display:flex;gap:7px;overflow-x:auto;margin-bottom:13px;scrollbar-width:none;}
+.write-plant-select::-webkit-scrollbar{display:none;}
+.write-plant-chip{padding:5px 11px;border-radius:20px;background:var(--green-pale);border:2px solid transparent;font-size:11px;font-weight:800;color:var(--green);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;font-family:'Nunito',sans-serif;}
+.write-plant-chip.active{background:var(--green);color:white;}
+.write-submit-btn{width:100%;padding:13px;background:var(--blue);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+/* PROFILE */
+.profile-header{background:linear-gradient(160deg,#1B5E20,#2E7D32);padding:22px 16px 18px;flex-shrink:0;}
+.profile-top{display:flex;align-items:center;gap:13px;}
+.profile-avatar{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:white;border:3px solid rgba(255,255,255,0.3);}
+.profile-name{font-size:18px;font-weight:900;color:white;}
+.profile-phone{font-size:12px;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px;}
+.profile-method{font-size:10px;color:rgba(255,255,255,0.6);font-weight:700;margin-top:2px;}
+.profile-body{padding:13px;flex:1;overflow-y:auto;scrollbar-width:none;}
+.profile-body::-webkit-scrollbar{display:none;}
+.profile-section{margin-bottom:16px;}
+.profile-section-label{font-size:10px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:8px;padding-left:3px;}
+.profile-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;}
+.profile-row{display:flex;align-items:center;gap:11px;padding:13px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;}
+.profile-row:last-child{border-bottom:none;}
+.profile-row:active{background:var(--bg);}
+.profile-row-icon{font-size:20px;flex-shrink:0;}
+.profile-row-text{flex:1;}
+.profile-row-title{font-size:13px;font-weight:800;color:var(--text);}
+.profile-row-sub{font-size:10px;color:var(--muted);font-weight:600;margin-top:1px;}
+.profile-row-arrow{font-size:15px;color:var(--muted);}
+.logout-btn{width:100%;padding:13px;background:var(--red-pale);color:var(--red);border:none;border-radius:var(--radius);font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;}
+
+/* Toast */
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(28,43,29,0.92);color:white;padding:10px 18px;border-radius:20px;font-size:12px;font-weight:800;opacity:0;transition:all 0.3s;z-index:300;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="phone">
+<div class="status-bar"><span>9:41</span><span>GrowFresh 🌱</span><span>▲▲▲ 🔋</span></div>
+
+<!-- SPLASH -->
+<div class="screen" id="screen-splash">
+  <div class="splash-logo">🌱</div>
+  <div class="splash-name">GrowFresh</div>
+  <div class="splash-tag">Fresh starts at home · Hyderabad</div>
+  <div class="splash-feats">
+    <div class="splash-feat"><div class="feat-icon">🛒</div><div><div class="feat-title">Order Seeds & Saplings</div><div class="feat-sub">Delivered 2–4 hrs across Hyderabad</div></div></div>
+    <div class="splash-feat"><div class="feat-icon">🌿</div><div><div class="feat-title">My Garden Tracker</div><div class="feat-sub">Daily care reminders & growth tracker</div></div></div>
+    <div class="splash-feat"><div class="feat-icon">📸</div><div><div class="feat-title">Space Analyzer</div><div class="feat-sub">AI suggests what fits your balcony</div></div></div>
+    <div class="splash-feat"><div class="feat-icon">👥</div><div><div class="feat-title">Community & Experts</div><div class="feat-sub">Learn, share & book home visits</div></div></div>
+  </div>
+  <button class="splash-btn" onclick="showScreen('login')">Get Started →</button>
+</div>
+
+<!-- LOGIN -->
+<div class="screen" id="screen-login">
+  <div class="login-top">
+    <button class="login-back" onclick="showScreen('splash')">←</button>
+    <div class="login-title">Welcome to GrowFresh 🌱</div>
+    <div class="login-sub">Login once. Stay logged in forever.</div>
+  </div>
+  <div class="login-scroll">
+    <div class="login-body">
+      <div class="login-tabs">
+        <button class="login-tab active" onclick="switchLoginTab('mobile',this)">📱 Mobile OTP</button>
+        <button class="login-tab" onclick="switchLoginTab('google',this)">🔵 Google</button>
+      </div>
+      <!-- Mobile OTP -->
+      <div class="tab-panel active" id="panel-mobile">
+        <div id="error-mobile" class="error-msg">⚠️ Enter valid 10-digit mobile number.</div>
+        <div class="input-group">
+          <div class="input-label">Mobile Number</div>
+          <div class="phone-input-wrap">
+            <div class="country-code">🇮🇳 +91</div>
+            <input class="text-input" id="mobile-input" type="tel" maxlength="10" placeholder="10-digit number" oninput="this.value=this.value.replace(/\D/g,'')" onkeyup="if(event.key==='Enter')sendOtp()"/>
+          </div>
+        </div>
+        <button class="primary-btn" id="send-otp-btn" onclick="sendOtp()">Send OTP →</button>
+        <div class="otp-section" id="otp-section">
+          <br>
+          <div class="otp-info">📩 OTP sent to +91 <span id="otp-sent-to">XXXXXXXXXX</span><br>Demo OTP: <strong>1 2 3 4</strong> · Valid 5 mins</div>
+          <div class="input-label" style="margin-top:12px">Enter 4-digit OTP</div>
+          <div class="otp-inputs">
+            <input class="otp-digit" id="otp1" maxlength="1" type="tel" oninput="otpMove(this,'otp2')">
+            <input class="otp-digit" id="otp2" maxlength="1" type="tel" oninput="otpMove(this,'otp3')" onkeydown="otpBack(event,'otp1')">
+            <input class="otp-digit" id="otp3" maxlength="1" type="tel" oninput="otpMove(this,'otp4')" onkeydown="otpBack(event,'otp2')">
+            <input class="otp-digit" id="otp4" maxlength="1" type="tel" oninput="otpMove(this,null)" onkeydown="otpBack(event,'otp3')">
+          </div>
+          <div class="resend-row"><span class="resend-timer" id="resend-timer">Resend in 30s</span><button class="resend-btn" id="resend-btn" style="display:none" onclick="resendOtp()">Resend OTP</button></div>
+          <div id="error-otp" class="error-msg">⚠️ Incorrect OTP. Hint: 1234</div>
+          <button class="primary-btn" onclick="verifyOtp()">✅ Verify & Login</button>
+        </div>
+      </div>
+      <!-- Google -->
+      <div class="tab-panel" id="panel-google">
+        <div style="text-align:center;margin-bottom:20px"><div style="font-size:42px;margin-bottom:10px">🔵</div><div style="font-size:15px;font-weight:800;color:var(--text)">Continue with Google</div><div style="font-size:12px;color:var(--muted);font-weight:600;margin-top:3px">One-time login · stays logged in</div></div>
+        <div id="error-google" class="error-msg">⚠️ Please enter name and email.</div>
+        <div class="input-group"><div class="input-label">Your Name</div><input class="full-input" id="google-name" type="text" placeholder="e.g. Priya Sharma"/></div>
+        <div class="input-group"><div class="input-label">Gmail Address</div><input class="full-input" id="google-email" type="email" placeholder="yourname@gmail.com"/></div>
+        <button class="google-btn" onclick="googleLogin()"><span style="font-size:20px">🔵</span> Continue with Google</button>
+      </div>
+      <div class="terms-note">By continuing you agree to our <span class="terms-link">Terms</span> & <span class="terms-link">Privacy Policy</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="screen" id="screen-home">
+  <div class="scroll-body">
+    <div class="home-header">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div class="home-greeting" id="home-greeting">Good morning 🌅</div>
+          <div class="home-name" id="home-name">Welcome!</div>
+        </div>
+        <div class="user-avatar" id="user-avatar" onclick="switchTab('profile')">P</div>
+      </div>
+      <div class="home-weather">☀️ Hyderabad · 31°C · Great growing day!</div>
+    </div>
+    <div class="home-quick">
+      <div class="home-qa" onclick="switchTab('calendar')"><div class="qa-icon">📅</div><div class="qa-label">Calendar</div></div>
+      <div class="home-qa" onclick="switchTab('analyzer')"><div class="qa-icon">��</div><div class="qa-label">Analyzer</div></div>
+      <div class="home-qa" onclick="switchTab('more')"><div class="qa-icon">⋯</div><div class="qa-label">More</div></div>
+    </div>
+    <div class="home-streak">
+      <div class="streak-fire">🔥</div>
+      <div class="streak-info">
+        <div class="streak-title">Garden Streak!</div>
+        <div class="streak-sub">You've cared for your plants <span id="streak-count">0</span> days in a row</div>
+      </div>
+      <div class="streak-days" id="streak-days">0</div>
+    </div>
+    <div class="home-section">
+      <div class="section-hdr"><div class="section-title">🔥 Flash Deal Today</div><div class="section-link" onclick="switchTab('shop')">Shop now →</div></div>
+      <div style="background:linear-gradient(135deg,#FF6B6B,#FF8E72);border-radius:var(--radius);padding:12px;margin-bottom:8px;color:white;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:11px;font-weight:700;opacity:0.9">Limited Time - 40% OFF</div>
+            <div style="font-size:16px;font-weight:900;margin-top:4px">Balcony Starter Kit</div>
+            <div style="font-size:12px;font-weight:700;margin-top:6px">₹<span style="text-decoration:line-through;font-size:10px">449</span> <strong style="font-size:18px">₹349</strong></div>
+          </div>
+          <div style="font-size:40px">📦</div>
+        </div>
+        <div style="font-size:10px;opacity:0.85;margin-top:6px;font-weight:600">⏰ Offer ends in 4 hours</div>
+      </div>
+    </div>
+
+    <div class="home-section">
+      <div class="section-hdr"><div class="section-title">📍 Hyderabad Picks For You</div><div class="section-link" onclick="switchTab('shop')">See all →</div></div>
+      <div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:8px;padding-bottom:4px;scrollbar-width:none">
+        <div style="background:var(--white);border-radius:var(--radius);padding:10px;flex-shrink:0;min-width:140px;box-shadow:var(--shadow-sm);cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:28px;margin-bottom:6px;text-align:center">🌶️</div>
+          <div style="font-size:11px;font-weight:900;color:var(--text);text-align:center">Chilli Sapling</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:2px">Perfect for Hyderabad</div>
+          <div style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:3px 6px;border-radius:8px;text-align:center;margin-top:6px">TRENDING</div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);padding:10px;flex-shrink:0;min-width:140px;box-shadow:var(--shadow-sm);cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:28px;margin-bottom:6px;text-align:center">🍅</div>
+          <div style="font-size:11px;font-weight:900;color:var(--text);text-align:center">Tomato Seeds</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:2px">Spring Planting</div>
+          <div style="background:var(--orange-pale);color:var(--orange);font-size:10px;font-weight:800;padding:3px 6px;border-radius:8px;text-align:center;margin-top:6px">NEW</div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);padding:10px;flex-shrink:0;min-width:140px;box-shadow:var(--shadow-sm);cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:28px;margin-bottom:6px;text-align:center">🪴</div>
+          <div style="font-size:11px;font-weight:900;color:var(--text);text-align:center">Grow Pots</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:2px">UV Protected</div>
+          <div style="background:var(--blue-pale);color:var(--blue);font-size:10px;font-weight:800;padding:3px 6px;border-radius:8px;text-align:center;margin-top:6px">STOCK UP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-section">
+      <div class="section-hdr">
+        <div class="section-title">🌱 My Plants</div>
+        <div class="section-link" onclick="switchTab('garden')">See all →</div>
+      </div>
+      <div class="home-plants-scroll" id="home-plants-scroll">
+        <div class="home-plant-mini" style="border:2px dashed var(--border);box-shadow:none" onclick="switchTab('garden')">
+          <div class="hpm-emoji">➕</div>
+          <div class="hpm-name" style="color:var(--muted)">Add Plant</div>
+        </div>
+      </div>
+    </div>
+    <div class="home-section">
+      <div class="section-hdr"><div class="section-title">💡 Today's Smart Tips</div></div>
+    </div>
+    <div id="home-tips-container" style="margin:0 14px 20px"></div>
+
+    <div class="home-section">
+      <div class="section-hdr"><div class="section-title">🥗 Nutrition Facts - What You'll Grow</div><div class="section-link" onclick="switchTab('shop')">Grow now →</div></div>
+      <div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:8px;padding-bottom:4px;scrollbar-width:none">
+        <div style="background:var(--white);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:155px;box-shadow:var(--shadow-sm)">
+          <div style="font-size:24px;margin-bottom:6px">🍅</div>
+          <div style="font-size:12px;font-weight:900;color:var(--text)">Tomato (100g)</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6">
+            <div>18 calories</div>
+            <div>🔥 Lycopene antioxidant</div>
+            <div>Vitamin C: 17% DV</div>
+            <div style="color:var(--green);font-weight:700;margin-top:4px">✓ Heart healthy</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:155px;box-shadow:var(--shadow-sm)">
+          <div style="font-size:24px;margin-bottom:6px">🌶️</div>
+          <div style="font-size:12px;font-weight:900;color:var(--text)">Chilli (100g)</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6">
+            <div>40 calories</div>
+            <div>🔥 Metabolism booster</div>
+            <div>Vitamin A: 48% DV</div>
+            <div style="color:var(--orange);font-weight:700;margin-top:4px">✓ Immune support</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:155px;box-shadow:var(--shadow-sm)">
+          <div style="font-size:24px;margin-bottom:6px">🥬</div>
+          <div style="font-size:12px;font-weight:900;color:var(--text)">Spinach (100g)</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6">
+            <div>23 calories</div>
+            <div>🧠 Iron rich</div>
+            <div>Calcium: 99% DV</div>
+            <div style="color:var(--green);font-weight:700;margin-top:4px">✓ Bone strength</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:155px;box-shadow:var(--shadow-sm)">
+          <div style="font-size:24px;margin-bottom:6px">🌿</div>
+          <div style="font-size:12px;font-weight:900;color:var(--text)">Coriander (5g)</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6">
+            <div>1.4 calories</div>
+            <div>✨ Detox aid</div>
+            <div>Fiber: 0.1g</div>
+            <div style="color:var(--green);font-weight:700;margin-top:4px">✓ Digestion help</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-section">
+      <div class="section-hdr"><div class="section-title">💰 Your Savings This Month</div></div>
+      <div style="background:linear-gradient(135deg,#52C77D,#43A047);border-radius:var(--radius);padding:14px;color:white;box-shadow:var(--shadow-md);text-align:center">
+        <div style="font-size:11px;opacity:0.85;font-weight:700">Total Fresh Produce Value</div>
+        <div style="font-size:28px;font-weight:900;margin:8px 0;display:flex;align-items:center;justify-content:center">
+          <div style="font-size:24px;margin-right:4px">₹</div><div id="monthly-savings">820</div>
+        </div>
+        <div style="font-size:10px;opacity:0.8;font-weight:700">vs Market Price</div>
+        <div style="display:flex;justify-content:space-around;margin-top:14px;font-size:10px;font-weight:700;opacity:0.95">
+          <div style="text-align:center;line-height:1.6">
+            <div>🍅</div>
+            <div>₹240</div>
+            <div style="font-size:9px;opacity:0.8">Tomato</div>
+          </div>
+          <div style="text-align:center;line-height:1.6">
+            <div>🌶️</div>
+            <div>₹320</div>
+            <div style="font-size:9px;opacity:0.8">Chilli</div>
+          </div>
+          <div style="text-align:center;line-height:1.6">
+            <div>🥬</div>
+            <div>₹180</div>
+            <div style="font-size:9px;opacity:0.8">Spinach</div>
+          </div>
+          <div style="text-align:center;line-height:1.6">
+            <div>🌿</div>
+            <div>₹80</div>
+            <div style="font-size:9px;opacity:0.8">Coriander</div>
+          </div>
+        </div>
+        <div style="font-size:11px;margin-top:12px;opacity:0.9;font-weight:700">🔥 Based on Hyderabad market prices</div>
+      </div>
+    </div>
+
+    <div class="home-section">
+      <div class="section-hdr"><div class="section-title">🌱 Compost & Minerals - Seasonal Guide</div><div class="section-link" onclick="switchTab('shop');filterCat(event.target.closest('.section-link'),'compost')">Shop now →</div></div>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-bottom:8px">
+        <div style="background:linear-gradient(135deg,#FFC837,#FF9800);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:160px;box-shadow:var(--shadow-sm);color:white;cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:13px;font-weight:900;margin-bottom:6px">🐄 Cow Dung</div>
+          <div style="font-size:10px;line-height:1.5">
+            <div style="font-weight:700">All Season</div>
+            <div style="opacity:0.9;margin-top:4px">Nitrogen rich · Tomato, Chilli</div>
+            <div style="font-weight:700;margin-top:6px">₹149</div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,#4DD0E1,#00BCD4);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:160px;box-shadow:var(--shadow-sm);color:white;cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:13px;font-weight:900;margin-bottom:6px">🐟 Fish Waste</div>
+          <div style="font-size:10px;line-height:1.5">
+            <div style="font-weight:700">Growth Phase</div>
+            <div style="opacity:0.9;margin-top:4px">Phosphorus boost · Fruiting</div>
+            <div style="font-weight:700;margin-top:6px">₹199</div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,#A1887F,#8D6E63);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:160px;box-shadow:var(--shadow-sm);color:white;cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:13px;font-weight:900;margin-bottom:6px">🥥 Coconut Coir</div>
+          <div style="font-size:10px;line-height:1.5">
+            <div style="font-weight:700">Summer Special</div>
+            <div style="opacity:0.9;margin-top:4px">Water retention · Cooling</div>
+            <div style="font-weight:700;margin-top:6px">₹129</div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,#90A4AE,#607D8B);border-radius:var(--radius);padding:12px;flex-shrink:0;min-width:160px;box-shadow:var(--shadow-sm);color:white;cursor:pointer" onclick="switchTab('shop')">
+          <div style="font-size:13px;font-weight:900;margin-bottom:6px">🪨 Wood Charcoal</div>
+          <div style="font-size:10px;line-height:1.5">
+            <div style="font-weight:700">All Season</div>
+            <div style="opacity:0.9;margin-top:4px">Drainage + pH balance</div>
+            <div style="font-weight:700;margin-top:6px">₹179</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius);padding:11px;margin-bottom:8px;border-left:4px solid var(--orange)">
+        <div style="font-size:11px;font-weight:900;color:var(--text);margin-bottom:6px">📅 Hyderabad Seasonal Tips:</div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.6">
+          <div>🌞 <strong>Summer (Apr-Jun):</strong> Use Coconut Coir for retention, Fish Waste for blooming</div>
+          <div>🌧️ <strong>Monsoon (Jul-Sep):</strong> Neem Cake to prevent fungal, Cow Dung for nutrients</div>
+          <div>❄️ <strong>Winter (Oct-Mar):</strong> Vermicompost for microbes, NPK Mix for growth</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+    <div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div>
+    <div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div>
+    <div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div>
+    <div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div>
+  </div>
+</div>
+
+<!-- SHOP -->
+<div class="screen" id="screen-shop">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Shop</div><button class="icon-btn" style="position:absolute;right:14px;top:50%;transform:translateY(-50%)" onclick="goToCart()">🛒<div class="cart-badge" id="cart-count">0</div></button></div>
+  <div class="scroll-body"><div class="shop-body">
+    <div class="cat-strip"><div class="cat-pill active" onclick="filterCat(this,'all')">🌾 All</div><div class="cat-pill" onclick="filterCat(this,'seeds')">🌱 Seeds</div><div class="cat-pill" onclick="filterCat(this,'saplings')">🌿 Saplings</div><div class="cat-pill" onclick="filterCat(this,'kits')">📦 Kits</div><div class="cat-pill" onclick="filterCat(this,'pots')">🪴 Pots</div><div class="cat-pill" onclick="filterCat(this,'compost')">🌍 Compost</div></div>
+    <div class="sec-label">🛒 Choose Your Plants</div>
+    <div class="product-grid" id="product-grid">
+      <div class="product-card" data-cat="seeds"><div class="product-img">🍅<div class="product-badge">SEEDS</div></div><div class="product-body"><div class="product-name">Tomato Seeds</div><div class="product-desc">Hybrid · 60 day harvest</div><div class="product-footer"><div><div class="price-now">₹59</div><div class="price-old">₹79</div></div><div id="ctrl-1"></div></div></div></div>
+      <div class="product-card" data-cat="seeds"><div class="product-img">🌶️<div class="product-badge">SEEDS</div></div><div class="product-body"><div class="product-name">Chilli Seeds</div><div class="product-desc">Hot variety · 45 days</div><div class="product-footer"><div><div class="price-now">₹49</div><div class="price-old">₹65</div></div><div id="ctrl-2"></div></div></div></div>
+      <div class="product-card" data-cat="seeds"><div class="product-img">🌿<div class="product-badge">SEEDS</div></div><div class="product-body"><div class="product-name">Coriander Seeds</div><div class="product-desc">Fast grow · 21 days</div><div class="product-footer"><div><div class="price-now">₹39</div><div class="price-old">₹55</div></div><div id="ctrl-3"></div></div></div></div>
+      <div class="product-card" data-cat="seeds"><div class="product-img">🥬<div class="product-badge">SEEDS</div></div><div class="product-body"><div class="product-name">Spinach Seeds</div><div class="product-desc">Nutrient rich · 30 days</div><div class="product-footer"><div><div class="price-now">₹45</div><div class="price-old">₹60</div></div><div id="ctrl-4"></div></div></div></div>
+      <div class="product-card" data-cat="saplings"><div class="product-img">🍅<div class="product-badge">SAPLING</div></div><div class="product-body"><div class="product-name">Tomato Sapling</div><div class="product-desc">Ready to plant · 2wk start</div><div class="product-footer"><div><div class="price-now">₹99</div><div class="price-old">₹129</div></div><div id="ctrl-5"></div></div></div></div>
+      <div class="product-card" data-cat="saplings"><div class="product-img">🌶️<div class="product-badge">SAPLING</div></div><div class="product-body"><div class="product-name">Chilli Sapling</div><div class="product-desc">Healthy roots · Pot ready</div><div class="product-footer"><div><div class="price-now">₹89</div><div class="price-old">₹119</div></div><div id="ctrl-6"></div></div></div></div>
+      <div class="product-card" data-cat="kits"><div class="product-img">📦<div class="product-badge">BEST VALUE</div></div><div class="product-body"><div class="product-name">Balcony Starter Kit</div><div class="product-desc">1 pot + soil + 2 seed packs</div><div class="product-footer"><div><div class="price-now">₹349</div><div class="price-old">₹449</div></div><div id="ctrl-7"></div></div></div></div>
+      <div class="product-card" data-cat="kits"><div class="product-img">🌿<div class="product-badge">FAMILY</div></div><div class="product-body"><div class="product-name">Family Fresh Bundle</div><div class="product-desc">3 pots + soil + 3 saplings</div><div class="product-footer"><div><div class="price-now">₹699</div><div class="price-old">₹850</div></div><div id="ctrl-8"></div></div></div></div>
+      <div class="product-card" data-cat="pots"><div class="product-img">🪴<div class="product-badge">POT</div></div><div class="product-body"><div class="product-name">Medium Grow Pot</div><div class="product-desc">UV resistant · Balcony safe</div><div class="product-footer"><div><div class="price-now">₹149</div><div class="price-old">₹179</div></div><div id="ctrl-9"></div></div></div></div>
+      <div class="product-card" data-cat="pots"><div class="product-img">🌱<div class="product-badge">SOIL</div></div><div class="product-body"><div class="product-name">Potting Soil 2kg</div><div class="product-desc">Organic blend · Nutrient rich</div><div class="product-footer"><div><div class="price-now">₹99</div><div class="price-old">₹119</div></div><div id="ctrl-10"></div></div></div></div>
+      
+      <!-- COMPOST & MINERALS -->
+      <div class="product-card" data-cat="compost"><div class="product-img">🐄<div class="product-badge">COMPOST</div></div><div class="product-body"><div class="product-name">Cow Dung Compost 5kg</div><div class="product-desc">Rich nitrogen · All season</div><div style="font-size:9px;color:var(--green);font-weight:700;margin-top:4px">✓ Best for: Tomato, Chilli</div><div class="product-footer"><div><div class="price-now">₹149</div><div class="price-old">₹189</div></div><div id="ctrl-11"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🐟<div class="product-badge">MINERAL</div></div><div class="product-body"><div class="product-name">Fish Waste Emulsion 1L</div><div class="product-desc">Phosphorus boost · Growth enhancer</div><div style="font-size:9px;color:var(--orange);font-weight:700;margin-top:4px">✓ Best for: Fruiting plants</div><div class="product-footer"><div><div class="price-now">₹199</div><div class="price-old">₹249</div></div><div id="ctrl-12"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🥥<div class="product-badge">ORGANIC</div></div><div class="product-body"><div class="product-name">Coconut Coir Dust 3kg</div><div class="product-desc">Water retention · Hyderabad approved</div><div style="font-size:9px;color:var(--green);font-weight:700;margin-top:4px">✓ Best for: Summer gardening</div><div class="product-footer"><div><div class="price-now">₹129</div><div class="price-old">₹159</div></div><div id="ctrl-13"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🪨<div class="product-badge">MINERAL</div></div><div class="product-body"><div class="product-name">Wood Charcoal Powder 2kg</div><div class="product-desc">Drainage improver · Drainage + pH</div><div style="font-size:9px;color:var(--green);font-weight:700;margin-top:4px">✓ Best for: All plants</div><div class="product-footer"><div><div class="price-now">₹179</div><div class="price-old">₹219</div></div><div id="ctrl-14"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🌾<div class="product-badge">COMPOST</div></div><div class="product-body"><div class="product-name">Vermicompost 3kg</div><div class="product-desc">Microbial rich · Winter special</div><div style="font-size:9px;color:var(--blue);font-weight:700;margin-top:4px">✓ Best for: Oct-Feb planting</div><div class="product-footer"><div><div class="price-now">₹159</div><div class="price-old">₹199</div></div><div id="ctrl-15"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🧪<div class="product-badge">MINERAL</div></div><div class="product-body"><div class="product-name">NPK Mix 1kg (15:15:15)</div><div class="product-desc">Balanced nutrient · All purpose</div><div style="font-size:9px;color:var(--orange);font-weight:700;margin-top:4px">✓ Best for: Growth phase</div><div class="product-footer"><div><div class="price-now">₹249</div><div class="price-old">₹299</div></div><div id="ctrl-16"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🌿<div class="product-badge">ORGANIC</div></div><div class="product-body"><div class="product-name">Neem Cake Powder 1kg</div><div class="product-desc">Pest repellent · Soil conditioner</div><div style="font-size:9px;color:var(--green);font-weight:700;margin-top:4px">✓ Best for: Monsoon season</div><div class="product-footer"><div><div class="price-now">₹179</div><div class="price-old">₹219</div></div><div id="ctrl-17"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">⚪<div class="product-badge">MINERAL</div></div><div class="product-body"><div class="product-name">Bone Meal Powder 1kg</div><div class="product-desc">Calcium + Phosphorus · Flowering</div><div style="font-size:9px;color:var(--purple);font-weight:700;margin-top:4px">✓ Best for: Blooming stage</div><div class="product-footer"><div><div class="price-now">₹189</div><div class="price-old">₹239</div></div><div id="ctrl-18"></div></div></div></div>
+      <div class="product-card" data-cat="compost"><div class="product-img">🪴<div class="product-badge">COMBO</div></div><div class="product-body"><div class="product-name">Complete Compost Kit 5kg</div><div class="product-desc">All minerals mix · Season ready</div><div style="font-size:9px;color:var(--green);font-weight:700;margin-top:4px">✓ Best for: First-time growers</div><div class="product-footer"><div><div class="price-now">₹399</div><div class="price-old">₹499</div></div><div id="ctrl-19"></div></div></div></div>
+    </div>
+  </div></div>
+  <div class="checkout-strip" id="checkout-strip"><div style="flex:1"><div style="font-size:11px;color:var(--muted);font-weight:700" id="strip-items">0 items</div><div style="font-size:16px;font-weight:900;color:var(--text)" id="strip-total">₹0</div></div><button class="strip-btn" onclick="goToCart()">View Cart →</button></div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item active" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
+</div>
+
+<!-- CART -->
+<div class="screen" id="screen-cart">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('shop')">←</button><div class="page-title">Your Cart</div><div class="page-subtitle" id="cart-count-text">0 items</div></div>
+  <div class="empty-state" id="empty-cart"><div class="empty-icon">🛒</div><div class="empty-title">Cart is empty</div><div class="empty-sub">Add some seeds or saplings!</div><button class="empty-btn" onclick="showScreen('shop')">Browse Shop</button></div>
+  <div class="scroll-body" id="cart-scroll" style="display:none"><div class="cart-body">
+    <div id="cart-items-list"></div>
+    <div class="delivery-note">🚚 Free delivery above ₹499 · 2–4 hrs · Hyderabad</div>
+    <div class="cart-summary"><div class="summary-row"><span>Subtotal</span><span id="summary-sub">₹0</span></div><div class="summary-row"><span>Delivery</span><span id="summary-delivery">₹49</span></div><div class="summary-row total"><span>Total</span><span id="summary-total">₹0</span></div></div>
+    <button class="action-btn" onclick="showScreen('upi');setupUPI()">💳 Proceed to Pay</button>
+  </div></div>
+</div>
+
+<!-- UPI -->
+<div class="screen" id="screen-upi">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('cart')">←</button><div class="page-title">Pay via UPI</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+    <div class="upi-amount-card"><div class="upi-to">PAYING TO</div><div class="upi-merchant">🌱 GrowFresh Hyderabad</div><div class="upi-amount-label">TOTAL AMOUNT</div><div class="upi-amount-value" id="upi-amount">₹0</div><div class="upi-items-info" id="upi-items-info"></div></div>
+    <div class="upi-section-label">PAY WITH UPI APP</div>
+    <div class="upi-apps">
+      <button class="upi-app-btn" onclick="selectUpiApp(this,'gpay')"><div class="upi-app-icon">🟢</div><div class="upi-app-name">Google Pay</div></button>
+      <button class="upi-app-btn" onclick="selectUpiApp(this,'phonepe')"><div class="upi-app-icon">🟣</div><div class="upi-app-name">PhonePe</div></button>
+      <button class="upi-app-btn" onclick="selectUpiApp(this,'paytm')"><div class="upi-app-icon">🔵</div><div class="upi-app-name">Paytm</div></button>
+      <button class="upi-app-btn" onclick="selectUpiApp(this,'bhim')"><div class="upi-app-icon">🇮🇳</div><div class="upi-app-name">BHIM UPI</div></button>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin:2px 0 13px"><div style="flex:1;height:1px;background:var(--border)"></div><div style="font-size:11px;font-weight:800;color:var(--muted)">OR ENTER UPI ID</div><div style="flex:1;height:1px;background:var(--border)"></div></div>
+    <div class="upi-input-row"><div style="font-size:18px">📱</div><input class="upi-input" id="upi-id-input" type="text" placeholder="yourname@upi"/><button class="upi-verify-btn" onclick="verifyUpi()">Verify</button></div>
+    <div id="upi-verify-msg" style="font-size:11px;font-weight:700;margin-bottom:13px;padding-left:4px;color:var(--muted)"></div>
+    <button class="pay-now-btn" id="pay-now-btn" onclick="confirmPayment()">✅ Pay <span id="pay-btn-amount">₹0</span> Now</button>
+    <div class="secure-note">🔒 100% Secure · Powered by UPI</div>
+  </div></div>
+</div>
+
+<!-- SUCCESS -->
+<div class="screen" id="screen-success">
+  <div class="success-body">
+    <div class="success-anim">✅</div>
+    <div class="success-title">Payment Successful! 🎉</div>
+    <div class="success-sub">Your plants are on the way. Redirecting to your home...</div>
+    <div class="order-card">
+      <div class="order-row"><span>Order ID</span><span id="order-id">#GF00001</span></div>
+      <div class="order-row"><span>Payment</span><span>UPI ✅</span></div>
+      <div class="order-row hl"><span>Amount Paid</span><span id="order-paid">₹0</span></div>
+      <div class="order-row"><span>Estimated Delivery</span><span style="color:var(--orange);font-weight:900" id="order-eta">2–4 hours</span></div>
+      <div class="order-row"><span>Status</span><span style="color:var(--green)">🌱 Confirmed</span></div>
+    </div>
+    <div class="redirect-bar"><div class="redirect-fill"></div></div>
+    <div class="redirect-note">Redirecting to home in 3 seconds...</div>
+  </div>
+</div>
+
+<!-- GARDEN -->
+<div class="screen" id="screen-garden">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">My Garden</div></div>
+  <div class="garden-hero">
+    <div class="garden-hero-top"><div><div class="garden-hero-title">🌿 My Garden</div><div class="garden-hero-sub">Track your plants daily</div></div><button class="add-plant-btn" onclick="showAddPlant()">＋ Add Plant</button></div>
+    <div class="garden-stats"><div class="garden-stat"><div class="stat-num" id="stat-plants">0</div><div class="stat-label">Plants</div></div><div class="garden-stat"><div class="stat-num" id="stat-harvest">0</div><div class="stat-label">Harvest Soon</div></div><div class="garden-stat"><div class="stat-num" id="stat-savings">₹0</div><div class="stat-label">Est. Savings</div></div></div>
+  </div>
+  <div class="reminders-banner" id="reminders-banner" style="display:none"><div class="reminders-title">🔔 Today's Care Tasks</div><div id="reminders-list"></div></div>
+  <div class="scroll-body"><div class="garden-body">
+    <div id="plants-list"></div>
+    <div class="empty-state" id="empty-garden" style="flex:none;padding:26px 14px"><div class="empty-icon">🪴</div><div class="empty-title">No plants yet</div><div class="empty-sub">Add your first plant and get daily care reminders!</div><button class="empty-btn" onclick="showAddPlant()">＋ Add First Plant</button></div>
+  </div></div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item active" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
+</div>
+
+<!-- EXPERT BOOKING -->
+<div class="screen" id="screen-expert">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('community')">←</button><div class="page-title">Expert Connect</div></div>
+  <div class="expert-hero"><div class="expert-hero-title">👨‍🌾 Book a Garden Expert</div><div class="expert-hero-sub">Home visits & video calls · Hyderabad</div></div>
+  <div class="how-works"><div class="hw-step"><div class="hw-icon">📋</div><div class="hw-text">Pick Expert</div></div><div class="hw-step"><div class="hw-icon">📅</div><div class="hw-text">Book Slot</div></div><div class="hw-step"><div class="hw-icon">🏡</div><div class="hw-text">Home Visit</div></div><div class="hw-step"><div class="hw-icon">🌱</div><div class="hw-text">Grow Better</div></div></div>
+  <div class="scroll-body"><div style="padding:13px">
+    <div class="expert-card">
+      <div class="expert-top"><div class="expert-avatar">👨‍🌾</div><div><div class="expert-name">Ravi Kumar</div><div class="expert-spec">Urban Gardening Specialist</div><div class="expert-rating"><span>⭐⭐⭐⭐⭐</span><span style="font-size:10px;color:var(--muted);font-weight:700;margin-left:4px">4.9 · 87 visits</span></div></div></div>
+      <div class="expert-tags"><div class="expert-tag">🍅 Vegetables</div><div class="expert-tag">🪴 Balcony Setup</div><div class="expert-tag">🌿 Organic</div></div>
+      <div class="expert-footer"><div class="expert-price">₹399 <span>/ home visit</span></div><button class="book-btn" onclick="showBooking('Ravi Kumar','₹399')">Book Now</button></div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-top"><div class="expert-avatar">👩‍🌾</div><div><div class="expert-name">Lakshmi Devi</div><div class="expert-spec">Kitchen Garden Expert</div><div class="expert-rating"><span>⭐⭐⭐⭐⭐</span><span style="font-size:10px;color:var(--muted);font-weight:700;margin-left:4px">4.8 · 64 visits</span></div></div></div>
+      <div class="expert-tags"><div class="expert-tag">🌶️ Chilli & Spices</div><div class="expert-tag">🌱 Seedlings</div><div class="expert-tag">💧 Watering Tips</div></div>
+      <div class="expert-footer"><div class="expert-price">₹299 <span>/ video call</span></div><button class="book-btn" onclick="showBooking('Lakshmi Devi','₹299')">Book Now</button></div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-top"><div class="expert-avatar">🧑‍🌾</div><div><div class="expert-name">Suresh Reddy</div><div class="expert-spec">Organic Farming Advisor</div><div class="expert-rating"><span>⭐⭐⭐⭐</span><span style="font-size:10px;color:var(--muted);font-weight:700;margin-left:4px">4.7 · 42 visits</span></div></div></div>
+      <div class="expert-tags"><div class="expert-tag">🌿 Soil Health</div><div class="expert-tag">🐛 Pest Control</div><div class="expert-tag">🧪 Fertilizers</div></div>
+      <div class="expert-footer"><div class="expert-price">₹499 <span>/ home visit</span></div><button class="book-btn" onclick="showBooking('Suresh Reddy','₹499')">Book Now</button></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- SEASONAL CALENDAR -->
+<div class="screen" id="screen-calendar">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Your Plant Timeline</div></div>
+  <div class="scroll-body">
+    <div style="padding:14px">
+      <!-- MY PLANTS TIMELINE -->
+      <div id="my-plants-timeline" style="margin-bottom:20px"></div>
+      
+      <!-- SEASONAL GUIDE -->
+      <div style="margin-top:20px">
+        <div style="font-size:14px;font-weight:900;color:var(--text);margin-bottom:12px">📅 Hyderabad Planting Guide</div>
+        <div class="cal-hero-sub" style="margin-bottom:12px">Month-by-month · What to plant when</div>
+        
+        <div class="month-card"><div class="month-card-top"><div class="month-name">🌸 March – April</div><div class="season-pill season-spring">Pre-Summer</div></div><div class="veggie-chips"><div class="veggie-chip">🌶️ Chilli</div><div class="veggie-chip">🍆 Brinjal</div><div class="veggie-chip">🫑 Capsicum</div><div class="veggie-chip">🍅 Tomato</div></div></div>
+        <div class="month-card"><div class="month-card-top"><div class="month-name">☀️ May – June</div><div class="season-pill season-summer">Summer</div></div><div class="veggie-chips"><div class="veggie-chip">🥒 Cucumber</div><div class="veggie-chip">🌽 Ridge Gourd</div><div class="veggie-chip">🎃 Bitter Gourd</div></div></div>
+        <div class="month-card"><div class="month-card-top"><div class="month-name">🌧️ July – September</div><div class="season-pill season-monsoon">Monsoon</div></div><div class="veggie-chips"><div class="veggie-chip">🌿 Methi</div><div class="veggie-chip">🥬 Spinach</div><div class="veggie-chip">🍃 Curry Leaf</div></div></div>
+        <div class="month-card" style="border:2px solid var(--green)"><div class="month-card-top"><div class="month-name">🍂 October – January</div><div class="season-pill season-winter">⭐ Best Season</div></div><div class="veggie-chips"><div class="veggie-chip">🍅 Tomato</div><div class="veggie-chip">🥬 Spinach</div><div class="veggie-chip">🌿 Coriander</div><div class="veggie-chip">🫛 Peas</div><div class="veggie-chip">🥕 Carrot</div></div></div>
+        <div class="month-card"><div class="month-card-top"><div class="month-name">🌺 February – March</div><div class="season-pill season-spring">Spring</div></div><div class="veggie-chips"><div class="veggie-chip">🌶️ Chilli</div><div class="veggie-chip">🍆 Brinjal</div><div class="veggie-chip">🌿 Coriander</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
+</div>
+
+<!-- SPACE ANALYZER -->
+<div class="screen" id="screen-analyzer">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Space Analyzer</div></div>
+  <div class="analyzer-hero"><div class="analyzer-hero-title">📸 AI Space Analyzer</div><div class="analyzer-hero-sub">Photo your balcony → Get plant recommendations</div></div>
+  <div class="scroll-body"><div class="analyzer-body">
+    <div class="upload-zone" onclick="runAnalyzer()">
+      <div class="upload-icon" id="upload-icon">📸</div>
+      <div class="upload-title" id="upload-title">Take or Upload a Photo</div>
+      <div class="upload-sub" id="upload-sub">Photo your balcony or garden space and our AI will suggest the best plants for you</div>
+    </div>
+    <button class="analyze-btn" onclick="runAnalyzer()" id="analyze-btn">🔍 Analyze My Space</button>
+    <div class="analyzer-result" id="analyzer-result">
+      <div class="result-title">✅ AI Analysis Complete — Your Balcony Can Fit:</div>
+      <div class="result-row"><div class="result-emoji">🍅</div><div class="result-info"><div class="result-plant">Tomato Plants</div><div class="result-pots">4 pots recommended · East-facing spot ✅</div></div><button class="result-add-btn" onclick="addAnalyzerToCart(59,'Tomato Seeds','🍅')">Add ₹59</button></div>
+      <div class="result-row"><div class="result-emoji">🌶️</div><div class="result-info"><div class="result-plant">Chilli Plants</div><div class="result-pots">3 pots · Excellent light for chilli ✅</div></div><button class="result-add-btn" onclick="addAnalyzerToCart(49,'Chilli Seeds','🌶️')">Add ₹49</button></div>
+      <div class="result-row"><div class="result-emoji">🌿</div><div class="result-info"><div class="result-plant">Coriander Box</div><div class="result-pots">2 small pots · Window sill ok ✅</div></div><button class="result-add-btn" onclick="addAnalyzerToCart(39,'Coriander Seeds','🌿')">Add ₹39</button></div>
+      <div class="result-row"><div class="result-emoji">🥬</div><div class="result-info"><div class="result-plant">Spinach</div><div class="result-pots">2 pots · Great for partial shade ✅</div></div><button class="result-add-btn" onclick="addAnalyzerToCart(45,'Spinach Seeds','🥬')">Add ₹45</button></div>
+      <button class="add-all-btn" onclick="addAllAnalyzer()">🛒 Add All to Cart — ₹192</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- SUBSCRIPTIONS -->
+<div class="screen" id="screen-subs">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Monthly Kits</div></div>
+  <div class="subs-hero"><div class="subs-hero-title">📦 Monthly Garden Kits</div><div class="subs-hero-sub">Auto-delivered every month · Cancel anytime</div></div>
+  <div class="scroll-body"><div class="subs-body">
+    <div class="sub-card">
+      <div class="sub-name">🌱 Seed of the Month</div>
+      <div class="sub-price">₹199 <span>/ month</span></div>
+      <div class="sub-features">
+        <div class="sub-feature">✅ 3 seasonal seed packets</div>
+        <div class="sub-feature">✅ Planting guide card</div>
+        <div class="sub-feature">✅ Hyderabad-specific tips</div>
+        <div class="sub-feature">✅ Free delivery</div>
+      </div>
+      <button class="sub-btn" onclick="subscribePlan('Seed of the Month','₹199')">Subscribe ₹199/month</button>
+    </div>
+    <div class="sub-card popular">
+      <div class="sub-popular-badge">⭐ Most Popular</div>
+      <div class="sub-name">🌿 Grow Box</div>
+      <div class="sub-price">₹399 <span>/ month</span></div>
+      <div class="sub-features">
+        <div class="sub-feature">✅ 2 ready-to-plant saplings</div>
+        <div class="sub-feature">✅ Potting soil bag</div>
+        <div class="sub-feature">✅ Organic fertilizer sachet</div>
+        <div class="sub-feature">✅ Monthly care tips video</div>
+        <div class="sub-feature">✅ Free delivery</div>
+      </div>
+      <button class="sub-btn" onclick="subscribePlan('Grow Box','₹399')">Subscribe ₹399/month</button>
+    </div>
+    <div class="sub-card">
+      <div class="sub-name">🏡 Full Garden Kit</div>
+      <div class="sub-price">₹699 <span>/ month</span></div>
+      <div class="sub-features">
+        <div class="sub-feature">✅ 3 saplings (seasonal variety)</div>
+        <div class="sub-feature">✅ 2 pots + soil bags</div>
+        <div class="sub-feature">✅ Fertilizer + pest control</div>
+        <div class="sub-feature">✅ 1 expert WhatsApp tip session</div>
+        <div class="sub-feature">✅ Priority free delivery</div>
+      </div>
+      <button class="sub-btn" onclick="subscribePlan('Full Garden Kit','₹699')">Subscribe ₹699/month</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- MORE FEATURES -->
+<div class="screen" id="screen-more">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">More Features</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">Stage 5 Features</div>
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:16px">
+      <div class="profile-row" onclick="showScreen('expert')"><div class="profile-row-icon">👨‍🌾</div><div class="profile-row-text"><div class="profile-row-title">Expert Booking</div><div class="profile-row-sub">Book home visits · Video calls</div></div><div class="profile-row-arrow">›</div></div>
+      <div class="profile-row" onclick="showScreen('calendar')"><div class="profile-row-icon">📅</div><div class="profile-row-text"><div class="profile-row-title">Seasonal Calendar</div><div class="profile-row-sub">Hyderabad month-by-month planting guide</div></div><div class="profile-row-arrow">›</div></div>
+      <div class="profile-row" onclick="showScreen('analyzer')"><div class="profile-row-icon">📸</div><div class="profile-row-text"><div class="profile-row-title">Space Analyzer</div><div class="profile-row-sub">AI suggests plants for your space</div></div><div class="profile-row-arrow">›</div></div>
+      <div class="profile-row" onclick="showScreen('subs')"><div class="profile-row-icon">📦</div><div class="profile-row-text"><div class="profile-row-title">Monthly Subscriptions</div><div class="profile-row-sub">Auto-delivered garden kits every month</div></div><div class="profile-row-arrow">›</div></div>
+    </div>
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">Bonus Features</div>
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden">
+      <div class="profile-row" onclick="showToast('🔥 Streak feature in My Garden!')"><div class="profile-row-icon">🔥</div><div class="profile-row-text"><div class="profile-row-title">Garden Streak</div><div class="profile-row-sub">Daily care streak tracker with rewards</div></div><div class="profile-row-arrow">›</div></div>
+      <div class="profile-row" onclick="showToast('☀️ Weather feature — coming soon!')"><div class="profile-row-icon">☀️</div><div class="profile-row-text"><div class="profile-row-title">Weather Integration</div><div class="profile-row-sub">Smart watering based on Hyderabad weather</div></div><div class="profile-row-arrow">›</div></div>
+      <div class="profile-row" onclick="showToast('🏆 Leaderboard — coming soon!')"><div class="profile-row-icon">🏆</div><div class="profile-row-text"><div class="profile-row-title">Grower Leaderboard</div><div class="profile-row-sub">Top growers in Hyderabad this month</div></div><div class="profile-row-arrow">›</div></div>
+      <div class="profile-row" onclick="showToast('🤝 Seed Swap — coming soon!')"><div class="profile-row-icon">🤝</div><div class="profile-row-text"><div class="profile-row-title">Seed Swap</div><div class="profile-row-sub">Exchange seeds with your neighbours</div></div><div class="profile-row-arrow">›</div></div>
+    </div>
+  </div></div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item active" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
+</div>
+
+<!-- COMMUNITY -->
+<div class="screen" id="screen-community">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Community</div></div>
+  <div class="community-hero"><div class="community-hero-title">👥 GrowFresh Community</div><div class="community-hero-sub">Share · Learn · Grow together</div><div class="community-stats"><div class="community-stat"><div class="cstat-num">1.2k</div><div class="cstat-label">Members</div></div><div class="community-stat"><div class="cstat-num" id="post-count-stat">12</div><div class="cstat-label">Posts</div></div><div class="community-stat"><div class="cstat-num">247</div><div class="cstat-label">Harvests</div></div></div></div>
+  <div class="compose-bar"><div class="compose-avatar" id="compose-avatar">P</div><div class="compose-input" onclick="showWritePost()">Share your garden story or tip... 🌱</div><button class="compose-post-btn" onclick="showWritePost()">Post</button></div>
+  <div class="feed-tabs"><button class="feed-tab active" onclick="switchFeed('all',this)">🌾 All</button><button class="feed-tab" onclick="switchFeed('tips',this)">💡 Tips</button><button class="feed-tab" onclick="switchFeed('harvest',this)">🍅 Harvests</button><button class="feed-tab" onclick="switchFeed('questions',this)">❓ Q&A</button><button class="feed-tab" onclick="switchTab('expert')">�‍🌾 Expert</button></div>
+  <div class="scroll-body"><div class="community-body" id="community-feed"></div></div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item active" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
+</div>
+
+<!-- PROFILE -->
+<div class="screen" id="screen-profile">
+  <div class="page-header"><button class="back-btn" onclick="showScreen('home')">←</button><div class="page-title">Profile</div></div>
+  <div class="profile-header"><div class="profile-top"><div class="profile-avatar" id="profile-avatar">P</div><div><div class="profile-name" id="profile-name">User</div><div class="profile-phone" id="profile-phone">—</div><div class="profile-method" id="profile-method">—</div></div></div></div>
+  <div class="profile-body">
+    <div class="profile-section"><div class="profile-section-label">My Activity</div><div class="profile-card"><div class="profile-row" onclick="switchTab('garden')"><div class="profile-row-icon">🌿</div><div class="profile-row-text"><div class="profile-row-title">My Garden</div><div class="profile-row-sub">Plants & daily care reminders</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="showScreen('orders')"><div class="profile-row-icon">📦</div><div class="profile-row-text"><div class="profile-row-title">Order Tracking</div><div class="profile-row-sub">Track your deliveries & history</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="switchTab('community')"><div class="profile-row-icon">👥</div><div class="profile-row-text"><div class="profile-row-title">Community</div><div class="profile-row-sub">Your posts & saved tips</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="showScreen('more')"><div class="profile-row-icon">✨</div><div class="profile-row-text"><div class="profile-row-title">All Features</div><div class="profile-row-sub">Explore everything GrowFresh offers</div></div><div class="profile-row-arrow">›</div></div></div></div>
+    <div class="profile-section"><div class="profile-section-label">Account</div><div class="profile-card"><div class="profile-row" style="cursor:default"><div class="profile-row-icon">🔒</div><div class="profile-row-text"><div class="profile-row-title">Stay Logged In</div><div class="profile-row-sub" id="session-info-text">Active</div></div><div style="font-size:10px;font-weight:800;color:var(--green);background:var(--green-pale);padding:3px 8px;border-radius:8px;">ON</div></div></div></div>
+    <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
+    <div style="text-align:center;font-size:11px;color:var(--muted);font-weight:700;margin-top:10px">GrowFresh v5.0 Complete Stages 1-5 · Hyderabad 🌱</div>
+  </div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item active" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
+</div>
+
+<!-- ORDER TRACKING -->
+<div class="screen" id="screen-orders">
+  <div class="page-header"><button class="back-btn" onclick="switchTab('profile')">←</button><div class="page-title">Order Tracking</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px">Active Orders</div>
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px">
+      <div style="padding:14px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:900;color:var(--text)">Order #GF00042</div>
+          <div style="background:var(--orange-pale);color:var(--orange);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">🚚 Out for Delivery</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:8px">Tomato Seeds × 1, Chilli Sapling × 2</div>
+        <div style="background:var(--bg);border-radius:9px;padding:9px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:6px">
+            <span>📍 Your Location</span><span>🔄 2 stops left</span>
+          </div>
+          <div style="background:var(--green-pale);border-radius:8px;height:5px;overflow:hidden"><div style="height:100%;background:var(--green);width:60%"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--green);font-weight:800">✅ Arriving in 45 mins · Driver 5⭐</div>
+      </div>
+    </div>
+    
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;margin-top:16px">Past Orders</div>
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:10px">
+      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--text)">Order #GF00041</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">23 Apr 2026 · ₹399 · 2 items</div>
+        </div>
+        <div style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">✅ Delivered</div>
+      </div>
+    </div>
+    
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:10px">
+      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--text)">Order #GF00040</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">18 Apr 2026 · ₹249 · 1 item</div>
+        </div>
+        <div style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">✅ Delivered</div>
+      </div>
+    </div>
+    
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden">
+      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--text)">Order #GF00039</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">10 Apr 2026 · ₹599 · 3 items</div>
+        </div>
+        <div style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">✅ Delivered</div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ADD PLANT MODAL -->
+<div class="modal-overlay" id="add-plant-modal">
+  <div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">🌱 Add Plant to My Garden</div>
+    <div class="plant-options" id="plant-options">
+      <div class="plant-option" onclick="selectPlantType(this,'Tomato','🍅',60,120)"><div class="plant-option-emoji">🍅</div><div class="plant-option-name">Tomato</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Chilli','🌶️',45,80)"><div class="plant-option-emoji">🌶️</div><div class="plant-option-name">Chilli</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Coriander','🌿',21,40)"><div class="plant-option-emoji">🌿</div><div class="plant-option-name">Coriander</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Spinach','🥬',30,60)"><div class="plant-option-emoji">🥬</div><div class="plant-option-name">Spinach</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Brinjal','🍆',55,100)"><div class="plant-option-emoji">🍆</div><div class="plant-option-name">Brinjal</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Capsicum','🫑',60,90)"><div class="plant-option-emoji">🫑</div><div class="plant-option-name">Capsicum</div></div>
+    </div>
+    <input class="modal-input" id="plant-location" placeholder="Location (e.g. Balcony Pot 1)"/>
+    <input class="modal-input" id="plant-days" type="number" placeholder="Days since planted (0 = today)" min="0"/>
+    <button class="modal-btn" onclick="addPlant()">🌱 Add to My Garden</button>
+    <button class="modal-cancel" onclick="hideAddPlant()">Cancel</button>
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="booking-sheet"><div class="modal-handle"></div>
+    <div class="modal-title">📅 Book <span id="booking-expert-name">Expert</span></div>
+    <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Select Date</div>
+    <div class="date-btns" id="date-btns"></div>
+    <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Select Time Slot</div>
+    <div class="time-slots">
+      <div class="time-slot" onclick="selectSlot(this)">9:00 AM</div>
+      <div class="time-slot" onclick="selectSlot(this)">10:30 AM</div>
+      <div class="time-slot booked">12:00 PM</div>
+      <div class="time-slot" onclick="selectSlot(this)">2:00 PM</div>
+      <div class="time-slot" onclick="selectSlot(this)">3:30 PM</div>
+      <div class="time-slot booked">5:00 PM</div>
+    </div>
+    <button class="confirm-book-btn" onclick="confirmBooking()">✅ Confirm Booking — <span id="booking-price">₹399</span></button>
+    <button class="modal-cancel" onclick="hideBooking()">Cancel</button>
+  </div>
+</div>
+
+<!-- WRITE POST MODAL -->
+<div class="write-modal" id="write-modal">
+  <div class="write-sheet">
+    <div class="write-header"><div class="write-title">✍️ Share with Community</div><button class="write-close" onclick="hideWritePost()">✕</button></div>
+    <div class="post-type-pills"><div class="post-type-pill active" onclick="selectPostType(this,'tip')">💡 Tip</div><div class="post-type-pill" onclick="selectPostType(this,'harvest')">🍅 Harvest</div><div class="post-type-pill" onclick="selectPostType(this,'question')">❓ Question</div><div class="post-type-pill" onclick="selectPostType(this,'idea')">🌟 Idea</div></div>
+    <textarea class="write-textarea" id="post-text" placeholder="Share your garden tip, harvest, question or idea..."></textarea>
+    <div style="font-size:10px;font-weight:800;color:var(--muted);margin-bottom:7px">TAG A PLANT</div>
+    <div class="write-plant-select"><div class="write-plant-chip active" onclick="selectPostPlant(this,'')">🌾 General</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🍅 Tomato')">🍅 Tomato</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🌶️ Chilli')">🌶️ Chilli</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🌿 Coriander')">🌿 Coriander</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🥬 Spinach')">🥬 Spinach</div></div>
+    <button class="write-submit-btn" onclick="submitPost()">📤 Post to Community</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// STORAGE
+const SK='gf_s5_sess',GK='gf_s5_garden',PK='gf_s5_posts',STK='gf_s5_streak';
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){window['_'+k]=v;}};
+const ld=(k,d)=>{try{const r=localStorage.getItem(k);return r?JSON.parse(r):(window['_'+k]||d);}catch(e){return window['_'+k]||d;}};
+const cl=k=>{try{localStorage.removeItem(k);}catch(e){}delete window['_'+k];};
+
+// INIT
+window.onload=async ()=>{
+  await loadProductsFromJSON();
+  const s=ld(SK,null);
+  if(s){applySession(s);goHome();}
+  else showScreen('splash');
+  Object.keys(products).forEach(id=>renderCtrl(id));
+  renderCommunityFeed();
+  updateStreak();
+};
+
+function goHome(){
+  renderGarden();renderHomePlants();renderHomeTips();
+  const h=new Date().getHours();
+  const g=h<12?'Good morning 🌅':h<17?'Good afternoon ☀️':'Good evening 🌙';
+  setEl('home-greeting',g);
+  showScreen('home');
+}
+
+// SESSION
+function applySession(s){
+  const init=s.name?s.name[0].toUpperCase():'U';
+  ['user-avatar','profile-avatar','compose-avatar','shop-avatar'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=init;});
+  setEl('profile-name',s.name||'User');
+  setEl('home-name',s.name||'User');
+  setEl('profile-phone',s.method==='mobile'?'+91 '+s.phone:s.email);
+  setEl('profile-method',s.method==='mobile'?'📱 Mobile OTP':'🔵 Google');
+  setEl('session-info-text','Active since '+new Date(s.loginTime).toLocaleDateString('en-IN',{day:'numeric',month:'short'}));
+  window._userName=s.name||'User';
+}
+
+// LOGIN
+let otpTimer=null;
+function switchLoginTab(tab,btn){document.querySelectorAll('.login-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+tab).classList.add('active');}
+function sendOtp(){const m=document.getElementById('mobile-input').value.trim();const e=document.getElementById('error-mobile');if(m.length!==10){e.classList.add('show');return;}e.classList.remove('show');setEl('otp-sent-to',m);document.getElementById('otp-section').classList.add('show');document.getElementById('send-otp-btn').textContent='✅ OTP Sent';document.getElementById('otp1').focus();startResendTimer();}
+function startResendTimer(){let s=30;const tEl=document.getElementById('resend-timer'),rBtn=document.getElementById('resend-btn');tEl.style.display='inline';rBtn.style.display='none';clearInterval(otpTimer);otpTimer=setInterval(()=>{s--;tEl.textContent='Resend in '+s+'s';if(s<=0){clearInterval(otpTimer);tEl.style.display='none';rBtn.style.display='inline';}},1000);}
+function resendOtp(){['otp1','otp2','otp3','otp4'].forEach(id=>document.getElementById(id).value='');document.getElementById('error-otp').classList.remove('show');startResendTimer();document.getElementById('otp1').focus();}
+function otpMove(el,nextId){el.value=el.value.replace(/\D/g,'');if(el.value&&nextId)document.getElementById(nextId).focus();const all=['otp1','otp2','otp3','otp4'].map(id=>document.getElementById(id).value);if(all.every(v=>v))verifyOtp();}
+function otpBack(e,prevId){if(e.key==='Backspace'&&!e.target.value)document.getElementById(prevId).focus();}
+function verifyOtp(){const entered=['otp1','otp2','otp3','otp4'].map(id=>document.getElementById(id).value).join('');if(entered!=='1234'){document.getElementById('error-otp').classList.add('show');['otp1','otp2','otp3','otp4'].forEach(id=>{const el=document.getElementById(id);el.style.borderColor='var(--red)';setTimeout(()=>el.style.borderColor='',1500);});return;}document.getElementById('error-otp').classList.remove('show');const mobile=document.getElementById('mobile-input').value.trim();const name='User '+mobile.slice(-4);const sess={name,phone:mobile,email:'',method:'mobile',loginTime:Date.now()};sv(SK,sess);applySession(sess);loginSuccess();}
+function googleLogin(){const name=document.getElementById('google-name').value.trim();const email=document.getElementById('google-email').value.trim();if(!name||!email.includes('@')){document.getElementById('error-google').classList.add('show');return;}document.getElementById('error-google').classList.remove('show');const sess={name,phone:'',email,method:'google',loginTime:Date.now()};sv(SK,sess);applySession(sess);loginSuccess();}
+function loginSuccess(){clearInterval(otpTimer);goHome();}
+function logoutUser(){if(!confirm('Logout from GrowFresh?'))return;cl(SK);document.getElementById('mobile-input').value='';['otp1','otp2','otp3','otp4'].forEach(id=>document.getElementById(id).value='');document.getElementById('otp-section').classList.remove('show');document.getElementById('send-otp-btn').textContent='Send OTP →';document.getElementById('google-name').value='';document.getElementById('google-email').value='';Object.keys(cart).forEach(k=>{delete cart[k];renderCtrl(k);});updateCartUI();showScreen('splash');}
+
+// SHOP & CART
+let products={1:{name:'Tomato Seeds',price:59,emoji:'🍅'},2:{name:'Chilli Seeds',price:49,emoji:'🌶️'},3:{name:'Coriander Seeds',price:39,emoji:'🌿'},4:{name:'Spinach Seeds',price:45,emoji:'🥬'},5:{name:'Tomato Sapling',price:99,emoji:'🍅'},6:{name:'Chilli Sapling',price:89,emoji:'🌶️'},7:{name:'Balcony Starter Kit',price:349,emoji:'📦'},8:{name:'Family Fresh Bundle',price:699,emoji:'🌿'},9:{name:'Medium Grow Pot',price:149,emoji:'🪴'},10:{name:'Potting Soil 2kg',price:99,emoji:'🌱'},11:{name:'Cow Dung Compost 5kg',price:149,emoji:'🐄'},12:{name:'Fish Waste Emulsion 1L',price:199,emoji:'🐟'},13:{name:'Coconut Coir Dust 3kg',price:129,emoji:'🥥'},14:{name:'Wood Charcoal Powder 2kg',price:179,emoji:'🪨'},15:{name:'Vermicompost 3kg',price:159,emoji:'🌾'},16:{name:'NPK Mix 1kg (15:15:15)',price:249,emoji:'🧪'},17:{name:'Neem Cake Powder 1kg',price:179,emoji:'🌿'},18:{name:'Bone Meal Powder 1kg',price:189,emoji:'⚪'},19:{name:'Complete Compost Kit 5kg',price:399,emoji:'🪴'}};
+
+// Load products from JSON file
+async function loadProductsFromJSON(){
+  try{
+    const resp=await fetch('products.json');
+    const data=await resp.json();
+    products={};
+    data.products.forEach(p=>{products[p.id]={...p,price:p.priceNow}});
+    console.log('✅ Products loaded from JSON:',products);
+  }catch(e){
+    console.log('📝 Using default products (JSON not available)');
+  }
+}
+
+const cart={};
+function renderCtrl(id){const el=document.getElementById('ctrl-'+id);if(!el)return;const qty=cart[id]?cart[id].qty:0;el.innerHTML=qty===0?`<button class="add-btn" onclick="addItem(${id})">+</button>`:`<div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${id},-1)">−</button><div class="qty-num">${qty}</div><button class="qty-btn" onclick="changeQty(${id},1)">+</button></div>`;}
+function addItem(id){cart[id]={qty:1,...products[id]};renderCtrl(id);updateCartUI();}
+function changeQty(id,delta){if(!cart[id])return;cart[id].qty+=delta;if(cart[id].qty<=0)delete cart[id];renderCtrl(id);updateCartUI();}
+function updateCartUI(){const items=Object.values(cart);const qty=items.reduce((s,i)=>s+i.qty,0);const sub=items.reduce((s,i)=>s+i.price*i.qty,0);const del=sub>=499?0:(sub>0?49:0);const tot=sub+del;const badge=document.getElementById('cart-count');qty>0?(badge.textContent=qty,badge.classList.add('show')):badge.classList.remove('show');const strip=document.getElementById('checkout-strip');if(qty>0){strip.classList.add('show');setEl('strip-items',qty+' item'+(qty>1?'s':''));setEl('strip-total','₹'+tot);}else strip.classList.remove('show');}
+function goToCart(){const items=Object.values(cart);const qty=items.reduce((s,i)=>s+i.qty,0);setEl('cart-count-text',qty+' item'+(qty!==1?'s':''));const em=document.getElementById('empty-cart'),sc=document.getElementById('cart-scroll');if(qty===0){em.style.display='flex';sc.style.display='none';}else{em.style.display='none';sc.style.display='block';renderCartItems();}showScreen('cart');}
+function renderCartItems(){const items=Object.values(cart);const sub=items.reduce((s,i)=>s+i.price*i.qty,0);const del=sub>=499?0:49;const tot=sub+del;let html='';Object.entries(cart).forEach(([id,item])=>{html+=`<div class="cart-item"><div class="cart-item-emoji">${item.emoji}</div><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">₹${item.price} × ${item.qty} = ₹${item.price*item.qty}</div></div><button class="cart-item-remove" onclick="removeFromCart(${id})">🗑</button></div>`;});document.getElementById('cart-items-list').innerHTML=html;setEl('summary-sub','₹'+sub);setEl('summary-delivery',del===0?'FREE 🎉':'₹'+del);setEl('summary-total','₹'+tot);}
+function removeFromCart(id){delete cart[id];renderCtrl(id);updateCartUI();goToCart();}
+
+// UPI
+let selectedUpiApp=null;
+function setupUPI(){const items=Object.values(cart);const sub=items.reduce((s,i)=>s+i.price*i.qty,0);const del=sub>=499?0:49;const tot=sub+del;const qty=items.reduce((s,i)=>s+i.qty,0);setEl('upi-amount','₹'+tot);setEl('upi-items-info',qty+' item'+(qty>1?'s':'')+(del>0?' + ₹'+del+' delivery':' · Free delivery 🎉'));setEl('pay-btn-amount','₹'+tot);window._payTotal=tot;}
+function selectUpiApp(el,app){document.querySelectorAll('.upi-app-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');selectedUpiApp=app;document.getElementById('upi-id-input').value='';setEl('upi-verify-msg','');}
+function verifyUpi(){const val=document.getElementById('upi-id-input').value.trim();const msg=document.getElementById('upi-verify-msg');if(!val.includes('@')){msg.textContent='⚠️ Enter valid UPI ID';msg.style.color='var(--orange)';}else{msg.textContent='✅ Verified!';msg.style.color='var(--green)';selectedUpiApp='manual';document.querySelectorAll('.upi-app-btn').forEach(b=>b.classList.remove('selected'));}}
+function confirmPayment(){if(!selectedUpiApp){const v=document.getElementById('upi-id-input').value.trim();if(!v.includes('@')){alert('Select a UPI app or enter UPI ID.');return;}}const btn=document.getElementById('pay-now-btn');btn.innerHTML='⏳ Processing payment...';btn.disabled=true;setTimeout(()=>{const orderId='#GF'+String(Math.floor(10000+Math.random()*90000));const mins=45+Math.floor(Math.random()*75);const eta=new Date(Date.now()+mins*60000);const h=eta.getHours(),m=String(eta.getMinutes()).padStart(2,'0');const etaStr=(h>12?h-12:h||12)+':'+m+(h>=12?' PM':' AM')+' (~'+mins+' mins)';setEl('order-id',orderId);setEl('order-paid','₹'+window._payTotal);setEl('order-eta',etaStr);Object.keys(cart).forEach(k=>{delete cart[k];renderCtrl(k);});updateCartUI();document.querySelectorAll('.upi-app-btn').forEach(b=>b.classList.remove('selected'));document.getElementById('upi-id-input').value='';setEl('upi-verify-msg','');selectedUpiApp=null;btn.innerHTML='✅ Pay <span id="pay-btn-amount">₹'+window._payTotal+'</span> Now';btn.disabled=false;showScreen('success');setTimeout(()=>{goHome();showToast('🌱 Order confirmed! Happy growing!');},3000);},1800);}
+
+// GARDEN
+let myPlants=[];
+const plantDefaults={Tomato:{emoji:'🍅',days:60,savings:120,reminders:['💧 Water every 2 days','☀️ 6hrs sunlight daily','🌿 Fertilize weekly']},Chilli:{emoji:'🌶️',days:45,savings:80,reminders:['💧 Water every 3 days','☀️ Full sunlight','✂️ Pinch tops for bushy growth']},Coriander:{emoji:'🌿',days:21,savings:40,reminders:['💧 Water daily','🌤️ Partial sunlight','✂️ Trim to prevent bolting']},Spinach:{emoji:'🥬',days:30,savings:60,reminders:['💧 Water every 2 days','🌤️ Partial shade ok','🥬 Harvest outer leaves first']},Brinjal:{emoji:'🍆',days:55,savings:100,reminders:['💧 Water every 2 days','☀️ Full sun needed','🪵 Support with stakes']},Capsicum:{emoji:'🫑',days:60,savings:90,reminders:['💧 Water regularly','☀️ Full sunlight','🌿 Pinch for bushiness']}};
+let selectedPlantData=null;
+function loadGarden(){myPlants=ld(GK,[]);}
+function saveGarden(){sv(GK,myPlants);}
+function renderGarden(){loadGarden();const list=document.getElementById('plants-list'),empty=document.getElementById('empty-garden'),banner=document.getElementById('reminders-banner');if(myPlants.length===0){list.innerHTML='';empty.style.display='flex';banner.style.display='none';updateGardenStats();return;}empty.style.display='none';const todayR=[];myPlants.forEach(p=>{const def=plantDefaults[p.type];if(def)def.reminders.forEach(r=>todayR.push({emoji:p.emoji,r,id:p.id}));});if(todayR.length>0){banner.style.display='block';let rHtml='';todayR.slice(0,4).forEach(r=>{rHtml+=`<span class="reminder-chip" onclick="this.classList.toggle('done');showToast(this.classList.contains('done')?'✅ Task done!':'Task unmarked')">${r.emoji} ${r.r}</span>`;});setEl('reminders-list','');document.getElementById('reminders-list').innerHTML=rHtml;}let html='';myPlants.forEach(p=>{const prog=Math.min(100,Math.round((p.daysPlanted/p.totalDays)*100));const left=Math.max(0,p.totalDays-p.daysPlanted);const sc=left<=5?'pill-harvest':left<=10?'pill-attention':'pill-growing';const st=left<=5?'🍅 Harvest Soon!':left<=10?'⚠️ Almost Ready':'🌱 Growing';html+=`<div class="plant-card-full"><div class="plant-card-top"><div class="plant-emoji-big">${p.emoji}</div><div class="plant-info"><div class="plant-name-big">${p.type}</div><div class="plant-meta">📍 ${p.location} · Day ${p.daysPlanted} of ${p.totalDays}</div></div><div class="plant-status-pill ${sc}">${st}</div></div><div class="progress-label"><span class="progress-text">Growth Progress</span><span class="progress-pct">${prog}% · ${left} days left</span></div><div class="progress-bar"><div class="progress-fill" style="width:${prog}%"></div></div><div class="plant-actions"><button class="plant-action-btn btn-water" onclick="logCare('💧 Watered')">💧 Water</button><button class="plant-action-btn btn-fertilize" onclick="logCare('🌿 Fertilized')">🌿 Fert</button><button class="plant-action-btn btn-sun" onclick="logCare('☀️ Sun logged')">☀️ Sun</button><button class="plant-action-btn btn-remove" onclick="removePlant(${p.id})">🗑</button></div></div>`;});list.innerHTML=html;updateGardenStats();renderHomePlants();}
+function updateGardenStats(){const h=myPlants.filter(p=>(p.totalDays-p.daysPlanted)<=7).length;const s=myPlants.reduce((a,p)=>a+(plantDefaults[p.type]?.savings||0),0);setEl('stat-plants',myPlants.length);setEl('stat-harvest',h);setEl('stat-savings','₹'+s);}
+function renderHomePlants(){loadGarden();const c=document.getElementById('home-plants-scroll');if(!c)return;let h=`<div class="home-plant-mini" style="border:2px dashed var(--border);box-shadow:none" onclick="switchTab('garden')"><div class="hpm-emoji">➕</div><div class="hpm-name" style="color:var(--muted)">Add Plant</div></div>`;myPlants.slice(0,4).forEach(p=>{const prog=Math.min(100,Math.round((p.daysPlanted/p.totalDays)*100));h+=`<div class="home-plant-mini" onclick="switchTab('garden')"><div class="hpm-emoji">${p.emoji}</div><div class="hpm-name">${p.type}</div><div class="hpm-bar"><div class="hpm-fill" style="width:${prog}%"></div></div><div class="hpm-days">${Math.max(0,p.totalDays-p.daysPlanted)}d left</div></div>`;});c.innerHTML=h;}
+function renderHomeTips(){const tips=[{emoji:'🌶️',title:'Chilli Season Alert!',desc:'Perfect month to plant chilli in Hyderabad. Get saplings today & harvest in 4 months!',action:'Shop Chilli Saplings',color:'#FF6B6B'},{emoji:'💧',title:'Watering Guide',desc:'Hyderabad heat: Water early morning or evening. Avoid noon watering in summer.',color:'#4ECDC4'},{emoji:'🌤️',title:'Weather Perfect Today',desc:'31°C · 40% humidity · Ideal for planting tomato & brinjal saplings!',color:'#95E1D3'},{emoji:'🏆',title:'Community Favorite',desc:'1200+ gardeners in Hyderabad growing tomatoes. Join & share your harvest!',color:'#A8E6CF'},{emoji:'🌙',title:'Night Harvest Tips',desc:'Cool evenings are best for harvesting leafy greens. Keep them fresh in fridge.',color:'#C7CEEA'}];const tc=document.getElementById('home-tips-container');if(!tc)return;const tip=tips[Math.floor(Math.random()*tips.length)];tc.innerHTML=`<div class="home-tip" style="background:linear-gradient(135deg,${tip.color}dd,${tip.color}aa);margin:0;border-bottom:3px solid ${tip.color};cursor:pointer" onclick="switchTab('community')"><div class="tip-icon">${tip.emoji}</div><div><div class="tip-title">${tip.title}</div><div class="tip-text">${tip.desc}</div><div style="font-size:10px;font-weight:800;color:white;opacity:0.9;margin-top:8px">→ ${tip.action}</div></div></div>`;}
+
+// RENDER PLANT TIMELINE FOR CALENDAR
+function renderPlantTimeline(){
+  loadGarden();
+  const container=document.getElementById('my-plants-timeline');
+  if(!container)return;
+  if(myPlants.length===0){
+    container.innerHTML='<div style="background:var(--bg);border-radius:var(--radius);padding:14px;text-align:center;color:var(--muted);font-size:13px;font-weight:700">📅 No plants yet. Add plants from your Garden to see timeline!</div>';
+    return;
+  }
+  let html='<div style="font-size:14px;font-weight:900;color:var(--text);margin-bottom:12px">🌱 Your Plant Timelines</div>';
+  myPlants.forEach(p=>{
+    const plantInfo={
+      'Tomato':{harvestDays:60,waterFreq:'Every 2 days',sun:'6-8 hrs',tips:['Water early morning','Add NPK fertilizer at flower stage','Support with stake at 30cm']},
+      'Chilli':{harvestDays:45,waterFreq:'Every 2-3 days',sun:'8+ hrs',tips:['Keep soil moist but not waterlogged','Prune side branches for better yield','Watch for pests in monsoon']},
+      'Coriander':{harvestDays:21,waterFreq:'Every day',sun:'4-6 hrs',tips:['Quick harvest - starts in 3 weeks','Pinch leaves from top for bushier growth','Perfect for balcony']},
+      'Spinach':{harvestDays:30,waterFreq:'Every day',sun:'4-5 hrs',tips:['Harvest leaves from bottom first','Keep soil consistently moist','Great for partial shade']},
+      'Brinjal':{harvestDays:55,waterFreq:'Every 2 days',sun:'8+ hrs',tips:['Heavy feeder - add NPK monthly','Support with stake','Can give harvest for 6+ months']},
+      'Capsicum':{harvestDays:60,waterFreq:'Every 2 days',sun:'8+ hrs',tips:['Hand pollinate flowers if needed','Takes longer to mature than chilli','Very high value crop']}
+    };
+    const info=plantInfo[p.type]||{harvestDays:45,waterFreq:'Every 2 days',sun:'6-8 hrs',tips:['Regular watering','Add fertilizer monthly','Monitor for pests']};
+    const daysLeft=Math.max(0,info.harvestDays-p.daysPlanted);
+    const progress=Math.min(100,Math.round((p.daysPlanted/info.harvestDays)*100));
+    const harvestStatus=daysLeft===0?'🎉 HARVEST NOW!':daysLeft<=7?'🔥 READY SOON':daysLeft<=14?'⏰ Almost there':'🌱 Still growing';
+    const harvestColor=daysLeft===0?'#4CAF50':daysLeft<=7?'#FF9800':daysLeft<=14?'#FFC107':'#2196F3';
+    html+=`
+      <div style="background:var(--white);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:var(--shadow-sm);border-left:4px solid ${harvestColor}">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+          <div style="display:flex;gap:10px">
+            <div style="font-size:32px">${p.emoji}</div>
+            <div>
+              <div style="font-size:13px;font-weight:900;color:var(--text)">${p.type}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">📍 ${p.location}</div>
+              <div style="font-size:10px;color:${harvestColor};font-weight:700;margin-top:6px">${harvestStatus}</div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:12px;font-weight:900;color:var(--text)">${p.daysPlanted}/${info.harvestDays}</div>
+            <div style="font-size:10px;color:var(--muted)">days</div>
+          </div>
+        </div>
+        
+        <!-- PROGRESS BAR -->
+        <div style="background:var(--border);height:6px;border-radius:3px;margin-bottom:10px;overflow:hidden">
+          <div style="background:linear-gradient(90deg,${harvestColor}aa,${harvestColor});height:100%;width:${progress}%;transition:width 0.3s"></div>
+        </div>
+        
+        <!-- HARVEST COUNTDOWN -->
+        <div style="background:linear-gradient(135deg,${harvestColor}15,${harvestColor}08);border-radius:8px;padding:10px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:11px;color:var(--muted);font-weight:700">Harvest in:</div>
+              <div style="font-size:20px;font-weight:900;color:${harvestColor};margin-top:2px">${daysLeft} days</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:10px;color:var(--muted);font-weight:700">Expected Harvest</div>
+              <div style="font-size:12px;font-weight:900;color:var(--text)">${new Date(p.addedAt+info.harvestDays*86400000).toLocaleDateString('en-IN',{month:'short',day:'numeric'})}</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- CARE GUIDE -->
+        <div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px">
+          <div style="font-size:11px;font-weight:900;color:var(--text);margin-bottom:8px">💡 Care Guide</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+            <div style="background:var(--blue-pale);border-radius:6px;padding:8px;text-align:center">
+              <div style="font-size:10px;color:var(--muted);font-weight:700">💧 Water</div>
+              <div style="font-size:12px;font-weight:900;color:var(--blue);margin-top:4px">${info.waterFreq}</div>
+            </div>
+            <div style="background:var(--orange-pale);border-radius:6px;padding:8px;text-align:center">
+              <div style="font-size:10px;color:var(--muted);font-weight:700">☀️ Sunlight</div>
+              <div style="font-size:12px;font-weight:900;color:var(--orange);margin-top:4px">${info.sun}</div>
+            </div>
+          </div>
+          
+          <!-- TIPS -->
+          <div style="font-size:10px;color:var(--muted);line-height:1.6;background:var(--bg);padding:8px;border-radius:6px">
+            <strong style="color:var(--text)">📝 Tips:</strong><br>
+            ${info.tips.map(t=>'✓ '+t).join('<br>')}
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  container.innerHTML=html;
+}
+function logCare(action){updateStreak();showToast(action+' ✅');}
+function removePlant(id){if(!confirm('Remove this plant?'))return;myPlants=myPlants.filter(p=>p.id!==id);saveGarden();renderGarden();showToast('Plant removed');}
+function showAddPlant(){document.getElementById('add-plant-modal').classList.add('show');document.querySelectorAll('.plant-option').forEach(o=>o.classList.remove('selected'));selectedPlantData=null;document.getElementById('plant-location').value='';document.getElementById('plant-days').value='';}
+function hideAddPlant(){document.getElementById('add-plant-modal').classList.remove('show');}
+function selectPlantType(el,name,emoji,days,savings){document.querySelectorAll('.plant-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');selectedPlantData={name,emoji,days,savings};}
+function addPlant(){if(!selectedPlantData){showToast('⚠️ Please select a plant type');return;}const loc=document.getElementById('plant-location').value.trim()||'Balcony';const d=parseInt(document.getElementById('plant-days').value)||0;myPlants.push({id:Date.now(),type:selectedPlantData.name,emoji:selectedPlantData.emoji,location:loc,daysPlanted:d,totalDays:selectedPlantData.days,addedAt:Date.now()});saveGarden();hideAddPlant();renderGarden();showToast('🌱 '+selectedPlantData.name+' added to your garden!');}
+
+// STREAK
+function updateStreak(){let streak=ld(STK,{count:0,lastDate:''});const today=new Date().toDateString();if(streak.lastDate!==today){streak.count=(streak.lastDate===new Date(Date.now()-86400000).toDateString()?streak.count+1:1);streak.lastDate=today;sv(STK,streak);}setEl('streak-count',streak.count);setEl('streak-days',streak.count);}
+
+// EXPERT BOOKING
+let selectedDate='',selectedSlot='';
+function showBooking(name,price){setEl('booking-expert-name',name);setEl('booking-price',price);const dates=document.getElementById('date-btns');dates.innerHTML='';for(let i=0;i<6;i++){const d=new Date(Date.now()+i*86400000);const btn=document.createElement('button');btn.className='date-btn'+(i===0?' selected':'');btn.textContent=(i===0?'Today · ':i===1?'Tomorrow · ':'')+d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});btn.onclick=()=>{document.querySelectorAll('.date-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');selectedDate=btn.textContent;};dates.appendChild(btn);}selectedDate=document.querySelector('.date-btn.selected')?.textContent||'';document.getElementById('booking-modal').classList.add('show');}
+function hideBooking(){document.getElementById('booking-modal').classList.remove('show');}
+function selectSlot(el){document.querySelectorAll('.time-slot:not(.booked)').forEach(s=>s.classList.remove('selected'));el.classList.add('selected');selectedSlot=el.textContent;}
+function confirmBooking(){if(!selectedSlot){showToast('⚠️ Please select a time slot');return;}hideBooking();showToast('✅ Expert booked for '+selectedSlot+'!');}
+
+// SPACE ANALYZER
+let analyzerDone=false;
+function runAnalyzer(){const btn=document.getElementById('analyze-btn');const icon=document.getElementById('upload-icon');const title=document.getElementById('upload-title');const sub=document.getElementById('upload-sub');if(analyzerDone){showToast('✅ Analysis already done!');return;}icon.textContent='⏳';title.textContent='Analyzing your space...';sub.textContent='AI is detecting space, light & layout...';btn.textContent='⏳ Analyzing...';btn.disabled=true;setTimeout(()=>{icon.textContent='✅';title.textContent='Analysis Complete!';sub.textContent='Found perfect spots for 4 plant types';document.getElementById('analyzer-result').classList.add('show');btn.textContent='✅ Analysis Complete';analyzerDone=true;showToast('📸 Space analyzed successfully!');},2000);}
+let analyzerCartItems=[];
+function addAnalyzerToCart(price,name,emoji){if(analyzerCartItems.includes(name)){showToast('Already added!');return;}analyzerCartItems.push(name);const id=Object.keys(products).find(k=>products[k].name===name);if(id){addItem(id);}else{const newId=100+analyzerCartItems.length;cart[newId]={qty:1,name,price,emoji};updateCartUI();}showToast('✅ '+name+' added to cart!');}
+function addAllAnalyzer(){['Tomato Seeds','Chilli Seeds','Coriander Seeds','Spinach Seeds'].forEach((name,i)=>{const id=Object.keys(products).find(k=>products[k].name===name);if(id&&!cart[id])addItem(id);});showToast('🛒 All 4 plants added to cart!');switchTab('shop');}
+
+// SUBSCRIPTIONS
+function subscribePlan(name,price){showToast('🎉 Subscribed to '+name+' for '+price+'/month!');showScreen('home');}
+
+// COMMUNITY
+const AC=['#2E7D32','#1565C0','#6A1B9A','#E65100','#00695C','#AD1457'];
+const seedPosts=[{id:1,author:'Priya R.',color:AC[0],time:'2h ago',type:'harvest',badge:'badge-harvest',plant:'🍅 Tomato',content:'Harvested my first batch of tomatoes from my Kondapur balcony! 18 tomatoes from just 2 pots — completely organic! 🌱',hasImage:true,imageEmoji:'🍅',likes:34,comments:8,saved:false,liked:false},{id:2,author:'Ravi K.',color:AC[1],time:'4h ago',type:'tip',badge:'badge-tip',plant:'🌶️ Chilli',content:'Pro tip: Pinch the top tip of your chilli plant at 6 inches. It branches into 2–3 stems giving 3× more chillis! Tested in my HITEC City terrace 🌶️',hasImage:false,likes:52,comments:14,saved:true,liked:false},{id:3,author:'Meena S.',color:AC[2],time:'6h ago',type:'question',badge:'badge-question',plant:'🌿 Coriander',content:'My coriander leaves are turning yellow after 10 days. I water daily on east-facing balcony. Overwatering? Any tips? 😟',hasImage:false,likes:12,comments:22,saved:false,liked:false},{id:4,author:'Suresh B.',color:AC[3],time:'1d ago',type:'idea',badge:'badge-idea',plant:'',content:'Idea: What if GrowFresh had a "Seed Swap" feature? Exchange extra seeds with neighbours! Builds community and reduces waste 💡',hasImage:false,likes:87,comments:31,saved:false,liked:false},{id:5,author:'Lakshmi D.',color:AC[4],time:'1d ago',type:'harvest',badge:'badge-harvest',plant:'🥬 Spinach',content:'Winter is BEST for spinach in Hyderabad! Harvesting fresh leaves every 3 days for dals and curries. Pure organic, zero cost after kit! 🥬✨',hasImage:true,imageEmoji:'🥬',likes:45,comments:9,saved:true,liked:true},{id:6,author:'Hari P.',color:AC[5],time:'2d ago',type:'tip',badge:'badge-tip',plant:'🍅 Tomato',content:'Free fertilizer tip: Crush eggshells and mix into pot soil every 2 weeks. Calcium makes tomatoes stronger and prevents blossom end rot! 🥚🍅',hasImage:false,likes:73,comments:18,saved:false,liked:false}];
+let communityPosts=[];let currentFeedFilter='all';let selectedPostType='tip';let selectedPostPlantTag='';
+function initCommunity(){const s=ld(PK,[]);communityPosts=s.length?s:[...seedPosts];if(!s.length)sv(PK,communityPosts);}
+function renderCommunityFeed(){initCommunity();const feed=document.getElementById('community-feed');let posts=communityPosts;if(currentFeedFilter!=='all'){const m={tips:'tip',harvest:'harvest',questions:'question'};const f=m[currentFeedFilter];if(f)posts=posts.filter(p=>p.type===f);}setEl('post-count-stat',communityPosts.length);if(!posts.length){feed.innerHTML='<div style="text-align:center;padding:36px 20px;color:var(--muted);font-weight:700;font-size:13px">No posts yet. Be the first! 🌱</div>';return;}const bl={tip:'💡 Tip',harvest:'🍅 Harvest',question:'❓ Question',idea:'🌟 Idea',experience:'📖 Experience'};feed.innerHTML=posts.map(p=>`<div class="post-card"><div class="post-header"><div class="post-avatar" style="background:${p.color||'var(--green)'}">${p.author[0]}</div><div><div class="post-author-name">${p.author}</div><div class="post-author-meta">🌱 Hyderabad · ${p.time}</div></div><div class="post-badge ${p.badge}">${bl[p.type]||p.type}</div></div>${p.plant?`<div class="post-plant-tag">${p.plant}</div>`:''}<div class="post-content">${p.content}</div>${p.hasImage?`<div class="post-image">${p.imageEmoji}</div>`:''}<div class="post-actions"><button class="post-action-btn ${p.liked?'liked':''}" onclick="toggleLike(${p.id},this)">${p.liked?'❤️':'🤍'} ${p.likes}</button><button class="post-action-btn" onclick="showToast('💬 Comments coming soon!')">💬 ${p.comments}</button><button class="post-action-btn ${p.saved?'bookmarked':''}" onclick="toggleSave(${p.id},this)">${p.saved?'🔖':'🏷️'} Save</button></div></div>`).join('');}
+function toggleLike(id,btn){const p=communityPosts.find(x=>x.id===id);if(!p)return;p.liked=!p.liked;p.likes+=p.liked?1:-1;sv(PK,communityPosts);btn.innerHTML=(p.liked?'❤️':'🤍')+' '+p.likes;btn.classList.toggle('liked',p.liked);if(p.liked)showToast('❤️ Liked!');}
+function toggleSave(id,btn){const p=communityPosts.find(x=>x.id===id);if(!p)return;p.saved=!p.saved;sv(PK,communityPosts);btn.innerHTML=(p.saved?'🔖':'🏷️')+' Save';btn.classList.toggle('bookmarked',p.saved);showToast(p.saved?'🔖 Saved!':'Removed from saved');}
+function switchFeed(f,btn){currentFeedFilter=f;document.querySelectorAll('.feed-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');renderCommunityFeed();}
+function showWritePost(){document.getElementById('write-modal').classList.add('show');}
+function hideWritePost(){document.getElementById('write-modal').classList.remove('show');}
+function selectPostType(el,type){document.querySelectorAll('.post-type-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');selectedPostType=type;}
+function selectPostPlant(el,plant){document.querySelectorAll('.write-plant-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');selectedPostPlantTag=plant;}
+function submitPost(){const text=document.getElementById('post-text').value.trim();if(!text||text.length<10){showToast('⚠️ Write at least 10 characters');return;}const bm={tip:'badge-tip',harvest:'badge-harvest',question:'badge-question',idea:'badge-idea'};communityPosts.unshift({id:Date.now(),author:window._userName||'You',color:AC[Math.floor(Math.random()*AC.length)],time:'Just now',type:selectedPostType,badge:bm[selectedPostType]||'badge-tip',plant:selectedPostPlantTag,content:text,hasImage:false,likes:0,comments:0,saved:false,liked:false});sv(PK,communityPosts);document.getElementById('post-text').value='';hideWritePost();currentFeedFilter='all';document.querySelectorAll('.feed-tab').forEach((t,i)=>{t.classList.toggle('active',i===0);});renderCommunityFeed();showToast('🌱 Posted to community!');}
+
+// NAV
+function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const el=document.getElementById('screen-'+name);if(el)el.classList.add('active');if(name==='garden')renderGarden();if(name==='community')renderCommunityFeed();}
+function switchTab(tab){const map={home:'home',shop:'shop',garden:'garden',community:'community',profile:'profile',expert:'expert',calendar:'calendar',analyzer:'analyzer',subs:'subs',more:'more'};showScreen(map[tab]||tab);if(tab==='calendar')renderPlantTimeline();}
+function filterCat(pill,cat){document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active'));pill.classList.add('active');document.querySelectorAll('.product-card').forEach(c=>{c.style.display=(cat==='all'||c.dataset.cat===cat)?'flex':'none';});}
+
+// UTILS
+function setEl(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+let toastTimer=null;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);}
+</script>
+</body>
+</html>
