@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1B5E20">
 <title>GrowFresh — Complete Stages 1-5 (All Features)</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -44,6 +45,27 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
 .phone{width:390px;height:820px;background:var(--bg);border-radius:48px;
   box-shadow:0 0 0 8px #111,0 0 0 10px #2a2a2a,0 32px 80px rgba(0,0,0,0.28);
   overflow:hidden;display:flex;flex-direction:column;position:relative;}
+/* ── REAL DEVICE / SMALL VIEWPORTS ───────────────────────────────
+   On actual phones the 390×820 bezelled frame overflows the viewport
+   so the status bar + page header (and the ← back button) sit ABOVE
+   the visible area. Below 480px wide OR 840px tall, drop the frame
+   and let the app fill the screen edge-to-edge with safe-area padding. */
+@media (max-width:480px), (max-height:840px){
+  html,body{background:var(--bg);display:block;overflow:hidden;}
+  .phone{
+    width:100vw;height:100vh;height:100dvh;
+    border-radius:0;box-shadow:none;
+    /* prefer the OS safe area; fall back to 12px so Android/Chrome
+       (which reports inset-top:0) still leaves room under the URL bar */
+    padding-top:max(env(safe-area-inset-top),12px);
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .status-bar{display:none;}            /* hide fake status bar; real one is above */
+  .screen{top:0;height:100%;}            /* reclaim the 38px we were reserving */
+  /* ensure the back-button row never touches the URL bar */
+  .page-header{padding-top:14px;padding-bottom:12px;position:sticky;top:0;z-index:50;}
+  .home-header{padding-top:18px;}
+}
 .status-bar{background:var(--green);padding:14px 22px 10px;display:flex;justify-content:space-between;color:white;font-size:11px;font-weight:800;flex-shrink:0;position:relative;z-index:100;height:38px;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.18);}
 .screen{position:absolute;top:38px;left:0;right:0;bottom:0;width:100%;height:calc(100% - 38px);display:none;flex-direction:column;overflow:hidden;z-index:1;background:inherit;pointer-events:none;}
 .screen.active{display:flex;z-index:10;pointer-events:auto;animation:fadeIn 0.25s ease both;}
@@ -113,8 +135,13 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
 .home-header{background:linear-gradient(160deg,var(--green-deep),var(--green));padding:18px 18px 22px;flex-shrink:0;position:relative;overflow:hidden;}
 .home-header::after{content:'🌿';position:absolute;right:-8px;top:-8px;font-size:90px;opacity:0.07;}
 .home-greeting{font-size:13px;color:rgba(255,255,255,0.75);font-weight:700;}
-.home-name{font-size:22px;font-weight:900;color:white;margin-top:2px;}
+.home-name{font-size:22px;font-weight:900;color:white;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .home-weather{background:rgba(255,255,255,0.14);border-radius:10px;padding:8px 12px;display:inline-flex;align-items:center;gap:8px;color:white;font-size:11px;font-weight:800;margin-top:12px;backdrop-filter:blur(4px);}
+@media (max-width:480px){
+  .home-header{padding:14px 14px 18px;}
+  .home-name{font-size:18px;}
+  .home-greeting{font-size:12px;}
+}
 .home-quick{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:14px 12px 0;}
 .home-qa{background:var(--white);border-radius:12px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform 0.15s;min-width:0;overflow:hidden;}
 .home-qa:active{transform:scale(0.96);}
@@ -579,16 +606,16 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
 <div class="screen" id="screen-home">
   <div class="scroll-body">
     <div class="home-header">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+        <div style="flex:1;min-width:0">
           <div class="home-greeting" id="home-greeting">Good morning 🌅</div>
           <div class="home-name" id="home-name">Welcome!</div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
           <!-- COMPACT STREAK BADGE (top-right) -->
-          <div onclick="switchTab('garden')" title="Garden Streak" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:var(--grad-harvest);color:white;cursor:pointer;box-shadow:0 3px 10px rgba(244,99,30,0.4);border:2px solid rgba(255,255,255,0.4);position:relative">
-            <div style="font-size:14px;line-height:1">🔥</div>
-            <div style="font-size:13px;font-weight:900;line-height:1.1" id="streak-days">0</div>
+          <div onclick="switchTab('garden')" title="Garden Streak" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:var(--grad-harvest);color:white;cursor:pointer;box-shadow:0 3px 10px rgba(244,99,30,0.4);border:2px solid rgba(255,255,255,0.4);position:relative;flex-shrink:0">
+            <div style="font-size:12px;line-height:1">🔥</div>
+            <div style="font-size:11px;font-weight:900;line-height:1.1" id="streak-days">0</div>
           </div>
           <div class="user-avatar" id="user-avatar" onclick="switchTab('profile')">P</div>
         </div>
