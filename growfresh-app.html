@@ -211,6 +211,25 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
 .product-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
 .product-card{background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;transition:transform 0.15s,box-shadow 0.3s,outline-color 0.3s;outline:2px solid transparent;outline-offset:2px;}
 .product-card.product-pulse{outline-color:var(--green);box-shadow:0 0 0 4px rgba(46,125,50,.18),var(--shadow-md);animation:pulseHighlight 1.6s ease-out;}
+
+/* ── FLOATING BACK BUTTON (always reachable) ───────────────
+   Mid-left FAB INSIDE the .phone frame so it appears on the
+   simulated screen (desktop) AND on real mobile (where .phone
+   fills the viewport). */
+.gf-fab-back{
+  position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
+  background:rgba(27,94,32,0.92);color:white;
+  font-size:22px;font-weight:900;line-height:1;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(0,0,0,0.28);
+  z-index:9998;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  transition:transform 0.15s,opacity 0.2s;opacity:0.92;
+  font-family:'Nunito',sans-serif;padding:0;
+}
+.gf-fab-back:hover{opacity:1;}
+.gf-fab-back:active{transform:translateY(-50%) scale(0.9);}
+.gf-fab-back.show{display:flex;}
 @keyframes pulseHighlight{0%{transform:scale(1);}25%{transform:scale(1.04);}60%{transform:scale(1);}}
 .product-card:active{transform:scale(0.97);}
 .product-img{background:var(--green-pale);height:84px;display:flex;align-items:center;justify-content:center;font-size:40px;position:relative;}
@@ -2427,6 +2446,140 @@ function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;',
   if (getToken()) setTimeout(hydrateFamily, 800);
 
   console.log('[gf-api] bridge ready → ' + API + '   (window.gfPlaceOrder available)');
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     FLOATING BACK BUTTON  — mid-left, always reachable on mobile
+     Auto-hides on top-level tabs (home/shop/garden/community/profile)
+     so it never overlaps the bottom-nav targets.
+     ═══════════════════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  var fab = document.createElement('button');
+  fab.className = 'gf-fab-back';
+  fab.setAttribute('aria-label','Go back (drag to move)');
+  fab.title = 'Tap = Back · Long-press & drag = Move';
+  fab.innerHTML = '←';
+  // Mount INSIDE the .phone frame so it appears on the simulated screen
+  // (desktop) and on real mobile (where .phone fills the viewport).
+  var host = document.querySelector('.phone') || document.body;
+  host.appendChild(fab);
+
+  // ── DRAGGABLE: persist position in localStorage ────────────────
+  var POS_KEY = 'gf_fab_pos';
+  function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+  function applyPos(p){
+    if (!p || typeof p.left !== 'number' || typeof p.top !== 'number') return;
+    var rect = host.getBoundingClientRect();
+    var size = 44;
+    var left = clamp(p.left, 4, Math.max(4, rect.width  - size - 4));
+    var top  = clamp(p.top,  4, Math.max(4, rect.height - size - 4));
+    fab.style.left      = left + 'px';
+    fab.style.top       = top  + 'px';
+    fab.style.right     = 'auto';
+    fab.style.bottom    = 'auto';
+    fab.style.transform = 'none';     // override the centering translateY
+  }
+  try {
+    var saved = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
+    if (saved) applyPos(saved);
+  } catch(e){}
+
+  var dragging = false, moved = false, startX = 0, startY = 0, baseL = 0, baseT = 0;
+  var DRAG_THRESHOLD = 5; // px before we treat it as a drag (so taps still navigate)
+
+  function pointerDown(ev){
+    var pt = ev.touches ? ev.touches[0] : ev;
+    dragging = true;
+    moved = false;
+    var rect = fab.getBoundingClientRect();
+    var hostRect = host.getBoundingClientRect();
+    baseL = rect.left - hostRect.left;
+    baseT = rect.top  - hostRect.top;
+    startX = pt.clientX;
+    startY = pt.clientY;
+    // pin current position so first move doesn't snap from CSS center
+    applyPos({ left: baseL, top: baseT });
+    fab.style.transition = 'none';
+    if (ev.cancelable) ev.preventDefault();
+  }
+  function pointerMove(ev){
+    if (!dragging) return;
+    var pt = ev.touches ? ev.touches[0] : ev;
+    var dx = pt.clientX - startX;
+    var dy = pt.clientY - startY;
+    if (!moved && (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD)) {
+      moved = true;
+      fab.style.opacity = '0.65';
+    }
+    if (moved) {
+      applyPos({ left: baseL + dx, top: baseT + dy });
+      if (ev.cancelable) ev.preventDefault();
+    }
+  }
+  function pointerUp(ev){
+    if (!dragging) return;
+    dragging = false;
+    fab.style.transition = '';
+    fab.style.opacity = '';
+    if (moved) {
+      // save final position
+      try {
+        var rect = fab.getBoundingClientRect();
+        var hostRect = host.getBoundingClientRect();
+        localStorage.setItem(POS_KEY, JSON.stringify({
+          left: rect.left - hostRect.left,
+          top:  rect.top  - hostRect.top,
+        }));
+      } catch(e){}
+      // swallow the click that follows on mouseup
+      var swallow = function(e){ e.stopPropagation(); e.preventDefault(); fab.removeEventListener('click', swallow, true); };
+      fab.addEventListener('click', swallow, true);
+      setTimeout(function(){ fab.removeEventListener('click', swallow, true); }, 50);
+    } else {
+      // pure tap → navigate back
+      if (typeof window.goBack === 'function') window.goBack();
+    }
+  }
+
+  fab.addEventListener('mousedown',  pointerDown);
+  fab.addEventListener('touchstart', pointerDown, { passive:false });
+  document.addEventListener('mousemove',  pointerMove);
+  document.addEventListener('touchmove',  pointerMove, { passive:false });
+  document.addEventListener('mouseup',    pointerUp);
+  document.addEventListener('touchend',   pointerUp);
+  document.addEventListener('touchcancel',pointerUp);
+  // double-click resets to default mid-left position
+  fab.addEventListener('dblclick', function(ev){
+    ev.preventDefault();
+    try { localStorage.removeItem(POS_KEY); } catch(e){}
+    fab.style.left = ''; fab.style.top = ''; fab.style.right = ''; fab.style.bottom = ''; fab.style.transform = '';
+  });
+
+  // keep it on-screen if the phone frame resizes
+  window.addEventListener('resize', function(){
+    try {
+      var saved = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
+      if (saved) applyPos(saved);
+    } catch(e){}
+  });
+
+  // ── SHOW/HIDE: mirror the top-left back button ─────────────────
+  function refresh(){
+    var cur = document.querySelector('.screen.active');
+    var hasBack = !!(cur && cur.querySelector('.back-btn'));
+    fab.classList.toggle('show', hasBack);
+  }
+  var orig = window.showScreen;
+  if (typeof orig === 'function') {
+    window.showScreen = function(){
+      var r = orig.apply(this, arguments);
+      try { refresh(); } catch(e){}
+      return r;
+    };
+  }
+  setTimeout(refresh, 300);
 })();
 </script>
 </body>
