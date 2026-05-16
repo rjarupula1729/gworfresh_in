@@ -16,6 +16,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { AppContext } from '../context/AppContext';
 import api from '../services/api';
 import { COLORS } from '../utils/colors';
+import ScreenHeader from '../components/ScreenHeader';
+import EmptyState from '../components/EmptyState';
 
 const CommunityForumScreen = ({ navigation }) => {
   const { user } = useContext(AppContext);
@@ -453,15 +455,15 @@ const CommunityForumScreen = ({ navigation }) => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Community Forum</Text>
-          <TouchableOpacity onPress={() => setNewPostModalVisible(true)}>
-            <Ionicons name="add-circle" size={24} color={COLORS.green} />
-          </TouchableOpacity>
-        </View>
+        <ScreenHeader
+          title="Community Forum"
+          onBack={() => navigation.goBack()}
+          right={
+            <TouchableOpacity onPress={() => setNewPostModalVisible(true)} hitSlop={10}>
+              <Ionicons name="add-circle" size={26} color={COLORS.white} />
+            </TouchableOpacity>
+          }
+        />
         <View style={styles.centerContent}>
           <ActivityIndicator size="large" color={COLORS.green} />
         </View>
@@ -471,16 +473,15 @@ const CommunityForumScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Community Forum</Text>
-        <TouchableOpacity onPress={() => setNewPostModalVisible(true)}>
-          <Ionicons name="add-circle" size={24} color={COLORS.green} />
-        </TouchableOpacity>
-      </View>
+      <ScreenHeader
+        title="Community Forum"
+        onBack={() => navigation.goBack()}
+        right={
+          <TouchableOpacity onPress={() => setNewPostModalVisible(true)} hitSlop={10}>
+            <Ionicons name="add-circle" size={26} color={COLORS.white} />
+          </TouchableOpacity>
+        }
+      />
 
       {/* Content */}
       {posts.length > 0 ? (
@@ -497,20 +498,13 @@ const CommunityForumScreen = ({ navigation }) => {
           <View style={{ height: 20 }} />
         </ScrollView>
       ) : (
-        <View style={styles.centerContent}>
-          <Ionicons name="chatbubbles" size={64} color={COLORS.lightGray} />
-          <Text style={styles.emptyText}>No posts yet</Text>
-          <Text style={styles.emptySubtext}>
-            Be the first to share your gardening journey!
-          </Text>
-          <TouchableOpacity
-            style={styles.createPostBtn}
-            onPress={() => setNewPostModalVisible(true)}
-          >
-            <Ionicons name="add" size={18} color="#FFF" />
-            <Text style={styles.createPostBtnText}>Create Post</Text>
-          </TouchableOpacity>
-        </View>
+        <EmptyState
+          icon="💬"
+          title="No posts yet"
+          subtitle="Be the first to share your gardening journey!"
+          ctaLabel="Create Post"
+          onCtaPress={() => setNewPostModalVisible(true)}
+        />
       )}
 
       <CommentsModal />
@@ -522,7 +516,7 @@ const CommunityForumScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.light,
+    backgroundColor: COLORS.bg,
   },
   header: {
     flexDirection: 'row',

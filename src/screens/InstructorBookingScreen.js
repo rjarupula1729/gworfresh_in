@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AppContext } from '../context/AppContext';
 import api from '../services/api';
 import { COLORS } from '../utils/colors';
+import ScreenHeader from '../components/ScreenHeader';
 
 const InstructorBookingScreen = ({ navigation }) => {
   const { user } = useContext(AppContext);
@@ -38,7 +39,7 @@ const InstructorBookingScreen = ({ navigation }) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch available instructors
       const instructorsRes = await api.get('/instructors/instructors/available');
       console.log('Instructors fetched:', instructorsRes.data);
@@ -404,13 +405,7 @@ const InstructorBookingScreen = ({ navigation }) => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Expert Consultants</Text>
-          <View style={{ width: 24 }} />
-        </View>
+        <ScreenHeader title="Expert Consultants" onBack={() => navigation.goBack()} />
         <View style={styles.centerContent}>
           <ActivityIndicator size="large" color={COLORS.green} />
         </View>
@@ -420,14 +415,7 @@ const InstructorBookingScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Expert Consultants</Text>
-        <View style={{ width: 24 }} />
-      </View>
+      <ScreenHeader title="Expert Consultants" onBack={() => navigation.goBack()} />
 
       {/* Tab Bar */}
       <View style={styles.tabBar}>

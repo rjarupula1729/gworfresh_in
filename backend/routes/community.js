@@ -1,152 +1,82 @@
+// community.js - Postgres edition (community_posts + community_comments)
 const express = require('express');
 const auth = require('../middleware/auth');
-const CommunityPost = require('../models/CommunityPost');
-const User = require('../models/User');
-
+const db = require('../config/db');
 const router = express.Router();
 
-// Get all community posts
-router.get('/', async (req, res) => {
+// GET /api/community  - all posts with author + comments count
+router.get('/', async (_req, res) => {
   try {
-    const posts = await CommunityPost.find()
-      .populate('userId', 'name mobile')
-      .populate('comments.userId', 'name mobile')
-      .sort({ createdAt: -1 });
-    res.json(posts);
+    const posts = await db('community_posts as p')
+      .leftJoin('users as u', 'u.id', 'p.user_id')
+      .select('p.*', 'u.name as author_name', 'u.mobile as author_mobile')
+      .orderBy('p.created_at', 'desc');
+    res.json(posts.map((p) => ({ ...p, _id: p.id })));
   } catch (err) {
-    res.status(500).json({ msg: 'Server error', error: err.message });
+    res.status(500).json({ msg: err.message });
   }
 });
 
-// Get a single post
+// GET /api/community/:id - post + its comments
 router.get('/:id', async (req, res) => {
   try {
-    const post = await CommunityPost.findById(req.params.id)
-      .populate('userId', 'name mobile')
-      .populate('comments.userId', 'name mobile');
-
-    if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
-    }
-
-    res.json(post);
+    const post = await db('community_posts as p')
+      .leftJoin('users as u', 'u.id', 'p.user_id')
+      .where('p.id', req.params.id)
+      .select('p.*', 'u.name as author_name')
+      .first();
+    if (!post) return res.status(404).json({ msg: 'Post not found' });
+    const comments = await db('community_comments as c')
+      .leftJoin('users as u', 'u.id', 'c.user_id')
+      .where('c.post_id', post.id)
+      .select('c.*', 'u.name as author_name')
+      .orderBy('c.created_at');
+    res.json({ ...post, _id: post.id, comments });
   } catch (err) {
-    res.status(500).json({ msg: 'Server error', error: err.message });
+    res.status(500).json({ msg: err.message });
   }
 });
 
-// Create a new community post
+// POST /api/community - create post
 router.post('/', auth, async (req, res) => {
   try {
-    const { content, images } = req.body;
-
-    if (!content) {
-      return res.status(400).json({ msg: 'Content is required' });
-    }
-
-    const post = new CommunityPost({
-      userId: req.user.id,
-      content,
-      images: images || [],
-      comments: []
-    });
-
-    await post.save();
-
-    // Award reward points for posting
-    await User.findByIdAndUpdate(req.user.id, {
-      $inc: { rewardPoints: 5 }
-    });
-
-    // Populate user info before returning
-    await post.populate('userId', 'name mobile');
-
-    res.json(post);
+    const { content, image_url } = req.body;
+    if (!content) return res.status(400).json({ msg: 'Content is required' });
+    const [post] = await db('community_posts')
+      .insert({ user_id: req.user.id, content, image_url: image_url || '' })
+      .returning('*');
+    await db('users').where({ id: req.user.id }).increment('reward_points', 5);
+    res.json({ ...post, _id: post.id });
   } catch (err) {
-    res.status(500).json({ msg: 'Server error', error: err.message });
+    res.status(500).json({ msg: err.message });
   }
 });
 
-// Add a comment to a post
+// POST /api/community/:id/comment
 router.post('/:id/comment', auth, async (req, res) => {
   try {
-    const { comment } = req.body;
-
-    if (!comment) {
-      return res.status(400).json({ msg: 'Comment is required' });
-    }
-
-    const post = await CommunityPost.findById(req.params.id);
-    if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
-    }
-
-    post.comments.push({
-      userId: req.user.id,
-      comment,
-      createdAt: new Date()
-    });
-
-    await post.save();
-
-    // Award reward points for commenting
-    await User.findByIdAndUpdate(req.user.id, {
-      $inc: { rewardPoints: 1 }
-    });
-
-    await post.populate('userId', 'name mobile');
-    await post.populate('comments.userId', 'name mobile');
-
-    res.json(post);
+    const { content } = req.body;
+    if (!content) return res.status(400).json({ msg: 'Content is required' });
+    const post = await db('community_posts').where({ id: req.params.id }).first();
+    if (!post) return res.status(404).json({ msg: 'Post not found' });
+    const [comment] = await db('community_comments')
+      .insert({ post_id: post.id, user_id: req.user.id, content })
+      .returning('*');
+    await db('users').where({ id: req.user.id }).increment('reward_points', 1);
+    res.json({ ...comment, _id: comment.id });
   } catch (err) {
-    res.status(500).json({ msg: 'Server error', error: err.message });
+    res.status(500).json({ msg: err.message });
   }
 });
 
-// Delete a post (only by creator)
+// DELETE /api/community/:id  (author only)
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const post = await CommunityPost.findById(req.params.id);
-    if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
-    }
-
-    if (post.userId.toString() !== req.user.id) {
-      return res.status(403).json({ msg: 'Unauthorized' });
-    }
-
-    await CommunityPost.findByIdAndDelete(req.params.id);
-    res.json({ msg: 'Post deleted successfully' });
+    const n = await db('community_posts').where({ id: req.params.id, user_id: req.user.id }).del();
+    if (!n) return res.status(404).json({ msg: 'Post not found or not yours' });
+    res.json({ msg: 'Post deleted' });
   } catch (err) {
-    res.status(500).json({ msg: 'Server error', error: err.message });
-  }
-});
-
-// Delete a comment (only by creator)
-router.delete('/:postId/comment/:commentId', auth, async (req, res) => {
-  try {
-    const { postId, commentId } = req.params;
-
-    const post = await CommunityPost.findById(postId);
-    if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
-    }
-
-    const comment = post.comments.find(c => c._id.toString() === commentId);
-    if (!comment) {
-      return res.status(404).json({ msg: 'Comment not found' });
-    }
-
-    if (comment.userId.toString() !== req.user.id) {
-      return res.status(403).json({ msg: 'Unauthorized' });
-    }
-
-    post.comments = post.comments.filter(c => c._id.toString() !== commentId);
-    await post.save();
-
-    res.json({ msg: 'Comment deleted successfully' });
-  } catch (err) {
-    res.status(500).json({ msg: 'Server error', error: err.message });
+    res.status(500).json({ msg: err.message });
   }
 });
 

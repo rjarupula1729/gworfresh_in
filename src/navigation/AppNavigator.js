@@ -12,6 +12,7 @@ import OrderTrackingScreen from "../screens/OrderTrackingScreen";
 import PlantTrackingScreen from "../screens/PlantTrackingScreen";
 import CommunityForumScreen from "../screens/CommunityForumScreen";
 import InstructorBookingScreen from "../screens/InstructorBookingScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 import { AppContext } from "../context/AppContext";
 import { COLORS } from "../utils/colors";
@@ -25,60 +26,35 @@ function Tabs() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-
-          if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Shop") {
-            iconName = focused ? "storefront" : "storefront-outline";
-          } else if (route.name === "Orders") {
-            iconName = focused ? "box" : "box-outline";
-          } else if (route.name === "Garden") {
-            iconName = focused ? "leaf" : "leaf-outline";
-          } else if (route.name === "Community") {
-            iconName = focused ? "chatbubbles" : "chatbubbles-outline";
-          } else if (route.name === "Instructors") {
-            iconName = focused ? "person-circle" : "person-circle-outline";
-          }
-
+          let iconName = "ellipse";
+          if (route.name === "Home") iconName = focused ? "home" : "home-outline";
+          else if (route.name === "Shop") iconName = focused ? "storefront" : "storefront-outline";
+          else if (route.name === "Garden") iconName = focused ? "leaf" : "leaf-outline";
+          else if (route.name === "Orders") iconName = focused ? "cube" : "cube-outline";
+          else if (route.name === "Community") iconName = focused ? "chatbubbles" : "chatbubbles-outline";
+          else if (route.name === "Profile") iconName = focused ? "person-circle" : "person-circle-outline";
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: COLORS.green,
-        tabBarInactiveTintColor: COLORS.gray,
+        tabBarInactiveTintColor: COLORS.muted,
         tabBarShowLabel: true,
-        tabBarLabelStyle: { fontSize: 10, fontWeight: "500" },
+        tabBarLabelStyle: { fontSize: 10, fontWeight: "800" },
+        tabBarStyle: {
+          backgroundColor: COLORS.white,
+          borderTopColor: COLORS.border,
+          borderTopWidth: 1,
+          height: 62,
+          paddingTop: 6,
+          paddingBottom: 8,
+        },
       })}
     >
-      <Tab.Screen 
-        name="Home" 
-        component={HomeScreen}
-        options={{ title: "Home" }}
-      />
-      <Tab.Screen 
-        name="Shop" 
-        component={ShopScreen}
-        options={{ title: "Shop" }}
-      />
-      <Tab.Screen 
-        name="Orders" 
-        component={OrderTrackingScreen}
-        options={{ title: "Orders" }}
-      />
-      <Tab.Screen 
-        name="Garden" 
-        component={PlantTrackingScreen}
-        options={{ title: "Garden" }}
-      />
-      <Tab.Screen 
-        name="Community" 
-        component={CommunityForumScreen}
-        options={{ title: "Community" }}
-      />
-      <Tab.Screen 
-        name="Instructors" 
-        component={InstructorBookingScreen}
-        options={{ title: "Experts" }}
-      />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ title: "Home" }} />
+      <Tab.Screen name="Shop" component={ShopScreen} options={{ title: "Shop" }} />
+      <Tab.Screen name="Garden" component={PlantTrackingScreen} options={{ title: "Garden" }} />
+      <Tab.Screen name="Orders" component={OrderTrackingScreen} options={{ title: "Orders" }} />
+      <Tab.Screen name="Community" component={CommunityForumScreen} options={{ title: "Forum" }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
     </Tab.Navigator>
   );
 }
@@ -86,7 +62,6 @@ function Tabs() {
 export default function AppNavigator() {
   const { token, loading } = useContext(AppContext);
 
-  // ADD THIS LOADER FIX HERE
   if (loading) return null;
 
   return (
@@ -97,7 +72,12 @@ export default function AppNavigator() {
         ) : (
           <>
             <Stack.Screen name="Main" component={Tabs} />
-            <Stack.Screen name="Cart" component={CartScreen} />
+            <Stack.Screen name="CartScreen" component={CartScreen} />
+            <Stack.Screen name="ShopScreen" component={ShopScreen} />
+            <Stack.Screen name="GardenScreen" component={PlantTrackingScreen} />
+            <Stack.Screen name="CommunityForumScreen" component={CommunityForumScreen} />
+            <Stack.Screen name="InstructorBookingScreen" component={InstructorBookingScreen} />
+            <Stack.Screen name="PlantTrackingScreen" component={PlantTrackingScreen} />
           </>
         )}
       </Stack.Navigator>

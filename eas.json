@@ -1,27 +1,56 @@
 {
+  "cli": {
+    "version": ">= 7.0.0",
+    "appVersionSource": "remote"
+  },
   "build": {
+    "lan": {
+      "distribution": "internal",
+      "android": { "buildType": "apk" },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://192.168.1.6:5000/api"
+      }
+    },
     "preview": {
-      "android": {
-        "buildType": "apk"
+      "distribution": "internal",
+      "channel": "preview",
+      "android": { "buildType": "apk" },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://growfresh-api-staging.onrender.com/api"
       }
     },
-    "preview2": {
-      "android": {
-        "buildType": "apk"
-      }
-    },
-    "preview3": {
-      "android": {
-        "buildType": "apk"
+    "internal": {
+      "distribution": "internal",
+      "channel": "internal",
+      "autoIncrement": true,
+      "android": { "buildType": "app-bundle" },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://growfresh-api.onrender.com/api"
       }
     },
     "production": {
-      "android": {
-        "buildType": "aab"
+      "channel": "production",
+      "autoIncrement": true,
+      "android": { "buildType": "app-bundle" },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://growfresh-api.onrender.com/api"
       }
     }
   },
   "submit": {
-    "production": {}
+    "internal": {
+      "android": {
+        "serviceAccountKeyPath": "./play-service-account.json",
+        "track": "internal",
+        "releaseStatus": "draft"
+      }
+    },
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./play-service-account.json",
+        "track": "production",
+        "releaseStatus": "draft"
+      }
+    }
   }
 }

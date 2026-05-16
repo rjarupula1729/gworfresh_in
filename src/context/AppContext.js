@@ -39,10 +39,20 @@ export const AppProvider = ({ children }) => {
     await removeItem("token");
   };
 
+  // Merge updates into current user and persist to storage.
+  // Use after a successful PUT /auth/me response.
+  const updateUser = async (patch) => {
+    const next = { ...(user || {}), ...(patch || {}) };
+    setUser(next);
+    await setItem("user", next);
+    return next;
+  };
+
   return (
     <AppContext.Provider value={{
       user, token, cart,
-      setCart, login, logout, loading
+      setCart, login, logout, loading,
+      setUser, updateUser,
     }}>
       {children}
     </AppContext.Provider>

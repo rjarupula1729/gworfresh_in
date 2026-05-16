@@ -16,6 +16,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { AppContext } from '../context/AppContext';
 import api from '../services/api';
 import { COLORS } from '../utils/colors';
+import ScreenHeader from '../components/ScreenHeader';
+import EmptyState from '../components/EmptyState';
 
 const PlantTrackingScreen = ({ navigation }) => {
   const { user } = useContext(AppContext);
@@ -75,15 +77,15 @@ const PlantTrackingScreen = ({ navigation }) => {
         date: new Date(),
       });
       console.log('Progress added:', response.data);
-      
+
       // Update local plant data
       const updatedPlant = response.data;
       setSelectedPlant(updatedPlant);
-      
+
       // Update plants list
       const updatedPlants = plants.map(p => p._id === updatedPlant._id ? updatedPlant : p);
       setPlants(updatedPlants);
-      
+
       Alert.alert('Success', 'Progress logged! You earned 2 reward points 🎉');
       setProgressModalVisible(false);
       setProgressNote('');
@@ -500,15 +502,7 @@ const PlantTrackingScreen = ({ navigation }) => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>My Garden</Text>
-          <TouchableOpacity>
-            <Ionicons name="add-circle" size={24} color={COLORS.green} />
-          </TouchableOpacity>
-        </View>
+        <ScreenHeader title="My Garden" onBack={() => navigation.goBack()} />
         <View style={styles.centerContent}>
           <ActivityIndicator size="large" color={COLORS.green} />
         </View>
@@ -518,16 +512,7 @@ const PlantTrackingScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Garden</Text>
-        <TouchableOpacity>
-          <Ionicons name="add-circle" size={24} color={COLORS.green} />
-        </TouchableOpacity>
-      </View>
+      <ScreenHeader title="My Garden" onBack={() => navigation.goBack()} />
 
       {/* Content */}
       {plants.length > 0 ? (
@@ -550,19 +535,13 @@ const PlantTrackingScreen = ({ navigation }) => {
           <View style={{ height: 20 }} />
         </ScrollView>
       ) : (
-        <View style={styles.centerContent}>
-          <Ionicons name="leaf" size={64} color={COLORS.lightGray} />
-          <Text style={styles.emptyText}>Your garden is empty</Text>
-          <Text style={styles.emptySubtext}>
-            Start by purchasing plants and seeds from the shop!
-          </Text>
-          <TouchableOpacity
-            style={styles.shopBtn}
-            onPress={() => navigation.navigate('Shop')}
-          >
-            <Text style={styles.shopBtnText}>Go to Shop</Text>
-          </TouchableOpacity>
-        </View>
+        <EmptyState
+          icon="🌱"
+          title="Your garden is empty"
+          subtitle="Start by purchasing plants and seeds from the shop"
+          ctaLabel="Go to Shop"
+          onCtaPress={() => navigation.navigate('Shop')}
+        />
       )}
 
       <PlantDetailsModal />
@@ -574,7 +553,7 @@ const PlantTrackingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.light,
+    backgroundColor: COLORS.bg,
   },
   header: {
     flexDirection: 'row',

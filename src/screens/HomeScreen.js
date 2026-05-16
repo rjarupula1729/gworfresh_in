@@ -1,302 +1,601 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-  RefreshControl,
-  Alert
-} from "react-native";
-import API from "../services/api";
-import { AppContext } from "../context/AppContext";
-import colors from "../utils/colors";
+import React, { useState, useEffect, useContext, useCallback } from "react";import React, { useState, useEffect, useContext } from "react";
 
-export default function HomeScreen({ navigation }) {
-  const { user, logout } = useContext(AppContext);
-  const [categories, setCategories] = useState([]);
-  const [featuredProducts, setFeaturedProducts] = useState([]);
+import {import {
+
+  View,  View,
+
+  Text,  Text,
+
+  ScrollView,  ScrollView,
+
+  TouchableOpacity,  TouchableOpacity,
+
+  StyleSheet,  StyleSheet,
+
+  ActivityIndicator,  ActivityIndicator,
+
+  RefreshControl,  RefreshControl,
+
+  Alert,  Alert
+
+} from "react-native";} from "react-native";
+
+import API from "../services/api";import API from "../services/api";
+
+import { AppContext } from "../context/AppContext";import { AppContext } from "../context/AppContext";
+
+import { COLORS, GRADIENTS } from "../utils/colors";import colors from "../utils/colors";
+
+import { SPACING, RADIUS, SHADOWS, TYPE } from "../utils/theme";
+
+import ScreenHeader from "../components/ScreenHeader";export default function HomeScreen({ navigation }) {
+
+import SectionHeader from "../components/SectionHeader";  const { user, logout } = useContext(AppContext);
+
+import QuickAction from "../components/QuickAction";  const [categories, setCategories] = useState([]);
+
+import BrandCard from "../components/BrandCard";  const [featuredProducts, setFeaturedProducts] = useState([]);
+
   const [loading, setLoading] = useState(true);
+
+export default function HomeScreen({ navigation }) {  const [refreshing, setRefreshing] = useState(false);
+
+  const { user, logout } = useContext(AppContext);
+
+  const [categories, setCategories] = useState([]);  useEffect(() => {
+
+  const [featuredProducts, setFeaturedProducts] = useState([]);    fetchData();
+
+  const [loading, setLoading] = useState(true);  }, []);
+
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const fetchData = async () => {
-    try {
-      // Fetch categories
-      const categoriesRes = await API.get("/products/categories/list");
-      setCategories(categoriesRes.data);
 
-      // Fetch featured products (all products)
-      const productsRes = await API.get("/products");
-      setFeaturedProducts(productsRes.data.slice(0, 6)); // Show first 6
-    } catch (err) {
-      Alert.alert("Error", "Failed to load data");
-      console.error(err);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
+  const fetchData = useCallback(async () => {    try {
+
+    try {      // Fetch categories
+
+      const [catRes, prodRes] = await Promise.all([      const categoriesRes = await API.get("/products/categories/list");
+
+        API.get("/products/categories/list"),      setCategories(categoriesRes.data);
+
+        API.get("/products"),
+
+      ]);      // Fetch featured products (all products)
+
+      setCategories(catRes.data || []);      const productsRes = await API.get("/products");
+
+      setFeaturedProducts((prodRes.data || []).slice(0, 6));      setFeaturedProducts(productsRes.data.slice(0, 6)); // Show first 6
+
+    } catch (err) {    } catch (err) {
+
+      Alert.alert("Error", "Failed to load data");      Alert.alert("Error", "Failed to load data");
+
+      console.error(err);      console.error(err);
+
+    } finally {    } finally {
+
+      setLoading(false);      setLoading(false);
+
+      setRefreshing(false);      setRefreshing(false);
+
+    }    }
+
+  }, []);  };
+
+
+
+  useEffect(() => {  const onRefresh = () => {
+
+    fetchData();    setRefreshing(true);
+
+  }, [fetchData]);    fetchData();
+
   };
 
   const onRefresh = () => {
-    setRefreshing(true);
-    fetchData();
-  };
 
-  const handleLogout = () => {
-    Alert.alert("Logout", "Are you sure?", [
-      { text: "Cancel", onPress: () => {} },
+    setRefreshing(true);  const handleLogout = () => {
+
+    fetchData();    Alert.alert("Logout", "Are you sure?", [
+
+  };      { text: "Cancel", onPress: () => {} },
+
       {
-        text: "Logout",
-        onPress: () => {
-          logout();
-        },
-        style: "destructive"
-      }
+
+  const handleLogout = () => {        text: "Logout",
+
+    Alert.alert("Logout", "Are you sure?", [        onPress: () => {
+
+      { text: "Cancel" },          logout();
+
+      { text: "Logout", style: "destructive", onPress: () => logout() },        },
+
+    ]);        style: "destructive"
+
+  };      }
+
     ]);
-  };
+
+  const iconFor = (cat) =>  };
+
+    cat === "Seeds" ? "🌾" : cat === "Saplings" ? "🌱" : cat === "Minerals" ? "💪" : "📦";
 
   if (loading) {
-    return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
-    );
+
+  if (loading) {    return (
+
+    return (      <View style={styles.centerContainer}>
+
+      <View style={styles.center}>        <ActivityIndicator size="large" color={colors.primary} />
+
+        <ActivityIndicator size="large" color={COLORS.green} />      </View>
+
+      </View>    );
+
+    );  }
+
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {/* Header */}
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.welcomeText}>Welcome 👋</Text>
+
+  return (    <ScrollView
+
+    <View style={styles.root}>      style={styles.container}
+
+      <ScreenHeader      refreshControl={
+
+        title={`Hi, ${user?.name?.split(" ")[0] || "Friend"} 👋`}        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+
+        right={      }
+
+          <TouchableOpacity onPress={handleLogout} hitSlop={10}>    >
+
+            <Text style={styles.headerLink}>Logout</Text>      {/* Header */}
+
+          </TouchableOpacity>      <View style={styles.header}>
+
+        }        <View>
+
+      />          <Text style={styles.welcomeText}>Welcome 👋</Text>
+
           <Text style={styles.userName}>{user?.name || "User"}</Text>
-        </View>
-        <TouchableOpacity
-          style={styles.logoutBtn}
-          onPress={handleLogout}
-        >
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
 
-      {/* User Stats */}
-      <View style={styles.statsContainer}>
-        <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Reward Points</Text>
-          <Text style={styles.statValue}>{user?.rewardPoints || 0}</Text>
-        </View>
-        <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Mobile</Text>
-          <Text style={styles.statValue}>{user?.mobile}</Text>
-        </View>
-      </View>
+      <ScrollView        </View>
 
-      {/* Quick Actions */}
-      <View style={styles.quickActionsContainer}>
+        style={styles.scroll}        <TouchableOpacity
+
+        contentContainerStyle={{ paddingBottom: 32 }}          style={styles.logoutBtn}
+
+        refreshControl={          onPress={handleLogout}
+
+          <RefreshControl        >
+
+            refreshing={refreshing}          <Text style={styles.logoutText}>Logout</Text>
+
+            onRefresh={onRefresh}        </TouchableOpacity>
+
+            colors={[COLORS.green]}      </View>
+
+            tintColor={COLORS.green}
+
+          />      {/* User Stats */}
+
+        }      <View style={styles.statsContainer}>
+
+      >        <View style={styles.statBox}>
+
+        {/* Savings / Rewards band */}          <Text style={styles.statLabel}>Reward Points</Text>
+
+        <View style={styles.section}>          <Text style={styles.statValue}>{user?.rewardPoints || 0}</Text>
+
+          <BrandCard        </View>
+
+            gradient={GRADIENTS.primary}        <View style={styles.statBox}>
+
+            icon="🌿"          <Text style={styles.statLabel}>Mobile</Text>
+
+            title={`${user?.rewardPoints || 0} Reward Points`}          <Text style={styles.statValue}>{user?.mobile}</Text>
+
+            subtitle="Tap to redeem fresh savings"        </View>
+
+            chip="SAVED ₹820"      </View>
+
+            onPress={() => navigation.navigate("GardenScreen")}
+
+          />      {/* Quick Actions */}
+
+        </View>      <View style={styles.quickActionsContainer}>
+
         <TouchableOpacity
-          style={styles.actionCard}
-          onPress={() => navigation.navigate("ShopScreen")}
-        >
-          <Text style={styles.actionIcon}>🛒</Text>
-          <Text style={styles.actionLabel}>Shop</Text>
-        </TouchableOpacity>
+
+        {/* Start Your Journey + Flash Deal */}          style={styles.actionCard}
+
+        <View style={styles.section}>          onPress={() => navigation.navigate("ShopScreen")}
+
+          <BrandCard        >
+
+            gradient={GRADIENTS.sun}          <Text style={styles.actionIcon}>🛒</Text>
+
+            icon="🚀"          <Text style={styles.actionLabel}>Shop</Text>
+
+            title="Start Your Journey"        </TouchableOpacity>
+
+            subtitle="Begin with a starter kit"        <TouchableOpacity
+
+            chip="Start →"          style={styles.actionCard}
+
+            onPress={() => navigation.navigate("ShopScreen")}          onPress={() => navigation.navigate("CartScreen")}
+
+            style={{ marginBottom: SPACING.sm }}        >
+
+          />          <Text style={styles.actionIcon}>🛍️</Text>
+
+          <BrandCard          <Text style={styles.actionLabel}>Cart</Text>
+
+            gradient={GRADIENTS.harvest}        </TouchableOpacity>
+
+            icon="⚡"        <TouchableOpacity
+
+            title="Flash Deal · 30% off"          style={styles.actionCard}
+
+            subtitle="Limited time on fresh saplings"          onPress={() => navigation.navigate("GardenScreen")}
+
+            chip="Shop →"        >
+
+            onPress={() => navigation.navigate("ShopScreen")}          <Text style={styles.actionIcon}>🌱</Text>
+
+          />          <Text style={styles.actionLabel}>My Garden</Text>
+
+        </View>        </TouchableOpacity>
+
         <TouchableOpacity
-          style={styles.actionCard}
-          onPress={() => navigation.navigate("CartScreen")}
-        >
-          <Text style={styles.actionIcon}>🛍️</Text>
-          <Text style={styles.actionLabel}>Cart</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionCard}
-          onPress={() => navigation.navigate("GardenScreen")}
-        >
-          <Text style={styles.actionIcon}>🌱</Text>
-          <Text style={styles.actionLabel}>My Garden</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionCard}
-          onPress={() => navigation.navigate("Orders")}
-        >
-          <Text style={styles.actionIcon}>📦</Text>
-          <Text style={styles.actionLabel}>Orders</Text>
-        </TouchableOpacity>
-      </View>
+
+        {/* 5 Quick Actions */}          style={styles.actionCard}
+
+        <View style={[styles.section, styles.qaRow]}>          onPress={() => navigation.navigate("Orders")}
+
+          <QuickAction icon="🛒" label="Shop" onPress={() => navigation.navigate("ShopScreen")} />        >
+
+          <QuickAction icon="🛍️" label="Cart" onPress={() => navigation.navigate("CartScreen")} />          <Text style={styles.actionIcon}>📦</Text>
+
+          <QuickAction icon="🌱" label="Garden" onPress={() => navigation.navigate("GardenScreen")} />          <Text style={styles.actionLabel}>Orders</Text>
+
+          <QuickAction icon="📦" label="Orders" onPress={() => navigation.navigate("Orders")} />        </TouchableOpacity>
+
+          <QuickAction icon="✨" label="More" onPress={() => navigation.navigate("CommunityForumScreen")} />      </View>
+
+        </View>
 
       {/* Categories Section */}
-      <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Categories</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {categories.map((category, idx) => (
-            <TouchableOpacity
-              key={idx}
-              style={styles.categoryChip}
-              onPress={() =>
-                navigation.navigate("ShopScreen", { category })
-              }
-            >
-              <Text style={styles.categoryText}>{category}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
 
-      {/* Featured Products */}
-      <View style={styles.sectionContainer}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Featured Products</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ShopScreen")}
+        {/* Categories */}      <View style={styles.sectionContainer}>
+
+        <View style={styles.section}>        <Text style={styles.sectionTitle}>Categories</Text>
+
+          <SectionHeader        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+
+            title="Categories"          {categories.map((category, idx) => (
+
+            linkLabel="See all"            <TouchableOpacity
+
+            onLinkPress={() => navigation.navigate("ShopScreen")}              key={idx}
+
+          />              style={styles.categoryChip}
+
+          <ScrollView              onPress={() =>
+
+            horizontal                navigation.navigate("ShopScreen", { category })
+
+            showsHorizontalScrollIndicator={false}              }
+
+            contentContainerStyle={{ paddingVertical: 4 }}            >
+
+          >              <Text style={styles.categoryText}>{category}</Text>
+
+            {categories.map((category, idx) => (            </TouchableOpacity>
+
+              <TouchableOpacity          ))}
+
+                key={idx}        </ScrollView>
+
+                style={styles.chip}      </View>
+
+                onPress={() => navigation.navigate("ShopScreen", { category })}
+
+              >      {/* Featured Products */}
+
+                <Text style={styles.chipText}>{category}</Text>      <View style={styles.sectionContainer}>
+
+              </TouchableOpacity>        <View style={styles.sectionHeader}>
+
+            ))}          <Text style={styles.sectionTitle}>Featured Products</Text>
+
+          </ScrollView>          <TouchableOpacity
+
+        </View>            onPress={() => navigation.navigate("ShopScreen")}
+
           >
-            <Text style={styles.viewAllText}>View All →</Text>
-          </TouchableOpacity>
-        </View>
 
-        <View style={styles.productsGrid}>
-          {featuredProducts.map((product) => (
-            <TouchableOpacity
-              key={product._id}
-              style={styles.productCard}
-              onPress={() =>
-                navigation.navigate("ShopScreen", { productId: product._id })
-              }
-            >
-              <View style={styles.productImage}>
-                <Text style={styles.productImageText}>
-                  {product.category === "Seeds" ? "🌾" : product.category === "Saplings" ? "🌱" : product.category === "Minerals" ? "💪" : "📦"}
-                </Text>
-              </View>
-              <Text style={styles.productName}>{product.name}</Text>
-              <Text style={styles.productCategory}>{product.category}</Text>
-              <View style={styles.priceContainer}>
-                <Text style={styles.price}>₹{product.price}</Text>
-              </View>
-              <TouchableOpacity
-                style={styles.addToCartBtn}
-                onPress={() => {
-                  Alert.alert("Added to Cart", `${product.name} added to cart!`);
-                  navigation.navigate("CartScreen");
-                }}
-              >
-                <Text style={styles.addToCartText}>Add to Cart</Text>
-              </TouchableOpacity>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
+        {/* Featured Products */}            <Text style={styles.viewAllText}>View All →</Text>
 
-      {/* Tips Section */}
-      <View style={styles.tipsContainer}>
-        <Text style={styles.tipTitle}>💡 Daily Tip</Text>
-        <Text style={styles.tipText}>
-          Water your plants early in the morning for best results. This helps prevent fungal infections and allows plants to absorb water before the sun gets too hot.
-        </Text>
-      </View>
+        <View style={styles.section}>          </TouchableOpacity>
 
-      <View style={{ height: 20 }} />
-    </ScrollView>
-  );
+          <SectionHeader        </View>
+
+            title="Hyderabad Picks"
+
+            linkLabel="View all"        <View style={styles.productsGrid}>
+
+            onLinkPress={() => navigation.navigate("ShopScreen")}          {featuredProducts.map((product) => (
+
+          />            <TouchableOpacity
+
+          <View style={styles.grid}>              key={product._id}
+
+            {featuredProducts.map((p) => (              style={styles.productCard}
+
+              <TouchableOpacity              onPress={() =>
+
+                key={p._id}                navigation.navigate("ShopScreen", { productId: product._id })
+
+                style={styles.productCard}              }
+
+                onPress={() => navigation.navigate("ShopScreen", { productId: p._id })}            >
+
+                activeOpacity={0.85}              <View style={styles.productImage}>
+
+              >                <Text style={styles.productImageText}>
+
+                <View style={styles.productImg}>                  {product.category === "Seeds" ? "🌾" : product.category === "Saplings" ? "🌱" : product.category === "Minerals" ? "💪" : "📦"}
+
+                  <Text style={{ fontSize: 36 }}>{iconFor(p.category)}</Text>                </Text>
+
+                </View>              </View>
+
+                <Text style={styles.productName} numberOfLines={1}>{p.name}</Text>              <Text style={styles.productName}>{product.name}</Text>
+
+                <Text style={styles.productCat} numberOfLines={1}>{p.category}</Text>              <Text style={styles.productCategory}>{product.category}</Text>
+
+                <View style={styles.priceRow}>              <View style={styles.priceContainer}>
+
+                  <Text style={styles.price}>₹{p.price}</Text>                <Text style={styles.price}>₹{product.price}</Text>
+
+                </View>              </View>
+
+                <TouchableOpacity              <TouchableOpacity
+
+                  style={styles.addBtn}                style={styles.addToCartBtn}
+
+                  onPress={() => {                onPress={() => {
+
+                    Alert.alert("Added to Cart", `${p.name} added!`);                  Alert.alert("Added to Cart", `${product.name} added to cart!`);
+
+                    navigation.navigate("CartScreen");                  navigation.navigate("CartScreen");
+
+                  }}                }}
+
+                >              >
+
+                  <Text style={styles.addBtnText}>Add to Cart</Text>                <Text style={styles.addToCartText}>Add to Cart</Text>
+
+                </TouchableOpacity>              </TouchableOpacity>
+
+              </TouchableOpacity>            </TouchableOpacity>
+
+            ))}          ))}
+
+          </View>        </View>
+
+        </View>      </View>
+
+
+
+        {/* Smart Tip */}      {/* Tips Section */}
+
+        <View style={styles.section}>      <View style={styles.tipsContainer}>
+
+          <BrandCard        <Text style={styles.tipTitle}>💡 Daily Tip</Text>
+
+            gradient={GRADIENTS.sky}        <Text style={styles.tipText}>
+
+            icon="💧"          Water your plants early in the morning for best results. This helps prevent fungal infections and allows plants to absorb water before the sun gets too hot.
+
+            title="Smart Tip"        </Text>
+
+            subtitle="Water early morning to prevent fungus"      </View>
+
+          />
+
+        </View>      <View style={{ height: 20 }} />
+
+      </ScrollView>    </ScrollView>
+
+    </View>  );
+
+  );}
+
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.light
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.light
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 20,
-    paddingBottom: 16
-  },
-  welcomeText: {
-    fontSize: 14,
-    color: "#666"
-  },
-  userName: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: colors.text
-  },
-  logoutBtn: {
-    backgroundColor: "#FF6B6B",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6
-  },
-  logoutText: {
-    color: colors.white,
-    fontSize: 12,
-    fontWeight: "600"
-  },
-  statsContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    marginBottom: 16,
-    gap: 12
-  },
-  statBox: {
-    flex: 1,
-    backgroundColor: colors.white,
-    borderRadius: 10,
-    padding: 12,
-    alignItems: "center"
-  },
-  statLabel: {
-    fontSize: 12,
-    color: "#999",
-    marginBottom: 4
-  },
-  statValue: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.primary
-  },
-  quickActionsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    paddingHorizontal: 12,
-    marginBottom: 20,
-    gap: 8
-  },
-  actionCard: {
-    width: "23%",
-    backgroundColor: colors.white,
-    borderRadius: 10,
-    padding: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#E0E0E0"
-  },
-  actionIcon: {
-    fontSize: 24,
-    marginBottom: 4
-  },
-  actionLabel: {
-    fontSize: 11,
-    fontWeight: "600",
-    color: colors.text,
-    textAlign: "center"
-  },
+
+const styles = StyleSheet.create({  container: {
+
+  root: { flex: 1, backgroundColor: COLORS.bg },    flex: 1,
+
+  scroll: { flex: 1 },    backgroundColor: colors.light
+
+  center: {  },
+
+    flex: 1,  centerContainer: {
+
+    justifyContent: "center",    flex: 1,
+
+    alignItems: "center",    justifyContent: "center",
+
+    backgroundColor: COLORS.bg,    alignItems: "center",
+
+  },    backgroundColor: colors.light
+
+  headerLink: {  },
+
+    color: COLORS.white,  header: {
+
+    fontWeight: "700",    flexDirection: "row",
+
+    fontSize: 13,    justifyContent: "space-between",
+
+  },    alignItems: "center",
+
+  section: {    paddingHorizontal: 16,
+
+    paddingHorizontal: SPACING.lg,    paddingTop: 20,
+
+    marginTop: SPACING.lg,    paddingBottom: 16
+
+  },  },
+
+  qaRow: {  welcomeText: {
+
+    flexDirection: "row",    fontSize: 14,
+
+    gap: SPACING.sm,    color: "#666"
+
+  },  },
+
+  chip: {  userName: {
+
+    backgroundColor: COLORS.white,    fontSize: 24,
+
+    borderRadius: RADIUS.pill,    fontWeight: "bold",
+
+    paddingHorizontal: SPACING.md,    color: colors.text
+
+    paddingVertical: 8,  },
+
+    marginRight: SPACING.sm,  logoutBtn: {
+
+    borderWidth: 1,    backgroundColor: "#FF6B6B",
+
+    borderColor: COLORS.greenPale,    paddingHorizontal: 12,
+
+    ...SHADOWS.sm,    paddingVertical: 6,
+
+  },    borderRadius: 6
+
+  chipText: {  },
+
+    color: COLORS.green,  logoutText: {
+
+    fontWeight: "700",    color: colors.white,
+
+    fontSize: 12,    fontSize: 12,
+
+  },    fontWeight: "600"
+
+  grid: {  },
+
+    flexDirection: "row",  statsContainer: {
+
+    flexWrap: "wrap",    flexDirection: "row",
+
+    justifyContent: "space-between",    paddingHorizontal: 16,
+
+    marginTop: SPACING.sm,    marginBottom: 16,
+
+    gap: SPACING.sm,    gap: 12
+
+  },  },
+
+  productCard: {  statBox: {
+
+    width: "48%",    flex: 1,
+
+    backgroundColor: COLORS.white,    backgroundColor: colors.white,
+
+    borderRadius: RADIUS.md,    borderRadius: 10,
+
+    padding: SPACING.sm,    padding: 12,
+
+    ...SHADOWS.sm,    alignItems: "center"
+
+  },  },
+
+  productImg: {  statLabel: {
+
+    height: 84,    fontSize: 12,
+
+    backgroundColor: COLORS.greenPale,    color: "#999",
+
+    borderRadius: RADIUS.sm,    marginBottom: 4
+
+    justifyContent: "center",  },
+
+    alignItems: "center",  statValue: {
+
+    marginBottom: SPACING.sm,    fontSize: 20,
+
+  },    fontWeight: "bold",
+
+  productName: {    color: colors.primary
+
+    ...TYPE.card,  },
+
+    color: COLORS.text,  quickActionsContainer: {
+
+    marginBottom: 2,    flexDirection: "row",
+
+  },    flexWrap: "wrap",
+
+  productCat: {    paddingHorizontal: 12,
+
+    ...TYPE.caption,    marginBottom: 20,
+
+    color: COLORS.muted,    gap: 8
+
+    marginBottom: 6,  },
+
+  },  actionCard: {
+
+  priceRow: { marginBottom: 6 },    width: "23%",
+
+  price: {    backgroundColor: colors.white,
+
+    fontSize: 14,    borderRadius: 10,
+
+    fontWeight: "800",    padding: 12,
+
+    color: COLORS.green,    alignItems: "center",
+
+  },    justifyContent: "center",
+
+  addBtn: {    borderWidth: 1,
+
+    backgroundColor: COLORS.green,    borderColor: "#E0E0E0"
+
+    borderRadius: RADIUS.sm,  },
+
+    paddingVertical: 7,  actionIcon: {
+
+    alignItems: "center",    fontSize: 24,
+
+  },    marginBottom: 4
+
+  addBtnText: {  },
+
+    color: COLORS.white,  actionLabel: {
+
+    fontSize: 11,    fontSize: 11,
+
+    fontWeight: "800",    fontWeight: "600",
+
+    letterSpacing: 0.3,    color: colors.text,
+
+  },    textAlign: "center"
+
+});  },
+
   sectionContainer: {
     paddingHorizontal: 16,
     marginBottom: 20

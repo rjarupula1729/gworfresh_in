@@ -1,0 +1,19 @@
+# Pre-commit hooks for growfresh
+# https://pre-commit.com
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: '\.(md|html)$'
+      - id: end-of-file-fixer
+        exclude: '\.(md|html|png|jpg|jpeg|gif|ico|svg)$'
+      - id: check-yaml
+      - id: check-json
+        exclude: 'tsconfig.*\.json$|.*\.code-workspace$'
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=2048']
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: ['--fix=lf']

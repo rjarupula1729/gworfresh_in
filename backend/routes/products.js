@@ -1,91 +1,91 @@
+// products.js - Postgres edition
 const express = require('express');
-const Product = require('../models/Product');
+const db = require('../config/db');
 const router = express.Router();
 
-// Get all products with optional filtering by category
+// GET /api/products?category=Seeds&q=tomato&region=Hyderabad
 router.get('/', async (req, res) => {
   try {
-    const { category } = req.query;
-    const filter = category ? { category } : {};
-    const products = await Product.find(filter);
-    res.json(products);
+    const { category, q, region } = req.query;
+    const rows = await db('products as p')
+      .leftJoin('product_categories as c', 'c.id', 'p.category_id')
+      .where('p.is_active', true)
+      .modify((qb) => {
+        if (category) qb.andWhere('c.name', category);
+        if (region)   qb.andWhere('p.region', region);
+        if (q)        qb.andWhere('p.name', 'ilike', `%${q}%`);
+      })
+      .select('p.*', 'c.name as category', 'c.slug as category_slug', 'c.icon as category_icon')
+      .orderBy('p.created_at', 'desc');
+    // Provide _id alias to keep frontend compat (it uses item._id as key)
+    res.json(rows.map((r) => ({ ...r, _id: r.id })));
   } catch (err) {
     res.status(500).json({ msg: 'Server error', error: err.message });
   }
 });
 
-// Get a single product by ID
+// GET /api/products/categories/list  -> ["Seeds","Saplings",...]
+router.get('/categories/list', async (_req, res) => {
+  const rows = await db('product_categories').orderBy('sort_order').select('name');
+  res.json(rows.map((r) => r.name));
+});
+
+// GET /api/products/categories  -> full objects
+router.get('/categories', async (_req, res) => {
+  const rows = await db('product_categories').orderBy('sort_order');
+  res.json(rows);
+});
+
+// GET /api/products/:id
 router.get('/:id', async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).populate('comboItems');
-    if (!product) {
-      return res.status(404).json({ msg: 'Product not found' });
-    }
-    res.json(product);
+    const p = await db('products as p')
+      .leftJoin('product_categories as c', 'c.id', 'p.category_id')
+      .where('p.id', req.params.id)
+      .select('p.*', 'c.name as category', 'c.slug as category_slug')
+      .first();
+    if (!p) return res.status(404).json({ msg: 'Product not found' });
+    res.json({ ...p, _id: p.id });
   } catch (err) {
     res.status(500).json({ msg: 'Server error', error: err.message });
   }
 });
 
-// Get all categories
-router.get('/categories/list', async (req, res) => {
-  try {
-    const categories = await Product.distinct('category');
-    res.json(categories);
-  } catch (err) {
-    res.status(500).json({ msg: 'Server error', error: err.message });
-  }
-});
-
-// Admin: Create a product
+// POST /api/products  (admin)
 router.post('/', async (req, res) => {
   try {
-    const { name, description, category, price, stock, images, comboItems, instructions } = req.body;
-    if (!name || !price || !category) {
-      return res.status(400).json({ msg: 'Name, price, and category are required' });
+    const { name, description, category_id, price, stock, image_url, instructions, region, tags } = req.body;
+    if (!name || !price || !category_id) {
+      return res.status(400).json({ msg: 'name, price, category_id are required' });
     }
-    const product = new Product({
-      name,
-      description,
-      category,
-      price,
-      stock: stock || 0,
-      images: images || [],
-      comboItems: comboItems || [],
-      instructions
-    });
-    await product.save();
-    res.json(product);
+    const [row] = await db('products')
+      .insert({ name, description, category_id, price, stock: stock || 0, image_url: image_url || '', instructions: instructions || '', region: region || '', tags: tags || [] })
+      .returning('*');
+    res.json(row);
   } catch (err) {
     res.status(500).json({ msg: 'Server error', error: err.message });
   }
 });
 
-// Admin: Update a product
+// PUT /api/products/:id  (admin)
 router.put('/:id', async (req, res) => {
   try {
-    const { name, description, category, price, stock, images, comboItems, instructions } = req.body;
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      { name, description, category, price, stock, images, comboItems, instructions },
-      { new: true }
-    );
-    if (!product) {
-      return res.status(404).json({ msg: 'Product not found' });
-    }
-    res.json(product);
+    const allowed = ['name','description','category_id','price','stock','image_url','instructions','region','tags','is_active'];
+    const patch = {};
+    allowed.forEach((k) => { if (req.body[k] !== undefined) patch[k] = req.body[k]; });
+    const [row] = await db('products').where({ id: req.params.id }).update(patch).returning('*');
+    if (!row) return res.status(404).json({ msg: 'Product not found' });
+    res.json(row);
   } catch (err) {
     res.status(500).json({ msg: 'Server error', error: err.message });
   }
 });
 
-// Admin: Delete a product
+// DELETE /api/products/:id  (admin)
 router.delete('/:id', async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
-    if (!product) {
-      return res.status(404).json({ msg: 'Product not found' });
-    }
+    const n = await db('products').where({ id: req.params.id }).del();
+    if (!n) return res.status(404).json({ msg: 'Product not found' });
     res.json({ msg: 'Product deleted successfully' });
   } catch (err) {
     res.status(500).json({ msg: 'Server error', error: err.message });

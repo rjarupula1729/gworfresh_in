@@ -1,0 +1,86 @@
+# shellcheck shell=bash
+# scripts/activate — venv-style isolation for the GrowFresh project.
+#
+# Usage:
+#   source scripts/activate     # turn ON  (prompt becomes "(growfresh) …")
+#   deactivate                  # turn OFF (reverts everything)
+#
+# What it does ONLY inside the activated shell:
+#   • adds postgresql@16 binaries to PATH
+#   • exports PGHOST/PGPORT/PGUSER/PGDATABASE so psql, knex, etc. just work
+#   • exports PROJECT_ROOT so scripts can find the repo
+#   • adds the project's node_modules/.bin to PATH (so `expo`, `eas`, `knex`
+#     work without `npx`)
+#
+# Nothing is written to your shell rc files, no launchd services are
+# registered, no global env vars are set. `deactivate` restores everything.
+
+# ── must be sourced, not executed ──────────────────────────
+if [ "${BASH_SOURCE[0]:-${(%):-%x}}" = "$0" ]; then
+  echo "❌  This script must be SOURCED, not executed:"
+  echo "    source scripts/activate"
+  exit 1
+fi
+
+# ── locate project root ─────────────────────────────────────
+_GF_SCRIPT="${BASH_SOURCE[0]:-${(%):-%x}}"
+export GROWFRESH_ROOT="$(cd "$(dirname "$_GF_SCRIPT")/.." && pwd)"
+
+# ── stash current state so we can restore on deactivate ─────
+export _GF_OLD_PATH="$PATH"
+export _GF_OLD_PS1="${PS1:-}"
+export _GF_OLD_PGHOST="${PGHOST:-}"
+export _GF_OLD_PGPORT="${PGPORT:-}"
+export _GF_OLD_PGUSER="${PGUSER:-}"
+export _GF_OLD_PGDATABASE="${PGDATABASE:-}"
+export _GF_OLD_PGPASSWORD="${PGPASSWORD:-}"
+
+# ── find Homebrew Postgres 16 (binaries only, no service) ──
+_GF_PG_PREFIX="$(brew --prefix postgresql@16 2>/dev/null || true)"
+if [ -z "$_GF_PG_PREFIX" ] || [ ! -x "$_GF_PG_PREFIX/bin/psql" ]; then
+  echo "⚠️   postgresql@16 not installed yet."
+  echo "    Run once:  brew install postgresql@16"
+  echo "    Then:      source scripts/activate"
+  return 1
+fi
+
+# ── compose project-only PATH ───────────────────────────────
+export PATH="$GROWFRESH_ROOT/node_modules/.bin:$_GF_PG_PREFIX/bin:$PATH"
+
+# ── project-scoped Postgres connection (matches backend/.env) ──
+export PGHOST=127.0.0.1
+export PGPORT=5433
+export PGUSER=postgres
+export PGDATABASE=growfresh
+unset  PGPASSWORD          # trust auth on local socket
+
+# ── prompt marker ───────────────────────────────────────────
+export PS1="(growfresh) ${_GF_OLD_PS1}"
+
+# ── define deactivate ───────────────────────────────────────
+deactivate() {
+  export PATH="$_GF_OLD_PATH"
+  export PS1="$_GF_OLD_PS1"
+  [ -n "$_GF_OLD_PGHOST" ]     && export PGHOST="$_GF_OLD_PGHOST"         || unset PGHOST
+  [ -n "$_GF_OLD_PGPORT" ]     && export PGPORT="$_GF_OLD_PGPORT"         || unset PGPORT
+  [ -n "$_GF_OLD_PGUSER" ]     && export PGUSER="$_GF_OLD_PGUSER"         || unset PGUSER
+  [ -n "$_GF_OLD_PGDATABASE" ] && export PGDATABASE="$_GF_OLD_PGDATABASE" || unset PGDATABASE
+  [ -n "$_GF_OLD_PGPASSWORD" ] && export PGPASSWORD="$_GF_OLD_PGPASSWORD" || unset PGPASSWORD
+  unset GROWFRESH_ROOT \
+        _GF_OLD_PATH _GF_OLD_PS1 \
+        _GF_OLD_PGHOST _GF_OLD_PGPORT _GF_OLD_PGUSER \
+        _GF_OLD_PGDATABASE _GF_OLD_PGPASSWORD
+  unset -f deactivate
+  echo "🌿  growfresh env deactivated."
+}
+
+echo "🌱  growfresh env activated"
+echo "    PROJECT  : $GROWFRESH_ROOT"
+echo "    POSTGRES : $_GF_PG_PREFIX/bin/psql"
+echo "    PG       : $PGUSER@$PGHOST:$PGPORT/$PGDATABASE"
+echo ""
+echo "Common commands inside this shell:"
+echo "    ./scripts/pg-local.sh init|start|stop|psql"
+echo "    cd backend && npm run db:migrate && npm run db:seed && npm run dev"
+echo "    npx expo start --tunnel       # (in a second activated shell)"
+echo "    deactivate                    # exit this env"

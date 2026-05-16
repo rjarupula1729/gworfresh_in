@@ -1,138 +1,145 @@
+// orders.js - Postgres edition
+// Creates orders + line items + payment transaction in a single TX.
+// Awards reward points + updates stock atomically.
 const express = require('express');
 const auth = require('../middleware/auth');
-const Order = require('../models/Order');
-const User = require('../models/User');
-const Product = require('../models/Product');
-
+const db = require('../config/db');
 const router = express.Router();
 
-// Get all orders for authenticated user
+const DELIVERY_CHARGE = 50;
+
+// GET /api/orders  - current user's orders
 router.get('/', auth, async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req.user.id }).populate('items.productId');
-    res.json(orders);
+    const orders = await db('orders').where({ user_id: req.user.id }).orderBy('placed_at', 'desc');
+    if (!orders.length) return res.json([]);
+    const ids = orders.map((o) => o.id);
+    const items = await db('order_items').whereIn('order_id', ids);
+    const grouped = {};
+    items.forEach((it) => { (grouped[it.order_id] ||= []).push(it); });
+    res.json(orders.map((o) => ({
+      ...o,
+      _id: o.id,
+      createdAt: o.placed_at,
+      subtotal: Number(o.subtotal),
+      deliveryCharge: Number(o.delivery_charge),
+      totalAmount: Number(o.total),
+      paymentMethod: o.payment_method,
+      paymentStatus: o.payment_status,
+      items: (grouped[o.id] || []).map((i) => ({
+        productId: i.product_id,
+        name: i.name_snapshot,
+        price: Number(i.price_snapshot),
+        quantity: i.quantity,
+        category_id: i.category_id,
+      })),
+    })));
   } catch (err) {
     res.status(500).json({ msg: 'Server error', error: err.message });
   }
 });
 
-// Get a single order by ID
+// GET /api/orders/:id
 router.get('/:id', auth, async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id).populate('items.productId');
-    if (!order) {
-      return res.status(404).json({ msg: 'Order not found' });
-    }
-    if (order.userId.toString() !== req.user.id) {
-      return res.status(403).json({ msg: 'Unauthorized' });
-    }
-    res.json(order);
+    const order = await db('orders').where({ id: req.params.id, user_id: req.user.id }).first();
+    if (!order) return res.status(404).json({ msg: 'Order not found' });
+    const items = await db('order_items').where({ order_id: order.id });
+    const tx = await db('transactions').where({ order_id: order.id });
+    res.json({ ...order, _id: order.id, items, transactions: tx });
   } catch (err) {
     res.status(500).json({ msg: 'Server error', error: err.message });
   }
 });
 
-// Place a new order
+// POST /api/orders  body: { items:[{productId,quantity}], address, paymentMethod }
 router.post('/', auth, async (req, res) => {
+  const { items, address, paymentMethod = 'COD' } = req.body;
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ msg: 'Order must contain at least one item' });
+  }
+  if (!address) return res.status(400).json({ msg: 'Delivery address is required' });
+
   try {
-    const { items, address, paymentMethod } = req.body;
+    const result = await db.transaction(async (trx) => {
+      // 1. Lock products + validate stock
+      const ids = items.map((i) => i.productId);
+      const products = await trx('products').whereIn('id', ids).forUpdate();
+      const byId = Object.fromEntries(products.map((p) => [p.id, p]));
 
-    if (!items || items.length === 0) {
-      return res.status(400).json({ msg: 'Order must contain at least one item' });
-    }
-
-    if (!address) {
-      return res.status(400).json({ msg: 'Delivery address is required' });
-    }
-
-    // Validate items and calculate total
-    let totalAmount = 0;
-    const orderItems = [];
-
-    for (const item of items) {
-      const product = await Product.findById(item.productId);
-      if (!product) {
-        return res.status(404).json({ msg: `Product ${item.productId} not found` });
+      let subtotal = 0;
+      const lineRows = [];
+      for (const it of items) {
+        const p = byId[it.productId];
+        if (!p) throw Object.assign(new Error(`Product ${it.productId} not found`), { status: 404 });
+        if (p.stock < it.quantity) throw Object.assign(new Error(`Insufficient stock for ${p.name}`), { status: 400 });
+        const lineTotal = Number(p.price) * it.quantity;
+        subtotal += lineTotal;
+        lineRows.push({
+          product_id: p.id,
+          category_id: p.category_id,
+          name_snapshot: p.name,
+          price_snapshot: p.price,
+          quantity: it.quantity,
+          line_total: lineTotal,
+        });
       }
-      if (product.stock < item.quantity) {
-        return res.status(400).json({ msg: `Insufficient stock for ${product.name}` });
+      const total = subtotal + DELIVERY_CHARGE;
+
+      // 2. Insert order
+      const [order] = await trx('orders').insert({
+        user_id: req.user.id,
+        subtotal,
+        delivery_charge: DELIVERY_CHARGE,
+        total,
+        status: 'Confirmed',
+        payment_method: paymentMethod,
+        payment_status: paymentMethod === 'COD' ? 'Pending' : 'Paid',
+        address,
+        confirmed_at: trx.fn.now(),
+      }).returning('*');
+
+      // 3. Insert line items
+      await trx('order_items').insert(lineRows.map((l) => ({ ...l, order_id: order.id })));
+
+      // 4. Decrement stock
+      for (const it of items) {
+        await trx('products').where({ id: it.productId }).decrement('stock', it.quantity);
       }
 
-      totalAmount += product.price * item.quantity;
-      orderItems.push({
-        productId: product._id,
-        name: product.name,
-        quantity: item.quantity,
-        price: product.price
+      // 5. Record transaction (payment event)
+      await trx('transactions').insert({
+        user_id: req.user.id,
+        order_id: order.id,
+        amount: total,
+        payment_method: paymentMethod,
+        status: paymentMethod === 'COD' ? 'pending' : 'success',
+        gateway: 'demo',
+        gateway_ref: `DEMO-${Date.now()}`,
       });
 
-      // Update product stock
-      product.stock -= item.quantity;
-      await product.save();
-    }
+      // 6. Award reward points (10 per order)
+      await trx('users').where({ id: req.user.id }).increment('reward_points', 10);
 
-    // Create order
-    const order = new Order({
-      userId: req.user.id,
-      items: orderItems,
-      totalAmount,
-      address,
-      paymentMethod: paymentMethod || 'Online',
-      status: 'Processing',
-      paymentStatus: paymentMethod === 'COD' ? 'Pending' : 'Pending',
-      placedAt: new Date()
+      return { ...order, _id: order.id, items: lineRows };
     });
 
-    await order.save();
-
-    // Award reward points (10 points per order)
-    await User.findByIdAndUpdate(req.user.id, {
-      $inc: { rewardPoints: 10 }
-    });
-
-    res.json(order);
+    res.json(result);
   } catch (err) {
-    res.status(500).json({ msg: 'Server error', error: err.message });
+    res.status(err.status || 500).json({ msg: err.message || 'Server error' });
   }
 });
 
-// Update order status (admin only)
+// PUT /api/orders/:id/status  (admin)
 router.put('/:id/status', async (req, res) => {
   try {
     const { status } = req.body;
-    if (!status) {
-      return res.status(400).json({ msg: 'Status is required' });
-    }
-
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true }
-    );
-
-    if (!order) {
-      return res.status(404).json({ msg: 'Order not found' });
-    }
-
-    res.json(order);
-  } catch (err) {
-    res.status(500).json({ msg: 'Server error', error: err.message });
-  }
-});
-
-// Mark order as delivered
-router.put('/:id/delivered', async (req, res) => {
-  try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status: 'Delivered', deliveredAt: new Date() },
-      { new: true }
-    );
-
-    if (!order) {
-      return res.status(404).json({ msg: 'Order not found' });
-    }
-
+    if (!status) return res.status(400).json({ msg: 'Status is required' });
+    const patch = { status };
+    if (status === 'Shipped')   patch.shipped_at = db.fn.now();
+    if (status === 'Delivered') patch.delivered_at = db.fn.now();
+    const [order] = await db('orders').where({ id: req.params.id }).update(patch).returning('*');
+    if (!order) return res.status(404).json({ msg: 'Order not found' });
     res.json(order);
   } catch (err) {
     res.status(500).json({ msg: 'Server error', error: err.message });

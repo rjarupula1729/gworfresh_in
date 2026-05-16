@@ -1,116 +1,230 @@
-# 🌱 GrowFresh - Agricultural E-Commerce Mobile App# 🌱 GrowFresh - Agriculture E-Commerce App# 🌱 GrowFresh - Complete Application
+# 🌱 GrowFresh# 🌱 GrowFresh - Agricultural E-Commerce Mobile App# 🌱 GrowFresh - Agriculture E-Commerce App# 🌱 GrowFresh - Complete Application
 
 
+
+Mobile-first home gardening + ecommerce app.
+
+**Stack:** React Native (Expo SDK 51) · Node/Express · PostgreSQL (Knex).
 
 **Build & Run on Your Android Phone in Minutes!**
 
+---
 
+
+
+## Quick links
 
 ---Simple app to buy and sell agriculture products online.**A mobile application that empowers users to grow their own vegetables at home with quality products, expert guidance, and community support.**
 
+| I want to… | Read this |
 
+| --- | --- |
 
-## 🚀 QUICK START (Choose One)
+| Run the project locally (one command) | `scripts/dev-up.sh` |
 
+| Understand the backend / database | [`backend/MIGRATION_TO_POSTGRES.md`](backend/MIGRATION_TO_POSTGRES.md) |## 🚀 QUICK START (Choose One)
 
+| Ship the app to Play Store testers | [`PLAY_STORE_RELEASE.md`](PLAY_STORE_RELEASE.md) |
+
+| See the privacy policy | [`PRIVACY_POLICY.md`](PRIVACY_POLICY.md) |
+
+| Preview the marketing landing page | open `growfresh-app.html` |
 
 ### ✅ **BEST: Cloud Build (Recommended)**## 🚀 Quick Start (Android)---
 
+---
 
+
+
+## Repo layout
 
 ```bash
-
-npm install -g eas-cli
-
-eas login### **Option 1: Use Expo Go (Easiest)**## 📖 Quick Links
-
-cd ~/Documents/gworfresh_in
-
-eas build --platform android
 
 ```
 
-```bash- 🚀 **[Quick Start Guide](./QUICK_START.md)** - Get running in 30 minutes
+gworfresh_in/npm install -g eas-cli
 
-⏱️ **15-30 min** → Real APK sent to your email → Install on phone ✅
+├── App.js                  Expo entry point
 
-# Install Expo CLI- 📱 **[Local Testing Guide](./LOCAL_TESTING_GUIDE.md)** - Detailed setup instructions
+├── app.json                Expo config (icon, package, version)eas login### **Option 1: Use Expo Go (Easiest)**## 📖 Quick Links
 
----
+├── eas.json                Build / submit profiles
 
-npm install -g expo-cli- 🎬 **[Visual Walkthrough](./VISUAL_WALKTHROUGH.md)** - See what to expect
+├── babel.config.jscd ~/Documents/gworfresh_in
 
-### ⚡ **FAST: Expo Go (Instant Testing)**
+├── package.json            App deps
 
-- 📊 **[Project Summary](./PROJECT_SUMMARY.md)** - Features & architecture
+├── assets/                 Icon + splash PNGs (drop your art here)eas build --platform android
 
-```bash
+├── src/
+
+│   ├── components/         Reusable UI (BrandCard, ScreenHeader, …)```
+
+│   ├── context/            AppContext (auth, cart, user state)
+
+│   ├── navigation/         AppNavigator (bottom tabs + stacks)```bash- 🚀 **[Quick Start Guide](./QUICK_START.md)** - Get running in 30 minutes
+
+│   ├── screens/            Home, Shop, Cart, Garden, Community, Profile, …
+
+│   ├── services/api.js     Axios client (reads extra.apiUrl)⏱️ **15-30 min** → Real APK sent to your email → Install on phone ✅
+
+│   └── utils/              colors, theme, storage helpers
+
+├── backend/                Node/Express + Postgres API# Install Expo CLI- 📱 **[Local Testing Guide](./LOCAL_TESTING_GUIDE.md)** - Detailed setup instructions
+
+│   ├── server.js
+
+│   ├── routes/             auth, products, orders, garden, community,---
+
+│   │                        analytics, instructors, cart
+
+│   ├── db/migrations/      Knex SQL migrationsnpm install -g expo-cli- 🎬 **[Visual Walkthrough](./VISUAL_WALKTHROUGH.md)** - See what to expect
+
+│   ├── db/seeds/           Demo data
+
+│   ├── Dockerfile          Production container### ⚡ **FAST: Expo Go (Instant Testing)**
+
+│   └── MIGRATION_TO_POSTGRES.md
+
+├── render.yaml             One-click Render.com deploy (DB + API)- 📊 **[Project Summary](./PROJECT_SUMMARY.md)** - Features & architecture
+
+├── scripts/dev-up.sh       Spin up local Postgres + API + Expo
+
+└── growfresh-app.html      Static marketing/landing page```bash
+
+```
 
 npm install -g expo-cli# Go to app directory
 
+---
+
 cd src
+
+## Local dev (TL;DR)
 
 expo startcd src---
 
-# Scan QR code with Expo Go app (free from Play Store)
+```bash
+
+# Prereqs: Node 18+, Docker, Xcode/Android Studio (or Expo Go on phone)# Scan QR code with Expo Go app (free from Play Store)
+
+
+
+# 1. clone + bootstrap everything```
+
+git clone <repo> gworfresh_in && cd gworfresh_in
+
+./scripts/dev-up.sh
+
+
+
+# Expo dev server opens automatically. Scan QR with Expo Go.⏱️ **2 min** → Test features instantly (no APK needed)# Start the app## ✨ What's Included
+
+# Demo OTP is 1234 for any mobile number.
 
 ```
 
 
 
-⏱️ **2 min** → Test features instantly (no APK needed)# Start the app## ✨ What's Included
+Manual steps if you don't want Docker:---expo start
 
 
 
----expo start
+```bash
+
+# Postgres
+
+brew install postgresql@16 && brew services start postgresql@16### 💻 **LOCAL: Build on Your Computer**### Backend (Node.js + Express + MongoDB)
+
+createdb growfresh
 
 
 
-### 💻 **LOCAL: Build on Your Computer**### Backend (Node.js + Express + MongoDB)
+# Backend
+
+cd backend```bash# On your phone:- ✅ 7 RESTful API routes with 25+ endpoints
+
+cp .env.example .env
+
+npm installnpm install -g eas-cli
+
+npm run db:migrate && npm run db:seed
+
+npm run deveas build --platform android --local# 1. Install "Expo Go" app from Play Store- ✅ User authentication (WhatsApp-style OTP)
 
 
 
-```bash# On your phone:- ✅ 7 RESTful API routes with 25+ endpoints
+# Mobile (in a second tab)```
 
-npm install -g eas-cli
+cd ..
 
-eas build --platform android --local# 1. Install "Expo Go" app from Play Store- ✅ User authentication (WhatsApp-style OTP)
+npm install# 2. Scan the QR code shown in terminal- ✅ Product catalog with categories
 
-```
+npx expo start
 
-# 2. Scan the QR code shown in terminal- ✅ Product catalog with categories
+```⏱️ **30-60 min** → APK file created locally
 
-⏱️ **30-60 min** → APK file created locally
 
-# 3. App opens instantly!- ✅ Shopping cart & order management
 
----
+---# 3. App opens instantly!- ✅ Shopping cart & order management
 
-```- ✅ Plant tracking system
 
-## 📱 FEATURES
 
-- ✅ Instructor booking
+## What's where in the API---
 
-✅ Product listing with images  
+
+
+| Path | File |```- ✅ Plant tracking system
+
+| --- | --- |
+
+| `POST /api/auth/verify-otp` | `backend/routes/auth.js` |## 📱 FEATURES
+
+| `GET  /api/products` | `backend/routes/products.js` |
+
+| `POST /api/orders` | `backend/routes/orders.js` (TX-wrapped) |- ✅ Instructor booking
+
+| `GET  /api/garden` | `backend/routes/garden.js` |
+
+| `GET  /api/community` | `backend/routes/community.js` |✅ Product listing with images  
+
+| `GET  /api/analytics/me/insights` | `backend/routes/analytics.js` |
 
 ✅ Shopping cart  ### **Option 2: Build APK for Android**- ✅ Community forum
 
-✅ User login  
+Full schema (12 tables + 2 analytical views) lives in
 
-✅ Order placement  - ✅ Reward points system
+`backend/db/migrations/20260516000001_init.js`.✅ User login  
 
-✅ Beautiful UI  
 
-```bash- ✅ Stock management
 
----
+---✅ Order placement  - ✅ Reward points system
 
-# Install EAS CLI
 
-## 📖 DETAILED GUIDES
 
-npm install -g eas-cli### Frontend (React Native + Expo)
+## Status✅ Beautiful UI  
+
+
+
+- ✅ React Native UI (9 screens) refactored onto shared design system```bash- ✅ Stock management
+
+- ✅ Backend migrated MongoDB → PostgreSQL (relational + analytics)
+
+- ✅ Production-hardened server (helmet, rate-limit, CORS allowlist)---
+
+- ✅ EAS build profiles for internal + production tracks
+
+- ✅ Render.com one-click deploy for backend# Install EAS CLI
+
+- 🔜 Drop real `assets/icon.png` + `assets/splash.png`
+
+- 🔜 First Play Store internal-testing build (`npm run build:internal`)## 📖 DETAILED GUIDES
+
+
+
+See [`PLAY_STORE_RELEASE.md`](PLAY_STORE_RELEASE.md) for the fullnpm install -g eas-cli### Frontend (React Native + Expo)
+
+ship-it checklist.
 
 👉 **[Android Build Complete Guide](./ANDROID_BUILD_GUIDE.md)**
 

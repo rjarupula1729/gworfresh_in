@@ -14,6 +14,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { AppContext } from '../context/AppContext';
 import api from '../services/api';
 import { COLORS } from '../utils/colors';
+import ScreenHeader from '../components/ScreenHeader';
+import EmptyState from '../components/EmptyState';
 
 const OrderTrackingScreen = ({ navigation }) => {
   const { user } = useContext(AppContext);
@@ -355,13 +357,7 @@ const OrderTrackingScreen = ({ navigation }) => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>My Orders</Text>
-          <View style={{ width: 24 }} />
-        </View>
+        <ScreenHeader title="My Orders" onBack={() => navigation.goBack()} />
         <View style={styles.centerContent}>
           <ActivityIndicator size="large" color={COLORS.green} />
         </View>
@@ -371,14 +367,7 @@ const OrderTrackingScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Orders</Text>
-        <View style={{ width: 24 }} />
-      </View>
+      <ScreenHeader title="My Orders" onBack={() => navigation.goBack()} />
 
       {/* Content */}
       {orders.length > 0 ? (
@@ -398,17 +387,13 @@ const OrderTrackingScreen = ({ navigation }) => {
           <View style={{ height: 20 }} />
         </ScrollView>
       ) : (
-        <View style={styles.centerContent}>
-          <Ionicons name="cart" size={64} color={COLORS.lightGray} />
-          <Text style={styles.emptyText}>No orders yet</Text>
-          <Text style={styles.emptySubtext}>Start shopping to place your first order!</Text>
-          <TouchableOpacity
-            style={styles.shopBtn}
-            onPress={() => navigation.navigate('Shop')}
-          >
-            <Text style={styles.shopBtnText}>Go to Shop</Text>
-          </TouchableOpacity>
-        </View>
+        <EmptyState
+          icon="📦"
+          title="No orders yet"
+          subtitle="Start shopping to place your first order"
+          ctaLabel="Go to Shop"
+          onCtaPress={() => navigation.navigate('Shop')}
+        />
       )}
 
       <OrderDetailsModal />
@@ -419,7 +404,7 @@ const OrderTrackingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.light,
+    backgroundColor: COLORS.bg,
   },
   header: {
     flexDirection: 'row',
