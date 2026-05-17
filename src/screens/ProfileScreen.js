@@ -19,7 +19,7 @@ import { SPACING, RADIUS, SHADOWS, TYPE } from "../utils/theme";
 import InfoChip from "../components/InfoChip";
 
 export default function ProfileScreen({ navigation }) {
-  const { user, logout, updateUser } = useContext(AppContext);
+  const { user, logout, updateUser, wishlist, futurePlants, growPoints, communities } = useContext(AppContext);
 
   const [editOpen, setEditOpen] = useState(false);
   const [familyOpen, setFamilyOpen] = useState(false);
@@ -184,14 +184,42 @@ export default function ProfileScreen({ navigation }) {
             sub="Bookings · sessions"
             onPress={() => navigation.navigate("InstructorBookingScreen")}
           />
+          <Row
+            icon="❤️"
+            title="My Wishlist"
+            sub={`${wishlist?.length || 0} saved ${(wishlist?.length || 0) === 1 ? "item" : "items"}`}
+            onPress={() => navigation.navigate("WishlistScreen")}
+          />
+          <Row
+            icon="🌱"
+            title="Future Plants"
+            sub={`${futurePlants?.length || 0} planned`}
+            onPress={() => navigation.navigate("FuturePlantsScreen")}
+          />
         </Card>
 
         {/* Wellness */}
         <SectionLabel label="WELLNESS & REWARDS" />
         <Card>
-          <Row icon="💚" title="Wellness Tracker" sub="Health · Water · Sleep" />
+          <Row
+            icon="💚"
+            title="Healthy Urban Living"
+            sub="Breathing · Breaks · 1-Hour for You"
+            onPress={() => navigation.navigate("UrbanLivingScreen")}
+          />
           <Row icon="🥗" title="Healthy Eating" sub="Recipes · Meal planner" />
-          <Row icon="🎁" title="GrowPoints & Rewards" sub="Earn · Redeem" />
+          <Row
+            icon="🎁"
+            title="GrowPoints & Rewards"
+            sub={`${growPoints || 0} pts · Earn · Redeem`}
+            onPress={() => navigation.navigate("AchievementsScreen")}
+          />
+          <Row
+            icon="🌐"
+            title="Communities Hub"
+            sub={`${communities?.length || 0} joined · Discover groups`}
+            onPress={() => navigation.navigate("CommunitiesHubScreen")}
+          />
           <Row icon="♻️" title="Soil Health" sub="Compost · Carbon impact" />
         </Card>
 

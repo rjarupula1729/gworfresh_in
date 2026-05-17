@@ -13,6 +13,11 @@ import PlantTrackingScreen from "../screens/PlantTrackingScreen";
 import CommunityForumScreen from "../screens/CommunityForumScreen";
 import InstructorBookingScreen from "../screens/InstructorBookingScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import WishlistScreen from "../screens/WishlistScreen";
+import FuturePlantsScreen from "../screens/FuturePlantsScreen";
+import UrbanLivingScreen from "../screens/UrbanLivingScreen";
+import CommunitiesHubScreen from "../screens/CommunitiesHubScreen";
+import AchievementsScreen from "../screens/AchievementsScreen";
 
 import { AppContext } from "../context/AppContext";
 import { COLORS } from "../utils/colors";
@@ -78,6 +83,11 @@ export default function AppNavigator() {
             <Stack.Screen name="CommunityForumScreen" component={CommunityForumScreen} />
             <Stack.Screen name="InstructorBookingScreen" component={InstructorBookingScreen} />
             <Stack.Screen name="PlantTrackingScreen" component={PlantTrackingScreen} />
+            <Stack.Screen name="WishlistScreen" component={WishlistScreen} />
+            <Stack.Screen name="FuturePlantsScreen" component={FuturePlantsScreen} />
+            <Stack.Screen name="UrbanLivingScreen" component={UrbanLivingScreen} />
+            <Stack.Screen name="CommunitiesHubScreen" component={CommunitiesHubScreen} />
+            <Stack.Screen name="AchievementsScreen" component={AchievementsScreen} />
           </>
         )}
       </Stack.Navigator>

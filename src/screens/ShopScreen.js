@@ -1,974 +1,355 @@
-import React, { useState, useEffect, useContext } from "react";import React, { useState, useEffect, useContext } from "react";
+// ShopScreen — RN counterpart of Shop tab in growfresh-app.html.
+// Backend-driven (GET /api/products?category=&region=&q=). 5 categories,
+// region picker, search, 2-col grid with region pin (top-left), wishlist
+// (top-right), category badge (bottom-left). Wishlist wired to AppContext.
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-import {import {
+import API from "../services/api";
+import { AppContext } from "../context/AppContext";
+import { COLORS } from "../utils/colors";
+import { RADIUS, SHADOWS, SPACING, TYPE } from "../utils/theme";
 
-  View,  View,
+const CATEGORIES = [
+  { key: null, label: "All" },
+  { key: "Seeds", label: "Seeds" },
+  { key: "Saplings", label: "Saplings" },
+  { key: "Minerals", label: "Minerals" },
+  { key: "Compost", label: "Compost" },
+  { key: "Tools", label: "Tools" },
+];
 
-  Text,  Text,
+const REGIONS = [
+  "All regions",
+  "Hyderabad", "Bangalore", "Chennai", "Mumbai",
+  "Delhi", "Kolkata", "Pune", "Ahmedabad",
+  "South India", "North India", "Coastal India", "Hill Stations",
+  "All India",
+];
 
-  ScrollView,  ScrollView,
+const CAT_TINT = {
+  Seeds: COLORS.greenPale,
+  Saplings: COLORS.tealPale,
+  Minerals: COLORS.bluePale,
+  Compost: COLORS.brownPale,
+  Tools: COLORS.orangePale,
+};
 
-  TouchableOpacity,  TouchableOpacity,
+const CAT_EMOJI = {
+  Seeds: "S", Saplings: "S", Minerals: "M", Compost: "C", Tools: "T",
+};
 
-  StyleSheet,  StyleSheet,
+function pickEmoji(name, category) {
+  const n = (name || "").toLowerCase();
+  if (n.includes("tomato")) return "T";
+  if (n.includes("chili") || n.includes("chilli") || n.includes("pepper")) return "P";
+  if (n.includes("mango")) return "M";
+  if (n.includes("lemon") || n.includes("lime")) return "L";
+  if (n.includes("rose")) return "R";
+  if (n.includes("mint") || n.includes("basil") || n.includes("tulsi")) return "B";
+  if (n.includes("carrot")) return "C";
+  if (n.includes("compost") || n.includes("manure")) return "E";
+  if (n.includes("fertil") || n.includes("mineral") || n.includes("npk")) return "N";
+  if (n.includes("tool") || n.includes("trowel") || n.includes("shovel") || n.includes("pruner")) return "T";
+  return CAT_EMOJI[category] || "*";
+}
 
-  ActivityIndicator,  ActivityIndicator,
-
-  Alert,  Alert,
-
-  FlatList,  FlatList,
-
-  TextInput,  TextInput,
-
-  Image,  Image
-
-} from "react-native";} from "react-native";
-
-import API from "../services/api";import API from "../services/api";
-
-import { AppContext } from "../context/AppContext";import { AppContext } from "../context/AppContext";
-
-import { COLORS, GRADIENTS } from "../utils/colors";import colors from "../utils/colors";
-
-import { SPACING, RADIUS, SHADOWS, TYPE } from "../utils/theme";
-
-import ScreenHeader from "../components/ScreenHeader";export default function ShopScreen({ navigation, route }) {
-
-import SectionHeader from "../components/SectionHeader";  const { setCart, cart } = useContext(AppContext);
-
-import EmptyState from "../components/EmptyState";  const [products, setProducts] = useState([]);
-
-import InfoChip from "../components/InfoChip";  const [filteredProducts, setFilteredProducts] = useState([]);
-
-  const [categories, setCategories] = useState([]);
-
-const iconFor = (cat) =>  const [selectedCategory, setSelectedCategory] = useState(route?.params?.category || null);
-
-  cat === "Seeds" ? "🌾" : cat === "Saplings" ? "🌱" : cat === "Minerals" ? "💪" : "📦";  const [searchText, setSearchText] = useState("");
-
-  const [loading, setLoading] = useState(true);
-
-export default function ShopScreen({ navigation, route }) {  const [selectedProduct, setSelectedProduct] = useState(null);
-
-  const { setCart, cart } = useContext(AppContext);  const [quantity, setQuantity] = useState(1);
+export default function ShopScreen({ navigation }) {
+  const { cart, setCart, isWished, toggleWishlist } = useContext(AppContext);
 
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState(null);
 
-  const [filtered, setFiltered] = useState([]);  useEffect(() => {
+  const [category, setCategory] = useState(null);
+  const [region, setRegion] = useState("All regions");
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [regionOpen, setRegionOpen] = useState(false);
 
-  const [categories, setCategories] = useState([]);    fetchData();
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query.trim()), 250);
+    return () => clearTimeout(t);
+  }, [query]);
 
-  const [selectedCategory, setSelectedCategory] = useState(route?.params?.category || null);  }, []);
+  const fetchProducts = useCallback(async () => {
+    setError(null);
+    try {
+      const params = {};
+      if (category) params.category = category;
+      if (region && region !== "All regions") params.region = region;
+      if (debouncedQuery) params.q = debouncedQuery;
+      const res = await API.get("/products", { params });
+      setProducts(Array.isArray(res.data) ? res.data : []);
+    } catch (e) {
+      setError(e.response?.data?.msg || "Couldn't load products");
+      setProducts([]);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, [category, region, debouncedQuery]);
 
-  const [searchText, setSearchText] = useState("");
+  useEffect(() => { fetchProducts(); }, [fetchProducts]);
 
-  const [loading, setLoading] = useState(true);  useEffect(() => {
+  const cartQty = useCallback(
+    (pid) => {
+      const item = cart.find((c) => c.productId === pid);
+      return item ? item.quantity : 0;
+    },
+    [cart]
+  );
 
-  const [selectedProduct, setSelectedProduct] = useState(null);    filterProducts();
-
-  const [quantity, setQuantity] = useState(1);  }, [selectedCategory, searchText, products]);
-
-
-
-  useEffect(() => {  const fetchData = async () => {
-
-    (async () => {    try {
-
-      try {      const categoriesRes = await API.get("/products/categories/list");
-
-        const [c, p] = await Promise.all([      setCategories(categoriesRes.data);
-
-          API.get("/products/categories/list"),
-
-          API.get("/products"),      const productsRes = await API.get("/products");
-
-        ]);      setProducts(productsRes.data);
-
-        setCategories(c.data || []);      setFilteredProducts(productsRes.data);
-
-        setProducts(p.data || []);    } catch (err) {
-
-        setFiltered(p.data || []);      Alert.alert("Error", "Failed to load products");
-
-      } catch (e) {    } finally {
-
-        Alert.alert("Error", "Failed to load products");      setLoading(false);
-
-      } finally {    }
-
-        setLoading(false);  };
-
+  const addToCart = (p) => {
+    const pid = p._id || p.id;
+    setCart((prev) => {
+      const idx = prev.findIndex((c) => c.productId === pid);
+      if (idx >= 0) {
+        const next = [...prev];
+        next[idx] = { ...next[idx], quantity: next[idx].quantity + 1 };
+        return next;
       }
-
-    })();  const filterProducts = () => {
-
-  }, []);    let filtered = products;
-
-
-
-  useEffect(() => {    if (selectedCategory) {
-
-    let f = products;      filtered = filtered.filter(p => p.category === selectedCategory);
-
-    if (selectedCategory) f = f.filter((p) => p.category === selectedCategory);    }
-
-    if (searchText) {
-
-      const q = searchText.toLowerCase();    if (searchText) {
-
-      f = f.filter((p) => p.name.toLowerCase().includes(q));      filtered = filtered.filter(p =>
-
-    }        p.name.toLowerCase().includes(searchText.toLowerCase())
-
-    setFiltered(f);      );
-
-  }, [selectedCategory, searchText, products]);    }
-
-
-
-  const handleAddToCart = (product, qty = 1) => {    setFilteredProducts(filtered);
-
-    const existing = cart.find((i) => i.productId === product._id);  };
-
-    const newCart = existing
-
-      ? cart.map((i) =>  const handleAddToCart = (product) => {
-
-          i.productId === product._id ? { ...i, quantity: i.quantity + qty } : i    const existingItem = cart.find(item => item.productId === product._id);
-
-        )
-
-      : [    const newCart = existingItem
-
-          ...cart,      ? cart.map(item =>
-
-          {          item.productId === product._id
-
-            productId: product._id,            ? { ...item, quantity: item.quantity + quantity }
-
-            name: product.name,            : item
-
-            price: product.price,        )
-
-            quantity: qty,      : [
-
-          },          ...cart,
-
-        ];          {
-
-    setCart(newCart);            productId: product._id,
-
-    Alert.alert("Added", `${qty} × ${product.name} added to cart!`);            name: product.name,
-
-    setSelectedProduct(null);            price: product.price,
-
-    setQuantity(1);            quantity
-
-  };          }
-
-        ];
-
-  if (loading) {
-
-    return (    setCart(newCart);
-
-      <View style={styles.center}>    Alert.alert("Success", `${quantity} x ${product.name} added to cart!`);
-
-        <ActivityIndicator size="large" color={COLORS.green} />    setSelectedProduct(null);
-
-      </View>    setQuantity(1);
-
-    );  };
-
-  }
-
-  if (loading) {
-
-  // ---------- Product Details ----------    return (
-
-  if (selectedProduct) {      <View style={styles.centerContainer}>
-
-    const p = selectedProduct;        <ActivityIndicator size="large" color={colors.primary} />
-
-    return (      </View>
-
-      <View style={styles.root}>    );
-
-        <ScreenHeader title="Product Details" onBack={() => setSelectedProduct(null)} />  }
-
-        <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
-
-          <View style={styles.detailImageWrap}>  if (selectedProduct) {
-
-            {p.image ? (    return (
-
-              <Image source={{ uri: p.image }} style={{ width: "100%", height: "100%" }} resizeMode="cover" />      <View style={styles.container}>
-
-            ) : (        <View style={styles.detailsHeader}>
-
-              <Text style={{ fontSize: 96 }}>{iconFor(p.category)}</Text>          <TouchableOpacity onPress={() => setSelectedProduct(null)}>
-
-            )}            <Text style={styles.backButton}>← Back</Text>
-
-          </View>          </TouchableOpacity>
-
-          <Text style={styles.detailsTitle}>Product Details</Text>
-
-          <View style={{ paddingHorizontal: SPACING.lg, paddingTop: SPACING.lg }}>          <View style={{ width: 50 }} />
-
-            <InfoChip variant="green" label={p.category} />        </View>
-
-            <Text style={styles.detailName}>{p.name}</Text>
-
-        <ScrollView style={styles.detailsContainer}>
-
-            <View style={styles.priceBlock}>          <View style={styles.detailsImageContainer}>
-
-              <Text style={styles.priceLabel}>Price</Text>            {selectedProduct.image ? (
-
-              <Text style={styles.priceValue}>₹{p.price}</Text>              <Image
-
-            </View>                source={{ uri: selectedProduct.image }}
-
-                style={styles.detailsProductImage}
-
-            <SectionHeader title="Description" />                defaultSource={require("../assets/placeholder.png")}
-
-            <Text style={styles.detailDesc}>                resizeMode="cover"
-
-              {p.description ||              />
-
-                "Premium quality product for your garden. Carefully selected and tested for best results."}            ) : (
-
-            </Text>              <Text style={styles.detailsImageText}>
-
-                {selectedProduct.category === "Seeds" ? "🌾" : selectedProduct.category === "Saplings" ? "🌱" : selectedProduct.category === "Minerals" ? "💪" : "📦"}
-
-            <SectionHeader title="Care Instructions" />              </Text>
-
-            <Text style={styles.detailDesc}>            )}
-
-              {p.instructions || "• Water regularly\n• Place in sunlight\n• Maintain soil moisture\n• Check for pests weekly"}          </View>
-
-            </Text>
-
-          <View style={styles.detailsContent}>
-
-            <SectionHeader title="Stock" />            <Text style={styles.detailsName}>{selectedProduct.name}</Text>
-
-            <Text style={styles.stockText}>            <Text style={styles.detailsCategory}>{selectedProduct.category}</Text>
-
-              {p.stock > 0 ? `${p.stock} units available` : "Out of stock"}
-
-            </Text>            <View style={styles.detailsPrice}>
-
-              <Text style={styles.detailsPriceLabel}>Price</Text>
-
-            {p.stock > 0 && (              <Text style={styles.detailsPriceValue}>₹{selectedProduct.price}</Text>
-
-              <>            </View>
-
-                <View style={styles.qtyRow}>
-
-                  <Text style={styles.qtyLabel}>Quantity</Text>            <Text style={styles.detailsSectionTitle}>Description</Text>
-
-                  <View style={styles.qtyControl}>            <Text style={styles.detailsDescription}>
-
-                    <TouchableOpacity              {selectedProduct.description || "Premium quality product for your garden. Carefully selected and tested for best results."}
-
-                      style={styles.qtyBtn}            </Text>
-
-                      onPress={() => setQuantity(Math.max(1, quantity - 1))}
-
-                    >            <Text style={styles.detailsSectionTitle}>Care Instructions</Text>
-
-                      <Text style={styles.qtyBtnText}>−</Text>            <Text style={styles.detailsInstructions}>
-
-                    </TouchableOpacity>              {selectedProduct.instructions || "• Water regularly\n• Place in sunlight\n• Maintain soil moisture\n• Check for pests weekly"}
-
-                    <Text style={styles.qtyValue}>{quantity}</Text>            </Text>
-
-                    <TouchableOpacity
-
-                      style={styles.qtyBtn}            <Text style={styles.detailsSectionTitle}>Stock Available</Text>
-
-                      onPress={() => setQuantity(quantity + 1)}            <Text style={styles.stockText}>
-
-                    >              {selectedProduct.stock} units available
-
-                      <Text style={styles.qtyBtnText}>+</Text>            </Text>
-
-                    </TouchableOpacity>
-
-                  </View>            {selectedProduct.stock > 0 && (
-
-                </View>              <>
-
-                <View style={styles.quantityContainer}>
-
-                <TouchableOpacity                  <Text style={styles.quantityLabel}>Quantity</Text>
-
-                  style={styles.bigAddBtn}                  <View style={styles.quantityControl}>
-
-                  onPress={() => handleAddToCart(p, quantity)}                    <TouchableOpacity
-
-                  activeOpacity={0.85}                      style={styles.quantityBtn}
-
-                >                      onPress={() => setQuantity(Math.max(1, quantity - 1))}
-
-                  <Text style={styles.bigAddBtnText}>Add to Cart · ₹{p.price * quantity}</Text>                    >
-
-                </TouchableOpacity>                      <Text style={styles.quantityBtnText}>−</Text>
-
-              </>                    </TouchableOpacity>
-
-            )}                    <Text style={styles.quantityValue}>{quantity}</Text>
-
-          </View>                    <TouchableOpacity
-
-        </ScrollView>                      style={styles.quantityBtn}
-
-      </View>                      onPress={() => setQuantity(quantity + 1)}
-
-    );                    >
-
-  }                      <Text style={styles.quantityBtnText}>+</Text>
-
-                    </TouchableOpacity>
-
-  // ---------- Shop List ----------                  </View>
-
-  return (                </View>
-
-    <View style={styles.root}>
-
-      <ScreenHeader                <TouchableOpacity
-
-        title="Shop"                  style={styles.addToCartButton}
-
-        right={                  onPress={() => handleAddToCart(selectedProduct)}
-
-          <TouchableOpacity onPress={() => navigation.navigate("CartScreen")} hitSlop={10}>                >
-
-            <Text style={styles.headerCart}>🛍️ {cart.length}</Text>                  <Text style={styles.addToCartButtonText}>Add to Cart</Text>
-
-          </TouchableOpacity>                </TouchableOpacity>
-
-        }              </>
-
-      />            )}
-
-          </View>
-
-      <View style={styles.searchWrap}>        </ScrollView>
-
-        <Text style={styles.searchIcon}>🔍</Text>      </View>
-
-        <TextInput    );
-
-          style={styles.searchInput}  }
-
-          placeholder="Search seeds, saplings…"
-
-          placeholderTextColor={COLORS.muted}  return (
-
-          value={searchText}    <View style={styles.container}>
-
-          onChangeText={setSearchText}      <View style={styles.header}>
-
-        />        <Text style={styles.headerTitle}>Shop</Text>
-
-      </View>        <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
-
-          <Text style={styles.cartIcon}>🛍️ {cart.length}</Text>
-
-      <ScrollView        </TouchableOpacity>
-
-        horizontal      </View>
-
-        showsHorizontalScrollIndicator={false}
-
-        style={styles.chipsScroll}      <View style={styles.searchContainer}>
-
-        contentContainerStyle={{ paddingHorizontal: SPACING.lg, gap: SPACING.sm }}        <TextInput
-
-      >          style={styles.searchInput}
-
-        <CategoryPill label="All" active={!selectedCategory} onPress={() => setSelectedCategory(null)} />          placeholder="Search products..."
-
-        {categories.map((c, i) => (          value={searchText}
-
-          <CategoryPill          onChangeText={setSearchText}
-
-            key={i}        />
-
-            label={c}      </View>
-
-            active={selectedCategory === c}
-
-            onPress={() => setSelectedCategory(c)}      <ScrollView
-
-          />        horizontal
-
-        ))}        showsHorizontalScrollIndicator={false}
-
-      </ScrollView>        style={styles.categoriesScroll}
-
-      >
-
-      {filtered.length === 0 ? (        <TouchableOpacity
-
-        <EmptyState          style={[
-
-          icon="🔎"            styles.categoryFilter,
-
-          title="No products found"            !selectedCategory && styles.categoryFilterActive
-
-          subtitle="Try a different search or category"          ]}
-
-        />          onPress={() => setSelectedCategory(null)}
-
-      ) : (        >
-
-        <FlatList          <Text
-
-          data={filtered}            style={[
-
-          keyExtractor={(item) => item._id}              styles.categoryFilterText,
-
-          numColumns={2}              !selectedCategory && styles.categoryFilterTextActive
-
-          columnWrapperStyle={styles.colWrap}            ]}
-
-          contentContainerStyle={{ paddingBottom: 24 }}          >
-
-          renderItem={({ item }) => (            All
-
-            <TouchableOpacity          </Text>
-
-              style={styles.card}        </TouchableOpacity>
-
-              onPress={() => setSelectedProduct(item)}
-
-              activeOpacity={0.85}        {categories.map((category, idx) => (
-
-            >          <TouchableOpacity
-
-              <View style={styles.cardImg}>            key={idx}
-
-                {item.image ? (            style={[
-
-                  <Image source={{ uri: item.image }} style={{ width: "100%", height: "100%" }} resizeMode="cover" />              styles.categoryFilter,
-
-                ) : (              selectedCategory === category && styles.categoryFilterActive
-
-                  <Text style={{ fontSize: 42 }}>{iconFor(item.category)}</Text>            ]}
-
-                )}            onPress={() => setSelectedCategory(category)}
-
-              </View>          >
-
-              <Text style={styles.cardName} numberOfLines={1}>{item.name}</Text>            <Text
-
-              <Text style={styles.cardCat} numberOfLines={1}>{item.category}</Text>              style={[
-
-              <View style={styles.cardPriceRow}>                styles.categoryFilterText,
-
-                <Text style={styles.cardPrice}>₹{item.price}</Text>                selectedCategory === category &&
-
-              </View>                  styles.categoryFilterTextActive
-
-              <TouchableOpacity              ]}
-
-                style={styles.cardAdd}            >
-
-                onPress={() => handleAddToCart(item, 1)}              {category}
-
-              >            </Text>
-
-                <Text style={styles.cardAddText}>Add</Text>          </TouchableOpacity>
-
-              </TouchableOpacity>        ))}
-
-            </TouchableOpacity>      </ScrollView>
-
+      return [...prev, { productId: pid, name: p.name, price: p.price, quantity: 1 }];
+    });
+  };
+
+  const decFromCart = (pid) => {
+    setCart((prev) => {
+      const idx = prev.findIndex((c) => c.productId === pid);
+      if (idx < 0) return prev;
+      const next = [...prev];
+      const q = next[idx].quantity - 1;
+      if (q <= 0) next.splice(idx, 1);
+      else next[idx] = { ...next[idx], quantity: q };
+      return next;
+    });
+  };
+
+  const cartCount = useMemo(() => cart.reduce((s, c) => s + c.quantity, 0), [cart]);
+
+  const renderItem = ({ item }) => {
+    const pid = item._id || item.id;
+    const qty = cartQty(pid);
+    const wished = isWished(pid);
+    const tint = CAT_TINT[item.category] || COLORS.greenPale;
+    return (
+      <View style={styles.card}>
+        <View style={[styles.imageBox, { backgroundColor: tint }]}>
+          {!!item.region && (
+            <View style={styles.regionPin}>
+              <Text numberOfLines={1} style={styles.regionPinText}>{item.region}</Text>
+            </View>
           )}
+          <TouchableOpacity style={styles.wishBtn} onPress={() => toggleWishlist(pid)} hitSlop={8}>
+            <Ionicons name={wished ? "heart" : "heart-outline"} size={16} color={wished ? COLORS.red : COLORS.text} />
+          </TouchableOpacity>
+          <Text style={styles.emoji}>{pickEmoji(item.name, item.category)}</Text>
+          {!!item.category && (
+            <View style={styles.catBadge}>
+              <Text style={styles.catBadgeText}>{String(item.category).toUpperCase()}</Text>
+            </View>
+          )}
+        </View>
 
-        />      {filteredProducts.length === 0 ? (
+        <Text numberOfLines={1} style={styles.name}>{item.name}</Text>
+        {!!item.description && (
+          <Text numberOfLines={2} style={styles.desc}>{item.description}</Text>
+        )}
 
-      )}        <View style={styles.emptyContainer}>
+        <View style={styles.bottomRow}>
+          <Text style={styles.price}>{"\u20B9"}{item.price}</Text>
+          {qty === 0 ? (
+            <TouchableOpacity style={styles.addBtn} onPress={() => addToCart(item)}>
+              <Text style={styles.addBtnText}>+ Add</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.qtyRow}>
+              <TouchableOpacity style={styles.qtyBtn} onPress={() => decFromCart(pid)}>
+                <Text style={styles.qtyBtnText}>-</Text>
+              </TouchableOpacity>
+              <Text style={styles.qtyText}>{qty}</Text>
+              <TouchableOpacity style={styles.qtyBtn} onPress={() => addToCart(item)}>
+                <Text style={styles.qtyBtnText}>+</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </View>
+    );
+  };
 
-    </View>          <Text style={styles.emptyText}>No products found</Text>
+  return (
+    <View style={styles.root}>
+      <View style={styles.header}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.title}>Shop</Text>
+          <Text style={styles.subtitle}>{products.length} items - {region}</Text>
+        </View>
+        <TouchableOpacity style={styles.cartIconWrap} onPress={() => navigation.navigate("CartScreen")}>
+          <Ionicons name="cart-outline" size={22} color={COLORS.text} />
+          {cartCount > 0 && (
+            <View style={styles.cartBadge}>
+              <Text style={styles.cartBadgeText}>{cartCount}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </View>
 
-  );        </View>
+      <View style={styles.searchRow}>
+        <View style={styles.searchBox}>
+          <Ionicons name="search" size={16} color={COLORS.muted} />
+          <TextInput
+            placeholder="Search products"
+            placeholderTextColor={COLORS.muted}
+            value={query}
+            onChangeText={setQuery}
+            style={styles.searchInput}
+          />
+          {!!query && (
+            <TouchableOpacity onPress={() => setQuery("")} hitSlop={8}>
+              <Ionicons name="close-circle" size={16} color={COLORS.muted} />
+            </TouchableOpacity>
+          )}
+        </View>
+        <TouchableOpacity style={styles.regionBtn} onPress={() => setRegionOpen(true)}>
+          <Ionicons name="location-outline" size={14} color={COLORS.green} />
+          <Text numberOfLines={1} style={styles.regionBtnText}>{region}</Text>
+        </TouchableOpacity>
+      </View>
 
-}      ) : (
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.catRow}>
+        {CATEGORIES.map((c) => {
+          const active = c.key === category;
+          return (
+            <Pressable
+              key={c.label}
+              onPress={() => setCategory(c.key)}
+              style={[styles.catPill, active && styles.catPillActive]}
+            >
+              <Text style={[styles.catPillText, active && styles.catPillTextActive]}>{c.label}</Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
 
+      {loading ? (
+        <View style={styles.center}><ActivityIndicator color={COLORS.green} /></View>
+      ) : error ? (
+        <View style={styles.center}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity style={styles.retryBtn} onPress={fetchProducts}>
+            <Text style={styles.retryBtnText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
         <FlatList
-
-function CategoryPill({ label, active, onPress }) {          data={filteredProducts}
-
-  return (          keyExtractor={(item) => item._id}
-
-    <TouchableOpacity          numColumns={2}
-
-      onPress={onPress}          columnWrapperStyle={styles.columnWrapper}
-
-      style={[styles.catPill, active && styles.catPillActive]}          renderItem={({ item }) => (
-
-      activeOpacity={0.85}            <TouchableOpacity
-
-    >              style={styles.productCard}
-
-      <Text style={[styles.catPillText, active && styles.catPillTextActive]}>{label}</Text>              onPress={() => setSelectedProduct(item)}
-
-    </TouchableOpacity>            >
-
-  );              <View style={styles.productImage}>
-
-}                {item.image ? (
-
-                  <Image
-
-const styles = StyleSheet.create({                    source={{ uri: item.image }}
-
-  root: { flex: 1, backgroundColor: COLORS.bg },                    style={styles.productImageContent}
-
-  center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.bg },                    resizeMode="cover"
-
-  headerCart: { color: COLORS.white, fontWeight: "800", fontSize: 13 },                  />
-
-                ) : (
-
-  searchWrap: {                  <Text style={styles.productImageText}>
-
-    flexDirection: "row",                    {item.category === "Seeds" ? "🌾" : item.category === "Saplings" ? "🌱" : item.category === "Minerals" ? "💪" : "📦"}
-
-    alignItems: "center",                  </Text>
-
-    marginHorizontal: SPACING.lg,                )}
-
-    marginTop: SPACING.lg,              </View>
-
-    backgroundColor: COLORS.white,              <Text style={styles.productName}>{item.name}</Text>
-
-    borderRadius: RADIUS.pill,              <Text style={styles.productCategory}>{item.category}</Text>
-
-    paddingHorizontal: SPACING.md,              <Text style={styles.productPrice}>₹{item.price}</Text>
-
-    borderWidth: 1,              <TouchableOpacity
-
-    borderColor: COLORS.border,                style={styles.quickAddBtn}
-
-    ...SHADOWS.sm,                onPress={() => {
-
-  },                  setSelectedProduct(item);
-
-  searchIcon: { fontSize: 14, marginRight: 6 },                }}
-
-  searchInput: { flex: 1, paddingVertical: 10, fontSize: 14, color: COLORS.text },              >
-
-                <Text style={styles.quickAddBtnText}>View & Add</Text>
-
-  chipsScroll: { marginTop: SPACING.md, marginBottom: SPACING.sm, flexGrow: 0 },              </TouchableOpacity>
-
-  catPill: {            </TouchableOpacity>
-
-    backgroundColor: COLORS.white,          )}
-
-    borderRadius: RADIUS.pill,          scrollEnabled={false}
-
-    paddingHorizontal: SPACING.md,        />
-
-    paddingVertical: 7,      )}
-
-    borderWidth: 1,    </View>
-
-    borderColor: COLORS.border,  );
-
-  },}
-
-  catPillActive: { backgroundColor: COLORS.green, borderColor: COLORS.green },
-
-  catPillText: { fontSize: 12, fontWeight: "700", color: COLORS.muted },const styles = StyleSheet.create({
-
-  catPillTextActive: { color: COLORS.white },  container: {
-
-    flex: 1,
-
-  colWrap: { justifyContent: "space-between", paddingHorizontal: SPACING.lg, marginTop: SPACING.sm, gap: SPACING.sm },    backgroundColor: colors.light
-
-  card: {  },
-
-    width: "48%",  centerContainer: {
-
-    backgroundColor: COLORS.white,    flex: 1,
-
-    borderRadius: RADIUS.md,    justifyContent: "center",
-
-    padding: SPACING.sm,    alignItems: "center",
-
-    marginBottom: SPACING.sm,    backgroundColor: colors.light
-
-    ...SHADOWS.sm,  },
-
-  },  header: {
-
-  cardImg: {    flexDirection: "row",
-
-    height: 100,    justifyContent: "space-between",
-
-    backgroundColor: COLORS.greenPale,    alignItems: "center",
-
-    borderRadius: RADIUS.sm,    paddingHorizontal: 16,
-
-    justifyContent: "center",    paddingTop: 12,
-
-    alignItems: "center",    paddingBottom: 12,
-
-    marginBottom: 8,    backgroundColor: colors.white,
-
-    overflow: "hidden",    borderBottomWidth: 1,
-
-  },    borderBottomColor: "#EEE"
-
-  cardName: { ...TYPE.card, color: COLORS.text },  },
-
-  cardCat: { ...TYPE.caption, color: COLORS.muted, marginTop: 2 },  headerTitle: {
-
-  cardPriceRow: { marginVertical: 6 },    fontSize: 20,
-
-  cardPrice: { fontSize: 14, fontWeight: "800", color: COLORS.green },    fontWeight: "bold",
-
-  cardAdd: {    color: colors.text
-
-    backgroundColor: COLORS.green,  },
-
-    borderRadius: RADIUS.sm,  cartIcon: {
-
-    paddingVertical: 7,    fontSize: 14,
-
-    alignItems: "center",    fontWeight: "600",
-
-  },    color: colors.primary
-
-  cardAddText: { color: COLORS.white, fontSize: 11, fontWeight: "800", letterSpacing: 0.3 },  },
-
-  searchContainer: {
-
-  // Detail    paddingHorizontal: 16,
-
-  detailImageWrap: {    paddingVertical: 12
-
-    height: 220,  },
-
-    backgroundColor: COLORS.greenPale,  searchInput: {
-
-    justifyContent: "center",    backgroundColor: colors.white,
-
-    alignItems: "center",    borderRadius: 20,
-
-    overflow: "hidden",    paddingHorizontal: 14,
-
-  },    paddingVertical: 10,
-
-  detailName: { ...TYPE.hero, color: COLORS.text, marginTop: SPACING.sm, marginBottom: 4 },    borderWidth: 1,
-
-  priceBlock: {    borderColor: "#DDD",
-
-    backgroundColor: COLORS.white,    fontSize: 14
-
-    borderRadius: RADIUS.md,  },
-
-    padding: SPACING.md,  categoriesScroll: {
-
-    marginTop: SPACING.md,    paddingHorizontal: 16,
-
-    flexDirection: "row",    paddingBottom: 12
-
-    justifyContent: "space-between",  },
-
-    alignItems: "center",  categoryFilter: {
-
-    ...SHADOWS.sm,    backgroundColor: colors.white,
-
-  },    borderRadius: 20,
-
-  priceLabel: { ...TYPE.caption, color: COLORS.muted },    paddingHorizontal: 14,
-
-  priceValue: { fontSize: 22, fontWeight: "900", color: COLORS.green },    paddingVertical: 8,
-
-  detailDesc: { ...TYPE.body, color: COLORS.text, lineHeight: 20, marginBottom: 4 },    marginRight: 8,
-
-  stockText: { ...TYPE.body, color: COLORS.greenDeep, fontWeight: "700" },    borderWidth: 1,
-
-    borderColor: "#DDD"
-
-  qtyRow: {  },
-
-    flexDirection: "row",  categoryFilterActive: {
-
-    alignItems: "center",    backgroundColor: colors.primary,
-
-    justifyContent: "space-between",    borderColor: colors.primary
-
-    marginTop: SPACING.lg,  },
-
-    backgroundColor: COLORS.white,  categoryFilterText: {
-
-    borderRadius: RADIUS.md,    fontSize: 12,
-
-    padding: SPACING.md,    fontWeight: "500",
-
-    ...SHADOWS.sm,    color: "#666"
-
-  },  },
-
-  qtyLabel: { ...TYPE.card, color: COLORS.text },  categoryFilterTextActive: {
-
-  qtyControl: { flexDirection: "row", alignItems: "center" },    color: colors.white
-
-  qtyBtn: {  },
-
-    width: 36,  emptyContainer: {
-
-    height: 36,    flex: 1,
-
-    borderRadius: RADIUS.sm,    justifyContent: "center",
-
-    backgroundColor: COLORS.greenPale,    alignItems: "center"
-
-    justifyContent: "center",  },
-
-    alignItems: "center",  emptyText: {
-
-  },    fontSize: 14,
-
-  qtyBtnText: { fontSize: 18, fontWeight: "900", color: COLORS.green },    color: "#999"
-
-  qtyValue: { fontSize: 16, fontWeight: "800", marginHorizontal: SPACING.lg, color: COLORS.text },  },
-
-  columnWrapper: {
-
-  bigAddBtn: {    justifyContent: "space-between",
-
-    marginTop: SPACING.lg,    paddingHorizontal: 16,
-
-    backgroundColor: COLORS.green,    marginBottom: 12
-
-    borderRadius: RADIUS.sm,  },
-
-    paddingVertical: 14,  productCard: {
-
-    alignItems: "center",    width: "48%",
-
-    ...SHADOWS.md,    backgroundColor: colors.white,
-
-  },    borderRadius: 10,
-
-  bigAddBtnText: { color: COLORS.white, fontWeight: "800", fontSize: 15, letterSpacing: 0.4 },    padding: 10,
-
-});    overflow: "hidden"
-
-  },
-  productImage: {
-    height: 100,
-    backgroundColor: colors.light,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 8,
-    overflow: "hidden"
-  },
-  productImageContent: {
-    width: "100%",
-    height: "100%"
-  },
-  productImageText: {
-    fontSize: 40
-  },
-  productName: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: colors.text,
-    marginBottom: 2
-  },
-  productCategory: {
-    fontSize: 10,
-    color: "#999",
-    marginBottom: 4
-  },
-  productPrice: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: colors.primary,
-    marginBottom: 6
-  },
-  quickAddBtn: {
-    backgroundColor: colors.primary,
-    borderRadius: 6,
-    paddingVertical: 6,
-    alignItems: "center"
-  },
-  quickAddBtnText: {
-    color: colors.white,
-    fontSize: 11,
-    fontWeight: "600"
-  },
-
-  // Product Details Styles
-  detailsHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 12,
-    backgroundColor: colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: "#EEE"
-  },
-  backButton: {
-    fontSize: 14,
-    color: colors.primary,
-    fontWeight: "600"
-  },
-  detailsTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: colors.text
-  },
-  detailsContainer: {
-    flex: 1
-  },
-  detailsImageContainer: {
-    height: 200,
-    backgroundColor: colors.white,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 16,
-    overflow: "hidden"
-  },
-  detailsProductImage: {
-    width: "100%",
-    height: "100%"
-  },
-  detailsImageText: {
-    fontSize: 80
-  },
-  detailsContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 20
-  },
-  detailsName: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: colors.text,
-    marginBottom: 4
-  },
-  detailsCategory: {
-    fontSize: 13,
-    color: "#999",
-    marginBottom: 12
-  },
-  detailsPrice: {
-    backgroundColor: colors.white,
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  detailsPriceLabel: {
-    fontSize: 12,
-    color: "#999"
-  },
-  detailsPriceValue: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.primary
-  },
-  detailsSectionTitle: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: colors.text,
-    marginTop: 14,
-    marginBottom: 8
-  },
-  detailsDescription: {
-    fontSize: 13,
-    color: "#666",
-    lineHeight: 20,
-    backgroundColor: colors.white,
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 12
-  },
-  detailsInstructions: {
-    fontSize: 13,
-    color: "#666",
-    lineHeight: 20,
-    backgroundColor: colors.white,
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 12
-  },
-  stockText: {
-    fontSize: 12,
-    color: colors.primary,
-    fontWeight: "600",
-    backgroundColor: colors.light,
-    borderRadius: 8,
-    padding: 10
-  },
-  quantityContainer: {
-    backgroundColor: colors.white,
-    borderRadius: 10,
-    padding: 12,
-    marginTop: 14,
-    marginBottom: 14
-  },
-  quantityLabel: {
-    fontSize: 12,
-    color: "#999",
-    marginBottom: 8
-  },
-  quantityControl: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  quantityBtn: {
-    width: 36,
-    height: 36,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    borderRadius: 6,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  quantityBtnText: {
-    fontSize: 18,
-    color: colors.primary,
-    fontWeight: "bold"
-  },
-  quantityValue: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: colors.text,
-    marginHorizontal: 20
-  },
-  addToCartButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 10,
-    paddingVertical: 14,
-    alignItems: "center",
-    marginBottom: 20
-  },
-  addToCartButtonText: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: "bold"
-  }
+          data={products}
+          renderItem={renderItem}
+          keyExtractor={(it) => String(it._id || it.id)}
+          numColumns={2}
+          columnWrapperStyle={{ gap: SPACING.md, paddingHorizontal: SPACING.lg }}
+          contentContainerStyle={{ paddingBottom: 100, paddingTop: SPACING.sm, gap: SPACING.md }}
+          refreshing={refreshing}
+          onRefresh={() => { setRefreshing(true); fetchProducts(); }}
+          ListEmptyComponent={
+            <View style={styles.center}>
+              <Text style={{ ...TYPE.body, color: COLORS.muted }}>No products found</Text>
+            </View>
+          }
+        />
+      )}
+
+      <Modal transparent animationType="fade" visible={regionOpen} onRequestClose={() => setRegionOpen(false)}>
+        <Pressable style={styles.overlay} onPress={() => setRegionOpen(false)}>
+          <Pressable style={styles.regionSheet} onPress={() => {}}>
+            <View style={styles.sheetHandle} />
+            <Text style={styles.sheetTitle}>Choose region</Text>
+            <ScrollView style={{ maxHeight: 380 }}>
+              {REGIONS.map((r) => {
+                const active = r === region;
+                return (
+                  <TouchableOpacity
+                    key={r}
+                    style={[styles.regionRow, active && { backgroundColor: COLORS.greenPale }]}
+                    onPress={() => { setRegion(r); setRegionOpen(false); }}
+                  >
+                    <Ionicons name="location" size={16} color={active ? COLORS.green : COLORS.muted} />
+                    <Text style={[styles.regionRowText, active && { color: COLORS.green }]}>{r}</Text>
+                    {active && <Ionicons name="checkmark" size={16} color={COLORS.green} />}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </Pressable>
+        </Pressable>
+      </Modal>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  root: { flex: 1, backgroundColor: COLORS.bg },
+  header: { flexDirection: "row", alignItems: "center", paddingHorizontal: SPACING.lg, paddingTop: SPACING.xxl, paddingBottom: SPACING.sm },
+  title: { ...TYPE.hero, color: COLORS.text },
+  subtitle: { ...TYPE.caption, color: COLORS.muted, marginTop: 2 },
+  cartIconWrap: { width: 38, height: 38, borderRadius: 19, backgroundColor: COLORS.white, alignItems: "center", justifyContent: "center", ...SHADOWS.sm },
+  cartBadge: { position: "absolute", top: -2, right: -2, minWidth: 18, height: 18, borderRadius: 9, backgroundColor: COLORS.red, alignItems: "center", justifyContent: "center", paddingHorizontal: 4 },
+  cartBadgeText: { color: COLORS.white, fontSize: 10, fontWeight: "900" },
+
+  searchRow: { flexDirection: "row", gap: SPACING.sm, paddingHorizontal: SPACING.lg, paddingTop: SPACING.sm },
+  searchBox: { flex: 1, flexDirection: "row", alignItems: "center", backgroundColor: COLORS.white, borderRadius: RADIUS.pill, paddingHorizontal: SPACING.md, height: 40, gap: SPACING.sm, ...SHADOWS.sm },
+  searchInput: { flex: 1, ...TYPE.body, color: COLORS.text, padding: 0 },
+  regionBtn: { flexDirection: "row", alignItems: "center", gap: 4, backgroundColor: COLORS.white, paddingHorizontal: SPACING.md, borderRadius: RADIUS.pill, maxWidth: 140, ...SHADOWS.sm },
+  regionBtnText: { ...TYPE.caption, color: COLORS.text, maxWidth: 100 },
+
+  catRow: { paddingHorizontal: SPACING.lg, paddingVertical: SPACING.md, gap: SPACING.sm },
+  catPill: { paddingHorizontal: SPACING.md, paddingVertical: 7, borderRadius: RADIUS.pill, backgroundColor: COLORS.white, ...SHADOWS.sm },
+  catPillActive: { backgroundColor: COLORS.green },
+  catPillText: { ...TYPE.caption, color: COLORS.text },
+  catPillTextActive: { color: COLORS.white },
+
+  card: { flex: 1, backgroundColor: COLORS.white, borderRadius: RADIUS.md, padding: SPACING.sm, ...SHADOWS.sm },
+  imageBox: { height: 110, borderRadius: RADIUS.sm, marginBottom: SPACING.sm, alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" },
+  emoji: { fontSize: 38, fontWeight: "900", color: COLORS.green },
+  regionPin: { position: "absolute", top: 5, left: 5, backgroundColor: "rgba(255,255,255,0.92)", paddingHorizontal: 6, paddingVertical: 2, borderRadius: 8, maxWidth: "62%" },
+  regionPinText: { fontSize: 9, fontWeight: "800", color: COLORS.text },
+  wishBtn: { position: "absolute", top: 5, right: 5, width: 24, height: 24, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.92)", alignItems: "center", justifyContent: "center" },
+  catBadge: { position: "absolute", bottom: 5, left: 5, backgroundColor: "rgba(46,125,50,0.92)", paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 },
+  catBadgeText: { fontSize: 8, fontWeight: "900", color: COLORS.white, letterSpacing: 0.5 },
+
+  name: { ...TYPE.card, color: COLORS.text },
+  desc: { ...TYPE.micro, color: COLORS.muted, marginTop: 2 },
+  bottomRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: SPACING.sm },
+  price: { ...TYPE.title, color: COLORS.green },
+  addBtn: { paddingHorizontal: SPACING.md, paddingVertical: 6, borderRadius: RADIUS.pill, backgroundColor: COLORS.green },
+  addBtnText: { color: COLORS.white, fontSize: 11, fontWeight: "900" },
+  qtyRow: { flexDirection: "row", alignItems: "center", backgroundColor: COLORS.greenPale, borderRadius: RADIUS.pill, paddingHorizontal: 4, paddingVertical: 2, gap: 6 },
+  qtyBtn: { width: 22, height: 22, borderRadius: 11, backgroundColor: COLORS.white, alignItems: "center", justifyContent: "center" },
+  qtyBtnText: { color: COLORS.green, fontSize: 14, fontWeight: "900" },
+  qtyText: { ...TYPE.caption, color: COLORS.text, minWidth: 14, textAlign: "center" },
+
+  center: { flex: 1, alignItems: "center", justifyContent: "center", padding: SPACING.xl },
+  errorText: { ...TYPE.body, color: COLORS.red, marginBottom: SPACING.md },
+  retryBtn: { paddingHorizontal: SPACING.lg, paddingVertical: SPACING.sm, borderRadius: RADIUS.pill, backgroundColor: COLORS.green },
+  retryBtnText: { color: COLORS.white, fontWeight: "900" },
+
+  overlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.4)", justifyContent: "flex-end" },
+  regionSheet: { backgroundColor: COLORS.white, borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: SPACING.lg, paddingBottom: SPACING.xxl },
+  sheetHandle: { alignSelf: "center", width: 40, height: 4, borderRadius: 2, backgroundColor: COLORS.border, marginBottom: SPACING.md },
+  sheetTitle: { ...TYPE.title, color: COLORS.text, marginBottom: SPACING.md },
+  regionRow: { flexDirection: "row", alignItems: "center", gap: SPACING.sm, paddingHorizontal: SPACING.md, paddingVertical: SPACING.md, borderRadius: RADIUS.sm },
+  regionRowText: { ...TYPE.body, color: COLORS.text, flex: 1 },
 });
