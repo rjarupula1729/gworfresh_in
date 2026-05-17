@@ -2506,7 +2506,11 @@ function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;',
   const setToken  = (t) => { try { localStorage.setItem(TK, t); } catch(e){} };
   const clearTok  = () => { try { localStorage.removeItem(TK); } catch(e){} };
 
-  // tiny on-screen status pill so you can SEE the wire is live
+  // tiny on-screen status pill so you can SEE the wire is live.
+  // Hidden by default — only rendered for developers who opt in with
+  // ?debug=1 in the URL or window.GF_DEBUG=true. End users never see it,
+  // even when the backend is unreachable (calls degrade gracefully).
+  const DEBUG_PILL = (qs.get('debug') === '1') || !!window.GF_DEBUG;
   const pill = document.createElement('div');
   pill.id = 'gf-api-pill';
   pill.style.cssText = [
@@ -2528,6 +2532,7 @@ function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;',
     '-webkit-backdrop-filter:blur(6px)',
     'pointer-events:auto',
     'user-select:none',
+    'display:' + (DEBUG_PILL ? 'block' : 'none'),
   ].join(';');
   pill.textContent = '● connecting';
   pill.title = 'GrowFresh API status — click to copy current JWT';
