@@ -897,7 +897,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
       <input type="search" id="shop-search" placeholder="Search seeds, saplings, kits…" autocomplete="off" oninput="onShopSearch(this.value)">
       <button type="button" class="gf-search-clear" aria-label="Clear" onclick="clearShopSearch()">×</button>
     </div>
-    <div class="cat-strip" style="grid-template-columns:repeat(6,1fr)"><div class="cat-pill active" onclick="filterCat(this,'all')">🌾 All</div><div class="cat-pill" onclick="filterCat(this,'seeds')">🌱 Seeds</div><div class="cat-pill" onclick="filterCat(this,'saplings')">🌿 Saplings</div><div class="cat-pill" onclick="filterCat(this,'minerals')">🧪 Minerals</div><div class="cat-pill" onclick="filterCat(this,'compost')">🌍 Compost</div><div class="cat-pill" onclick="filterCat(this,'tools')">🛠️ Tools</div></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;"><label style="font-size:11px;font-weight:800;color:var(--muted)">📍 Region</label><select id="shop-region" onchange="onShopRegionChange(this.value)" style="flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);font:800 12px Nunito,sans-serif;color:var(--text);outline:none"><option value="all">All regions</option><option value="Hyderabad">Hyderabad</option><option value="Bangalore">Bangalore</option><option value="Chennai">Chennai</option><option value="Mumbai">Mumbai</option><option value="Delhi">Delhi</option><option value="Kolkata">Kolkata</option><option value="Pune">Pune</option><option value="Ahmedabad">Ahmedabad</option><option value="South India">South India</option><option value="North India">North India</option><option value="Coastal India">Coastal India</option><option value="Hill Stations">Hill Stations</option><option value="All India">All India · Universal</option></select><span id="shop-count" style="font-size:10.5px;font-weight:800;color:var(--green-deep);background:var(--green-pale);padding:5px 9px;border-radius:8px;flex-shrink:0">0</span></div>
+    <div class="cat-strip" style="grid-template-columns:repeat(5,1fr)"><div class="cat-pill active" onclick="filterCat(this,'all')">🌾 All</div><div class="cat-pill" onclick="filterCat(this,'seeds')">🌱 Seeds</div><div class="cat-pill" onclick="filterCat(this,'saplings')">🌿 Saplings</div><div class="cat-pill" onclick="filterCat(this,'minerals,compost')">🧪 Minerals &amp; Compost</div><div class="cat-pill" onclick="filterCat(this,'tools')">🛠️ Tools</div></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;"><label style="font-size:11px;font-weight:800;color:var(--muted)">📍 Region</label><select id="shop-region" onchange="onShopRegionChange(this.value)" style="flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);font:800 12px Nunito,sans-serif;color:var(--text);outline:none"><option value="all">All regions</option><option value="Hyderabad">Hyderabad</option><option value="Bangalore">Bangalore</option><option value="Chennai">Chennai</option><option value="Mumbai">Mumbai</option><option value="Delhi">Delhi</option><option value="Kolkata">Kolkata</option><option value="Pune">Pune</option><option value="Ahmedabad">Ahmedabad</option><option value="South India">South India</option><option value="North India">North India</option><option value="Coastal India">Coastal India</option><option value="Hill Stations">Hill Stations</option><option value="All India">All India · Universal</option></select><span id="shop-count" style="font-size:10.5px;font-weight:800;color:var(--green-deep);background:var(--green-pale);padding:5px 9px;border-radius:8px;flex-shrink:0">0</span></div>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)">
       <div class="sec-label" style="margin:0">🛒 Choose Your Plants</div>
       <button onclick="goToCart()" id="shop-cart-btn" style="position:relative;display:flex;align-items:center;gap:6px;background:var(--green);color:#fff;border:none;border-radius:999px;padding:7px 14px 7px 11px;font:800 12px/1 system-ui;cursor:pointer;box-shadow:0 2px 6px rgba(46,125,50,.25);flex-shrink:0">
@@ -2361,11 +2361,13 @@ function switchTab(tab,cat){
   if(tab==='calendar')renderPlantTimeline();
   if(tab==='shop'&&cat){
     // wait for screen swap, then activate the matching category pill
+    // (Minerals & Compost share one pill, so map either to the group key)
+    var pillCat=(cat==='minerals'||cat==='compost')?'minerals,compost':cat;
     setTimeout(()=>{
       const pills=document.querySelectorAll('#screen-shop .cat-pill');
       pills.forEach(p=>{
         const onclickAttr=p.getAttribute('onclick')||'';
-        if(onclickAttr.includes("'"+cat+"'")){filterCat(p,cat);}
+        if(onclickAttr.includes("'"+pillCat+"'")){filterCat(p,pillCat);}
       });
     },30);
   }
@@ -2373,7 +2375,15 @@ function switchTab(tab,cat){
 function filterCat(pill,cat){
   document.querySelectorAll('#screen-shop .cat-pill').forEach(p=>p.classList.remove('active'));
   if(pill&&pill.classList)pill.classList.add('active');
-  document.querySelectorAll('.product-card').forEach(c=>{c.style.display=(cat==='all'||c.dataset.cat===cat)?'flex':'none';});
+  // `cat` may be a single key ("seeds") or a comma-joined group
+  // ("minerals,compost") so we can collapse related categories into a
+  // single pill while keeping per-card badges distinct (e.g. MINERALS
+  // vs COMPOST). Split once and test membership.
+  var cats=String(cat||'all').split(',').map(function(s){return s.trim();});
+  var all=cats.indexOf('all')!==-1;
+  document.querySelectorAll('.product-card').forEach(function(c){
+    c.style.display=(all||cats.indexOf(c.dataset.cat)!==-1)?'flex':'none';
+  });
 }
 // Deep-link from anywhere into a specific product card on the Shop page.
 // Switches to Shop, applies the category filter, then scrolls to and pulses
@@ -2962,18 +2972,25 @@ function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;',
 (function(){
   // --- SHOP SEARCH ---
   var _shopCat = 'all';
+  // Parse the active pill key (may be a single cat like "seeds" or a
+  // comma-joined group like "minerals,compost") into a Set for fast lookup.
+  function _shopCatSet(){
+    return String(_shopCat||'all').split(',').map(function(s){return s.trim();});
+  }
   window.onShopSearch = function(q){
     q = String(q||'').trim().toLowerCase();
     var grid = document.getElementById('product-grid');
     var cards = grid ? grid.querySelectorAll('.product-card') : [];
     var shown = 0;
+    var cats = _shopCatSet();
+    var allCats = cats.indexOf('all') !== -1;
     cards.forEach(function(card){
       var cat  = card.dataset.cat || '';
       var nEl  = card.querySelector('.product-name');
       var dEl  = card.querySelector('.product-desc');
       var name = (nEl && nEl.textContent || '').toLowerCase();
       var desc = (dEl && dEl.textContent || '').toLowerCase();
-      var matchCat = (_shopCat === 'all' || cat === _shopCat);
+      var matchCat = allCats || cats.indexOf(cat) !== -1;
       var matchQ   = (!q || name.indexOf(q) !== -1 || desc.indexOf(q) !== -1);
       var show = matchCat && matchQ;
       card.style.display = show ? 'flex' : 'none';
@@ -3016,13 +3033,18 @@ function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;',
         emoji: emoji,
       };
     }).filter(function(p){
-      return p.name && (p.name.toLowerCase().indexOf(q) !== -1 || p.desc.toLowerCase().indexOf(q) !== -1);
+      // Match against name, description and category so users can find
+      // products by typing the category word (e.g. "minerals", "compost",
+      // "tools") on the Home search even when those words don't appear
+      // inside an individual product's name/description.
+      var hay = (p.name + ' ' + p.desc + ' ' + (p.cat||'')).toLowerCase();
+      return p.name && hay.indexOf(q) !== -1;
     });
     // Features / screens
     var features = [
       // Core nav
       { name:'Home',           desc:'Dashboard · your daily view',         icon:'🏠', tab:'home',           kw:'dashboard greeting' },
-      { name:'Shop',           desc:'Browse seeds, saplings, kits',        icon:'🛒', tab:'shop',           kw:'store buy products catalog seeds saplings kits compost' },
+      { name:'Shop',           desc:'Browse seeds, saplings, kits',        icon:'🛒', tab:'shop',           kw:'store buy products catalog seeds saplings kits minerals compost fertilizer npk tools' },
       { name:'Garden',         desc:'Track your plants daily',             icon:'🌿', tab:'garden',         kw:'my plants tracker watering grow' },
       { name:'Community',      desc:'Ask, share & learn together',         icon:'👥', tab:'community',      kw:'feed posts forum people social' },
       { name:'Profile',        desc:'Account & settings',                  icon:'👤', tab:'profile',        kw:'account settings me user logout' },

@@ -53,6 +53,7 @@ app.use('/api/community',   require('./routes/community'));
 app.use('/api/analytics',   require('./routes/analytics'));
 app.use('/api/activity',    require('./routes/activity'));
 app.use('/api/family',      require('./routes/family'));
+app.use('/api/wellness',    require('./routes/wellness'));
 
 // liveness + readiness
 app.get('/', (_req, res) => res.json({ name: 'growfresh-api', status: 'ok' }));

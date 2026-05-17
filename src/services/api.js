@@ -43,4 +43,19 @@ API.interceptors.response.use(
   }
 );
 
+// ─── Wellness / GrowPoints / Communities ──────────────────────────────
+// Thin wrappers over /api/wellness so screens & AppContext don't have to
+// repeat URLs. Every call returns the parsed JSON body.
+export const wellnessAPI = {
+  getMe: () => API.get('/wellness/me').then((r) => r.data),
+  // patch can include: { day?, breaks?[5], breathing?, hourForYou? }
+  putDay: (patch) => API.put('/wellness/day', patch || {}).then((r) => r.data),
+  joinCommunity: (id) =>
+    API.post(`/wellness/communities/${encodeURIComponent(id)}`).then((r) => r.data),
+  leaveCommunity: (id) =>
+    API.delete(`/wellness/communities/${encodeURIComponent(id)}`).then((r) => r.data),
+  addPoints: (delta, reason) =>
+    API.post('/wellness/points', { delta, reason }).then((r) => r.data),
+};
+
 export default API;

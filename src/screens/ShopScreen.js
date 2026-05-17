@@ -22,12 +22,18 @@ import { AppContext } from "../context/AppContext";
 import { COLORS } from "../utils/colors";
 import { RADIUS, SHADOWS, SPACING, TYPE } from "../utils/theme";
 
+// Minerals + Compost share a single pill ("Minerals & Compost") but
+// products keep their original category badge (MINERALS / COMPOST) so
+// each card remains visually distinct. The merged pill uses a special
+// key "MineralsCompost" that triggers a client-side OR-filter.
+const MERGED_MIN_COMPOST = "MineralsCompost";
+const MERGED_MEMBERS = ["Minerals", "Compost"];
+
 const CATEGORIES = [
   { key: null, label: "All" },
   { key: "Seeds", label: "Seeds" },
   { key: "Saplings", label: "Saplings" },
-  { key: "Minerals", label: "Minerals" },
-  { key: "Compost", label: "Compost" },
+  { key: MERGED_MIN_COMPOST, label: "Minerals & Compost" },
   { key: "Tools", label: "Tools" },
 ];
 
@@ -89,11 +95,18 @@ export default function ShopScreen({ navigation }) {
     setError(null);
     try {
       const params = {};
-      if (category) params.category = category;
+      // For the merged Minerals+Compost pill we omit the category param
+      // and apply an OR-filter client-side (backend only accepts a single
+      // category at a time).
+      if (category && category !== MERGED_MIN_COMPOST) params.category = category;
       if (region && region !== "All regions") params.region = region;
       if (debouncedQuery) params.q = debouncedQuery;
       const res = await API.get("/products", { params });
-      setProducts(Array.isArray(res.data) ? res.data : []);
+      let list = Array.isArray(res.data) ? res.data : [];
+      if (category === MERGED_MIN_COMPOST) {
+        list = list.filter((p) => MERGED_MEMBERS.includes(p.category));
+      }
+      setProducts(list);
     } catch (e) {
       setError(e.response?.data?.msg || "Couldn't load products");
       setProducts([]);

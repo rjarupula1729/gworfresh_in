@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { getItem, setItem, removeItem } from "../utils/storage";
+import { wellnessAPI } from "../services/api";
 
 export const AppContext = createContext();
 
@@ -40,11 +41,31 @@ export const AppProvider = ({ children }) => {
     if (Array.isArray(savedComm)) setCommunities(savedComm);
     if (savedWell && typeof savedWell === "object") setWellnessByDay(savedWell);
     setLoading(false);
+    // Best-effort server hydrate (overrides locals when token is present)
+    if (savedUser && savedToken) hydrateFromServer();
+  };
+
+  // Fire-and-forget helper — never throws, never blocks UI
+  const safe = (p) => { try { return Promise.resolve(p).catch(() => null); } catch (_) { return Promise.resolve(null); } };
+
+  const hydrateFromServer = async () => {
+    const data = await safe(wellnessAPI.getMe());
+    if (!data) return;
+    if (typeof data.growPoints === "number") {
+      setGrowPoints(data.growPoints); await setItem("growPoints", data.growPoints);
+    }
+    if (Array.isArray(data.communities)) {
+      setCommunities(data.communities); await setItem("communities", data.communities);
+    }
+    if (data.wellnessByDay && typeof data.wellnessByDay === "object") {
+      setWellnessByDay(data.wellnessByDay); await setItem("wellnessByDay", data.wellnessByDay);
+    }
   };
 
   const login = async (userData, tokenData) => {
     setUser(userData); setToken(tokenData);
     await setItem("user", userData); await setItem("token", tokenData);
+    hydrateFromServer();
   };
 
   const logout = async () => {
@@ -100,8 +121,14 @@ export const AppProvider = ({ children }) => {
   const isJoined = (id) => communities.includes(id);
   const toggleCommunity = async (id) => {
     if (!id) return;
-    const next = communities.includes(id) ? communities.filter((x) => x !== id) : [...communities, id];
+    const joining = !communities.includes(id);
+    const next = joining ? [...communities, id] : communities.filter((x) => x !== id);
     setCommunities(next); await setItem("communities", next);
+    // Best-effort sync — server is source of truth on success
+    const resp = await safe(joining ? wellnessAPI.joinCommunity(id) : wellnessAPI.leaveCommunity(id));
+    if (resp && Array.isArray(resp.communities)) {
+      setCommunities(resp.communities); await setItem("communities", resp.communities);
+    }
   };
 
   // Wellness / WFH
@@ -122,8 +149,9 @@ export const AppProvider = ({ children }) => {
     const nextBreaks = cur.breaks.slice();
     nextBreaks[idx] = !nextBreaks[idx];
     const merged = await updateTodayWellness({ breaks: nextBreaks });
-    // Award 5 points per completed break
+    // Award 5 points per completed break (optimistic; server reconciles below)
     if (nextBreaks[idx]) await addPoints(5);
+    syncDay({ breaks: nextBreaks });
     return merged;
   };
 
@@ -132,6 +160,7 @@ export const AppProvider = ({ children }) => {
     if (cur.breathing) return cur;
     const merged = await updateTodayWellness({ breathing: true });
     await addPoints(10);
+    syncDay({ breathing: true });
     return merged;
   };
 
@@ -140,7 +169,26 @@ export const AppProvider = ({ children }) => {
     if (cur.hourForYou) return cur;
     const merged = await updateTodayWellness({ hourForYou: true });
     await addPoints(25);
+    syncDay({ hourForYou: true });
     return merged;
+  };
+
+  // Push the latest day state to the server; reconcile growPoints from the
+  // authoritative response so the client never drifts above what the server
+  // has actually awarded.
+  const syncDay = async (patch) => {
+    const cur = todayWellness();
+    const payload = {
+      day: todayKey(),
+      breaks: patch.breaks || cur.breaks,
+      breathing: typeof patch.breathing === "boolean" ? patch.breathing : cur.breathing,
+      hourForYou: typeof patch.hourForYou === "boolean" ? patch.hourForYou : cur.hourForYou,
+    };
+    const resp = await safe(wellnessAPI.putDay(payload));
+    if (resp && typeof resp.growPoints === "number") {
+      setGrowPoints(resp.growPoints);
+      await setItem("growPoints", resp.growPoints);
+    }
   };
 
   return (
