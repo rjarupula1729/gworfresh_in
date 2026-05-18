@@ -62,9 +62,9 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
   }
   .status-bar{display:none;}            /* hide fake status bar; real one is above */
   .screen{top:0;height:100%;}            /* reclaim the 38px we were reserving */
-  /* ensure the back-button row never touches the URL bar */
-  .page-header{padding-top:14px;padding-bottom:12px;position:sticky;top:0;z-index:50;}
-  .home-header{padding-top:18px;}
+  /* ensure the back-button row never touches the URL bar (compact) */
+  .page-header{padding-top:8px;padding-bottom:7px;position:sticky;top:0;z-index:50;}
+  .home-header{padding-top:10px;}
 }
 .status-bar{background:var(--green);padding:14px 22px 10px;display:flex;justify-content:space-between;color:white;font-size:11px;font-weight:800;flex-shrink:0;position:relative;z-index:100;height:38px;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.18);}
 .screen{position:absolute;top:38px;left:0;right:0;bottom:0;width:100%;height:calc(100% - 38px);display:none;flex-direction:column;overflow:hidden;z-index:1;background:inherit;pointer-events:none;}
@@ -131,17 +131,17 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
 .terms-note{text-align:center;margin-top:20px;font-size:11px;color:var(--muted);font-weight:600;line-height:1.6;}
 .terms-link{color:var(--green);font-weight:800;cursor:pointer;}
 
-/* HOME SCREEN */
-.home-header{background:linear-gradient(160deg,var(--green-deep),var(--green));padding:18px 18px 22px;flex-shrink:0;position:relative;overflow:hidden;}
-.home-header::after{content:'🌿';position:absolute;right:-8px;top:-8px;font-size:90px;opacity:0.07;pointer-events:none;}
+/* HOME SCREEN — compact sticky header */
+.home-header{background:linear-gradient(160deg,var(--green-deep),var(--green));padding:10px 14px 12px;flex-shrink:0;position:sticky;top:0;z-index:40;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,0.12);}
+.home-header::after{content:'🌿';position:absolute;right:-6px;top:-6px;font-size:60px;opacity:0.07;pointer-events:none;}
 .home-header > *{position:relative;z-index:1;}
-.home-greeting{font-size:13px;color:rgba(255,255,255,0.75);font-weight:700;}
-.home-name{font-size:22px;font-weight:900;color:white;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.home-weather{background:rgba(255,255,255,0.14);border-radius:10px;padding:8px 12px;display:inline-flex;align-items:center;gap:8px;color:white;font-size:11px;font-weight:800;margin-top:12px;backdrop-filter:blur(4px);}
+.home-greeting{font-size:11px;color:rgba(255,255,255,0.75);font-weight:700;line-height:1.15;}
+.home-name{font-size:17px;font-weight:900;color:white;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.15;}
+.home-weather{background:rgba(255,255,255,0.14);border-radius:9px;padding:5px 9px;display:inline-flex;align-items:center;gap:7px;color:white;font-size:10px;font-weight:800;margin-top:6px;backdrop-filter:blur(4px);}
 @media (max-width:480px){
-  .home-header{padding:14px 14px 18px;}
-  .home-name{font-size:18px;}
-  .home-greeting{font-size:12px;}
+  .home-header{padding:8px 12px 10px;}
+  .home-name{font-size:15px;}
+  .home-greeting{font-size:10px;}
 }
 .home-quick{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:14px 12px 0;}
 .home-qa{background:var(--white);border-radius:12px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform 0.15s;min-width:0;overflow:hidden;}
@@ -211,17 +211,17 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
 .tip-title{font-size:12px;font-weight:900;line-height:1.2;}
 .tip-text{font-size:10px;opacity:0.9;font-weight:600;margin-top:2px;line-height:1.4;}
 
-/* SHARED HEADER / NAV */
-.top-header{background:var(--white);padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--shadow-sm);z-index:10;}
-.header-brand{display:flex;align-items:center;gap:8px;}
-.brand-logo{width:32px;height:32px;background:var(--green);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;}
-.brand-name{font-size:17px;font-weight:900;color:var(--text);}
-.brand-tag{font-size:9px;color:var(--muted);font-weight:600;display:block;margin-top:-2px;}
-.header-right{display:flex;align-items:center;gap:7px;}
-.icon-btn{position:relative;width:38px;height:38px;background:var(--green-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;border:none;}
-.cart-badge{position:absolute;top:-4px;right:-4px;background:var(--orange);color:white;font-size:10px;font-weight:900;min-width:17px;height:17px;border-radius:9px;display:none;align-items:center;justify-content:center;padding:0 3px;}
+/* SHARED HEADER / NAV — compact */
+.top-header{background:var(--white);padding:8px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--shadow-sm);z-index:10;}
+.header-brand{display:flex;align-items:center;gap:7px;}
+.brand-logo{width:28px;height:28px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.brand-name{font-size:15px;font-weight:900;color:var(--text);}
+.brand-tag{font-size:8.5px;color:var(--muted);font-weight:600;display:block;margin-top:-2px;}
+.header-right{display:flex;align-items:center;gap:6px;}
+.icon-btn{position:relative;width:32px;height:32px;background:var(--green-pale);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;border:none;}
+.cart-badge{position:absolute;top:-4px;right:-4px;background:var(--orange);color:white;font-size:9px;font-weight:900;min-width:15px;height:15px;border-radius:8px;display:none;align-items:center;justify-content:center;padding:0 3px;}
 .cart-badge.show{display:flex;}
-.user-avatar{width:38px;height:38px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;cursor:pointer;flex-shrink:0;border:2px solid rgba(255,255,255,0.55);box-shadow:0 3px 10px rgba(27,94,32,0.35);-webkit-tap-highlight-color:transparent;transition:transform .12s ease;}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;cursor:pointer;flex-shrink:0;border:2px solid rgba(255,255,255,0.55);box-shadow:0 3px 10px rgba(27,94,32,0.35);-webkit-tap-highlight-color:transparent;transition:transform .12s ease;}
 .user-avatar:active{transform:scale(0.92);}
 /* GLOBAL BOTTOM NAV — sits at bottom of phone, always visible on every page */
 .bottom-nav{background:var(--white);border-top:1px solid var(--border);display:flex;padding:6px 0 13px;flex-shrink:0;box-shadow:0 -3px 14px rgba(0,0,0,0.05);position:absolute;left:0;right:0;bottom:0;height:62px;z-index:80;}
@@ -307,13 +307,13 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
 .checkout-strip.show{display:flex;align-items:center;gap:12px;}
 .strip-btn{background:var(--green);color:white;border:none;border-radius:var(--radius-sm);padding:11px 16px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;}
 
-/* CART */
-.page-header{background:var(--white);padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;box-shadow:var(--shadow-sm);}
-.back-btn{width:34px;height:34px;background:transparent;color:var(--green-deep);border-radius:50%;border:none;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;line-height:1;padding:0;}
+/* CART — compact shared page header */
+.page-header{background:var(--white);padding:7px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;box-shadow:var(--shadow-sm);}
+.back-btn{width:30px;height:30px;background:transparent;color:var(--green-deep);border-radius:50%;border:none;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;line-height:1;padding:0;}
 .back-btn:hover{background:var(--green-pale);}
 .back-btn:active{transform:scale(0.88);background:var(--green-pale);}
-.page-title{font-size:18px;font-weight:800;color:var(--text);letter-spacing:-0.3px;line-height:1.2;}
-.page-subtitle{font-size:11px;color:var(--muted);font-weight:600;margin-left:auto;letter-spacing:0.2px;}
+.page-title{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.3px;line-height:1.15;}
+.page-subtitle{font-size:10px;color:var(--muted);font-weight:600;margin-left:auto;letter-spacing:0.2px;}
 .cart-body{padding:13px;}
 .cart-item{background:var(--white);border-radius:var(--radius);padding:12px;display:flex;align-items:center;gap:11px;margin-bottom:9px;box-shadow:var(--shadow-sm);}
 .cart-item-emoji{font-size:32px;flex-shrink:0;}
@@ -372,20 +372,20 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
 .redirect-note{font-size:11px;color:var(--muted);font-weight:700;margin-top:6px;animation:slideUp 0.4s 0.5s ease both;}
 
 /* MY GARDEN */
-.garden-hero{background:linear-gradient(160deg,var(--green-deep),var(--green));padding:18px 16px 22px;flex-shrink:0;position:relative;overflow:hidden;}
-.garden-hero::before{content:'🌿';position:absolute;right:-8px;top:-8px;font-size:90px;opacity:0.07;pointer-events:none;}
+.garden-hero{background:linear-gradient(160deg,var(--green-deep),var(--green));padding:10px 14px 12px;flex-shrink:0;position:relative;overflow:hidden;}
+.garden-hero::before{content:'🌿';position:absolute;right:-6px;top:-6px;font-size:60px;opacity:0.07;pointer-events:none;}
 .garden-hero > *{position:relative;z-index:1;}
-.garden-hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.garden-hero-title{font-size:20px;font-weight:900;color:white;}
-.garden-hero-sub{font-size:11px;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px;}
-.add-plant-btn{background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.3);border-radius:9px;padding:7px 12px;color:white;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;}
-.garden-stats{display:flex;gap:8px;}
-.garden-stat{background:rgba(255,255,255,0.14);border-radius:11px;padding:9px 12px;flex:1;text-align:center;}
-.stat-num{font-size:19px;font-weight:900;color:white;}
-.stat-label{font-size:9px;color:rgba(255,255,255,0.7);font-weight:800;text-transform:uppercase;}
-.reminders-banner{background:var(--orange-pale);border-radius:var(--radius);padding:12px;margin:12px 13px 0;box-shadow:var(--shadow-sm);}
-.reminders-title{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:900;color:var(--orange);margin-bottom:8px;}
-.reminder-chip{display:inline-flex;align-items:center;gap:5px;background:white;border-radius:20px;padding:5px 10px;font-size:10px;font-weight:800;color:var(--text);margin:0 5px 5px 0;box-shadow:var(--shadow-sm);cursor:pointer;}
+.garden-hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.garden-hero-title{font-size:15px;font-weight:900;color:white;line-height:1.15;}
+.garden-hero-sub{font-size:10px;color:rgba(255,255,255,0.75);font-weight:600;margin-top:1px;line-height:1.15;}
+.add-plant-btn{background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.3);border-radius:8px;padding:5px 10px;color:white;font-size:10px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;}
+.garden-stats{display:flex;gap:6px;}
+.garden-stat{background:rgba(255,255,255,0.14);border-radius:9px;padding:5px 8px;flex:1;text-align:center;}
+.stat-num{font-size:15px;font-weight:900;color:white;line-height:1.15;}
+.stat-label{font-size:8px;color:rgba(255,255,255,0.7);font-weight:800;text-transform:uppercase;letter-spacing:0.2px;}
+.reminders-banner{background:var(--orange-pale);border-radius:var(--radius);padding:8px 10px;margin:8px 13px 0;box-shadow:var(--shadow-sm);}
+.reminders-title{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:900;color:var(--orange);margin-bottom:5px;}
+.reminder-chip{display:inline-flex;align-items:center;gap:5px;background:white;border-radius:18px;padding:4px 9px;font-size:10px;font-weight:800;color:var(--text);margin:0 4px 4px 0;box-shadow:var(--shadow-sm);cursor:pointer;}
 .reminder-chip.done{opacity:0.45;text-decoration:line-through;}
 .garden-body{padding:13px;}
 .plant-card-full{background:var(--white);border-radius:var(--radius);padding:13px;margin-bottom:11px;box-shadow:var(--shadow-sm);}
@@ -522,19 +522,19 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
 .sub-card.popular .sub-btn{background:#C2185B;}
 
 /* COMMUNITY */
-.community-hero{background:var(--grad-sky);padding:16px 16px 18px;flex-shrink:0;}
-.community-hero-title{font-size:20px;font-weight:900;color:white;}
-.community-hero-sub{font-size:12px;color:rgba(255,255,255,0.8);font-weight:600;margin-top:3px;}
-.community-stats{display:flex;gap:8px;margin-top:12px;}
-.community-stat{background:rgba(255,255,255,0.14);border-radius:10px;padding:7px 10px;flex:1;text-align:center;}
+.community-hero{background:var(--grad-sky);padding:9px 14px 11px;flex-shrink:0;}
+.community-hero-title{font-size:15px;font-weight:900;color:white;line-height:1.15;}
+.community-hero-sub{font-size:10px;color:rgba(255,255,255,0.8);font-weight:600;margin-top:2px;line-height:1.15;}
+.community-stats{display:flex;gap:6px;margin-top:7px;}
+.community-stat{background:rgba(255,255,255,0.14);border-radius:9px;padding:4px 8px;flex:1;text-align:center;}
 .cstat-num{font-size:17px;font-weight:900;color:white;}
 .cstat-label{font-size:9px;color:rgba(255,255,255,0.7);font-weight:800;text-transform:uppercase;}
 .compose-bar{background:var(--white);padding:9px 13px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);flex-shrink:0;}
 .compose-avatar{width:32px;height:32px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;}
 .compose-input{flex:1;background:var(--bg);border:none;border-radius:18px;padding:8px 13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;color:var(--muted);outline:none;cursor:pointer;}
 .compose-post-btn{background:var(--blue);color:white;border:none;border-radius:18px;padding:7px 13px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;}
-.feed-tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;background:var(--bg);padding:4px;margin:10px 14px 0;border-radius:14px;border:1px solid var(--border);flex-shrink:0;}
-.feed-tab{padding:7px 2px;border:none;background:transparent;font-size:10px;font-weight:800;color:var(--muted);cursor:pointer;font-family:'Nunito',sans-serif;border-radius:10px;transition:all 0.18s;text-align:center;line-height:1.1;letter-spacing:-0.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.feed-tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;background:var(--bg);padding:3px;margin:6px 13px 0;border-radius:11px;border:1px solid var(--border);flex-shrink:0;}
+.feed-tab{padding:5px 2px;border:none;background:transparent;font-size:9.5px;font-weight:800;color:var(--muted);cursor:pointer;font-family:'Nunito',sans-serif;border-radius:8px;transition:all 0.18s;text-align:center;line-height:1.1;letter-spacing:-0.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .feed-tab:hover{color:var(--text);}
 .feed-tab.active{color:var(--white);background:var(--green);box-shadow:0 2px 6px rgba(46,125,50,.25);}
 .community-body{padding:11px 13px;}
@@ -890,22 +890,25 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
 
 <!-- SHOP -->
 <div class="screen" id="screen-shop">
-  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Shop</div><button class="icon-btn" style="position:absolute;right:14px;top:50%;transform:translateY(-50%)" onclick="goToCart()">🛒<div class="cart-badge" id="cart-count">0</div></button></div>
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Shop</div></div>
   <div class="scroll-body"><div class="shop-body">
-    <div class="gf-search">
-      <span class="gf-search-ico">🔍</span>
-      <input type="search" id="shop-search" placeholder="Search seeds, saplings, kits…" autocomplete="off" oninput="onShopSearch(this.value)">
-      <button type="button" class="gf-search-clear" aria-label="Clear" onclick="clearShopSearch()">×</button>
+    <div class="shop-sticky" style="position:sticky;top:0;z-index:30;background:var(--bg);padding-top:5px;margin:-12px -14px 0;padding-left:12px;padding-right:12px;padding-bottom:5px;border-bottom:1px solid var(--border)">
+      <div class="gf-search">
+        <span class="gf-search-ico">🔍</span>
+        <input type="search" id="shop-search" placeholder="Search seeds, saplings, kits…" autocomplete="off" oninput="onShopSearch(this.value)">
+        <button type="button" class="gf-search-clear" aria-label="Clear" onclick="clearShopSearch()">×</button>
+      </div>
+      <div class="cat-strip"><div class="cat-pill active" onclick="filterCat(this,'all')">🌾 All</div><div class="cat-pill" onclick="filterCat(this,'seeds')">🌱 Seeds</div><div class="cat-pill" onclick="filterCat(this,'saplings')">🌿 Saplings</div><div class="cat-pill" onclick="filterCat(this,'minerals,compost')">🧪 Minerals &amp; Compost</div><div class="cat-pill" onclick="filterCat(this,'tools')">🛠️ Tools</div></div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><label style="font-size:11px;font-weight:800;color:var(--muted)">📍 Region</label><select id="shop-region" onchange="onShopRegionChange(this.value)" style="flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);font:800 12px Nunito,sans-serif;color:var(--text);outline:none"><option value="all">All regions</option><option value="Hyderabad">Hyderabad</option><option value="Bangalore">Bangalore</option><option value="Chennai">Chennai</option><option value="Mumbai">Mumbai</option><option value="Delhi">Delhi</option><option value="Kolkata">Kolkata</option><option value="Pune">Pune</option><option value="Ahmedabad">Ahmedabad</option><option value="South India">South India</option><option value="North India">North India</option><option value="Coastal India">Coastal India</option><option value="Hill Stations">Hill Stations</option><option value="All India">All India · Universal</option></select><span id="shop-count" style="font-size:10.5px;font-weight:800;color:var(--green-deep);background:var(--green-pale);padding:5px 9px;border-radius:8px;flex-shrink:0">0</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 4px">
+        <div style="flex:1;min-width:0">
+          <div class="sec-label" style="margin:0;font-size:10px">Choose Your Plants</div>
+          <div style="font-size:8px;font-weight:800;color:#E65100;background:#FFE0B2;display:inline-block;padding:1px 6px;border-radius:5px;margin-top:3px;letter-spacing:.2px">tap card for 🤝 companions</div>
+        </div>
+        <button onclick="goToCart()" aria-label="Open cart" style="position:relative;width:38px;height:38px;background:var(--green-pale);border:none;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;flex-shrink:0">🛒<span class="cart-badge" id="cart-count">0</span></button>
+      </div>
     </div>
-    <div class="cat-strip"><div class="cat-pill active" onclick="filterCat(this,'all')">🌾 All</div><div class="cat-pill" onclick="filterCat(this,'seeds')">🌱 Seeds</div><div class="cat-pill" onclick="filterCat(this,'saplings')">🌿 Saplings</div><div class="cat-pill" onclick="filterCat(this,'minerals,compost')">🧪 Minerals &amp; Compost</div><div class="cat-pill" onclick="filterCat(this,'tools')">🛠️ Tools</div></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;"><label style="font-size:11px;font-weight:800;color:var(--muted)">📍 Region</label><select id="shop-region" onchange="onShopRegionChange(this.value)" style="flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);font:800 12px Nunito,sans-serif;color:var(--text);outline:none"><option value="all">All regions</option><option value="Hyderabad">Hyderabad</option><option value="Bangalore">Bangalore</option><option value="Chennai">Chennai</option><option value="Mumbai">Mumbai</option><option value="Delhi">Delhi</option><option value="Kolkata">Kolkata</option><option value="Pune">Pune</option><option value="Ahmedabad">Ahmedabad</option><option value="South India">South India</option><option value="North India">North India</option><option value="Coastal India">Coastal India</option><option value="Hill Stations">Hill Stations</option><option value="All India">All India · Universal</option></select><span id="shop-count" style="font-size:10.5px;font-weight:800;color:var(--green-deep);background:var(--green-pale);padding:5px 9px;border-radius:8px;flex-shrink:0">0</span></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)">
-      <div class="sec-label" style="margin:0">🛒 Choose Your Plants</div>
-      <button onclick="goToCart()" id="shop-cart-btn" style="position:relative;display:flex;align-items:center;gap:6px;background:var(--green);color:#fff;border:none;border-radius:999px;padding:7px 14px 7px 11px;font:800 12px/1 system-ui;cursor:pointer;box-shadow:0 2px 6px rgba(46,125,50,.25);flex-shrink:0">
-        <span style="font-size:14px">🛒</span><span>Cart</span>
-        <span id="shop-cart-count" style="display:none;background:var(--orange);color:#fff;border-radius:999px;font-size:10px;font-weight:900;min-width:17px;height:17px;line-height:17px;text-align:center;padding:0 4px;margin-left:2px">0</span>
-      </button>
-    </div>
-    <div class="product-grid" id="product-grid"></div>
+    <div class="product-grid" id="product-grid" style="margin-top:10px"></div>
     <div class="gf-noresult" id="shop-noresult" style="display:none">🔍 No products match your search.<br><span style="font-size:11px;font-weight:700">Try a different word or category.</span></div>
   </div></div>
   <div class="checkout-strip" id="checkout-strip"><div style="flex:1"><div style="font-size:11px;color:var(--muted);font-weight:700" id="strip-items">0 items</div><div style="font-size:16px;font-weight:900;color:var(--text)" id="strip-total">₹0</div></div><button class="strip-btn" onclick="goToCart()">View Cart →</button></div>
@@ -1145,6 +1148,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
     </div>
     <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">Bonus Features</div>
     <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden">
+      <div class="profile-row" onclick="showScreen('rd')"><div class="profile-row-icon">🧪</div><div class="profile-row-text"><div class="profile-row-title">R&amp;D Lab · Garden Planner <span style="display:inline-block;font-size:9px;font-weight:900;color:#1565C0;background:#E3F2FD;border:1px solid #BBDEFB;padding:1px 6px;border-radius:999px;margin-left:4px;letter-spacing:.4px;vertical-align:middle">SOON</span></div><div class="profile-row-sub">Geo-adaptive ecology · smart space split · concept preview</div></div><div class="profile-row-arrow">›</div></div>
       <div class="profile-row" onclick="showToast('🔥 Streak feature in My Garden!')"><div class="profile-row-icon">🔥</div><div class="profile-row-text"><div class="profile-row-title">Garden Streak</div><div class="profile-row-sub">Daily care streak tracker with rewards</div></div><div class="profile-row-arrow">›</div></div>
       <div class="profile-row" onclick="showToast('☀️ Weather feature — coming soon!')"><div class="profile-row-icon">☀️</div><div class="profile-row-text"><div class="profile-row-title">Weather Integration</div><div class="profile-row-sub">Smart watering based on Hyderabad weather</div></div><div class="profile-row-arrow">›</div></div>
       <div class="profile-row" onclick="showToast('🏆 Leaderboard — coming soon!')"><div class="profile-row-icon">🏆</div><div class="profile-row-text"><div class="profile-row-title">Grower Leaderboard</div><div class="profile-row-sub">Top growers in Hyderabad this month</div></div><div class="profile-row-arrow">›</div></div>
@@ -1303,14 +1307,202 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
       <div class="profile-row" onclick="showToast('🍃 Coming soon!')"><div class="profile-row-icon">🍃</div><div class="profile-row-text"><div class="profile-row-title">Neem-based Pest Repellents</div><div class="profile-row-sub">100% natural remedies</div></div><div class="profile-row-arrow">›</div></div>
     </div>
 
-    <div style="background:var(--grad-harvest);border-radius:var(--radius);padding:16px;color:white;box-shadow:var(--shadow-sm)">
-      <div style="font-size:32px">🧒</div>
-      <div style="font-size:16px;font-weight:900;margin-top:4px">Kids Zone</div>
-      <div style="font-size:12px;opacity:0.95;margin-top:4px">Fun gardening activities for children · Stories · Games</div>
-      <button onclick="showToast('🧒 Kids zone — coming soon!')" style="margin-top:10px;background:white;color:#FF6F00;border:none;border-radius:8px;padding:9px 14px;font-weight:900;font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif">Explore Kids Zone</button>
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">🎮 Kids Zone · Farming Games</div>
+    <div style="background:linear-gradient(135deg,#FF9A8B 0%,#FFB347 50%,#FFD86F 100%);border-radius:var(--radius);padding:16px;color:white;box-shadow:var(--shadow-md);margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:38px">🧒🌱</div>
+        <div style="flex:1">
+          <div style="font-size:10px;font-weight:800;opacity:0.95;letter-spacing:0.5px;text-transform:uppercase">For Little Farmers · Ages 4-10</div>
+          <div style="font-size:17px;font-weight:900;margin-top:2px;line-height:1.1">Grow Together with Mom &amp; Dad</div>
+          <div style="font-size:11px;opacity:0.95;margin-top:3px">4 mini-games · Earn 🌟 Garden Stars · Play with parents</div>
+        </div>
+      </div>
+      <button onclick="showScreen('kids')" style="margin-top:12px;background:white;color:#E65100;border:none;border-radius:10px;padding:11px 14px;font-weight:900;font-size:14px;cursor:pointer;font-family:'Nunito',sans-serif;width:100%;box-shadow:0 2px 8px rgba(0,0,0,0.15)">🎮 Open Kids Games →</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px">
+      <div onclick="showScreen('kids');setTimeout(()=>kidsPlay('seed'),60)" style="background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);cursor:pointer">
+        <div style="background:linear-gradient(135deg,#A8E063,#56AB2F);height:78px;display:flex;align-items:center;justify-content:center;font-size:38px">🌱</div>
+        <div style="padding:8px"><div style="font-size:12px;font-weight:900">Seed → Sprout</div><div style="font-size:10px;color:var(--muted);font-weight:600">Tap to water · Ages 4+</div></div>
+      </div>
+      <div onclick="showScreen('kids');setTimeout(()=>kidsPlay('pest'),60)" style="background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);cursor:pointer">
+        <div style="background:linear-gradient(135deg,#FFE259,#FFA751);height:78px;display:flex;align-items:center;justify-content:center;font-size:38px">🐛</div>
+        <div style="padding:8px"><div style="font-size:12px;font-weight:900">Spot the Pest</div><div style="font-size:10px;color:var(--muted);font-weight:600">Find the bug · Ages 5+</div></div>
+      </div>
+      <div onclick="showScreen('kids');setTimeout(()=>kidsPlay('harvest'),60)" style="background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);cursor:pointer">
+        <div style="background:linear-gradient(135deg,#FF9A8B,#FF6A88);height:78px;display:flex;align-items:center;justify-content:center;font-size:38px">🥕</div>
+        <div style="padding:8px"><div style="font-size:12px;font-weight:900">Harvest Match</div><div style="font-size:10px;color:var(--muted);font-weight:600">Pick the ripe ones · Ages 6+</div></div>
+      </div>
+      <div onclick="showScreen('kids');setTimeout(()=>kidsPlay('quiz'),60)" style="background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);cursor:pointer">
+        <div style="background:linear-gradient(135deg,#84FAB0,#8FD3F4);height:78px;display:flex;align-items:center;justify-content:center;font-size:38px">🌻</div>
+        <div style="padding:8px"><div style="font-size:12px;font-weight:900">Sun &amp; Water Quiz</div><div style="font-size:10px;color:var(--muted);font-weight:600">Plant smarts · Ages 7+</div></div>
+      </div>
     </div>
   </div></div>
   <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
+</div>
+
+<!-- ================ NEW: KIDS ZONE · FARMING GAMES ================ -->
+<div class="screen" id="screen-kids">
+  <div class="page-header" style="background:linear-gradient(135deg,#FF9A8B,#FFB347)"><button class="back-btn" onclick="goBack()">←</button><div class="page-title" style="color:white">🎮 Kids Farming Games</div><div class="page-subtitle" style="color:rgba(255,255,255,0.95)">Play · Learn · Help mom &amp; dad grow food</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+
+    <!-- Stars Wallet -->
+    <div style="background:linear-gradient(135deg,#FFD86F,#FC6262);border-radius:var(--radius);padding:14px;color:white;box-shadow:var(--shadow-md);margin-bottom:14px;display:flex;align-items:center;gap:12px">
+      <div style="font-size:36px">🌟</div>
+      <div style="flex:1">
+        <div style="font-size:10px;font-weight:800;opacity:0.95;letter-spacing:0.5px;text-transform:uppercase">Your Garden Stars</div>
+        <div style="font-size:24px;font-weight:900;line-height:1" id="kidsStars">0</div>
+        <div style="font-size:11px;opacity:0.95;margin-top:2px">Earn stars · Show mom &amp; dad · Plant real seeds!</div>
+      </div>
+    </div>
+
+    <!-- Game Picker -->
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">🎮 Pick a Game</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <button onclick="kidsPlay('seed')" style="background:linear-gradient(135deg,#A8E063,#56AB2F);border:none;border-radius:14px;padding:14px 10px;color:white;font-family:'Nunito',sans-serif;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:34px">🌱</div><div style="font-size:13px;font-weight:900;margin-top:4px">Seed → Sprout</div><div style="font-size:10px;opacity:0.95;font-weight:600">Tap to water</div>
+      </button>
+      <button onclick="kidsPlay('pest')" style="background:linear-gradient(135deg,#FFE259,#FFA751);border:none;border-radius:14px;padding:14px 10px;color:white;font-family:'Nunito',sans-serif;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:34px">🐛</div><div style="font-size:13px;font-weight:900;margin-top:4px">Spot the Pest</div><div style="font-size:10px;opacity:0.95;font-weight:600">Find the bug</div>
+      </button>
+      <button onclick="kidsPlay('harvest')" style="background:linear-gradient(135deg,#FF9A8B,#FF6A88);border:none;border-radius:14px;padding:14px 10px;color:white;font-family:'Nunito',sans-serif;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:34px">🥕</div><div style="font-size:13px;font-weight:900;margin-top:4px">Harvest Match</div><div style="font-size:10px;opacity:0.95;font-weight:600">Pick ripe ones</div>
+      </button>
+      <button onclick="kidsPlay('quiz')" style="background:linear-gradient(135deg,#84FAB0,#8FD3F4);border:none;border-radius:14px;padding:14px 10px;color:white;font-family:'Nunito',sans-serif;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:34px">🌻</div><div style="font-size:13px;font-weight:900;margin-top:4px">Sun &amp; Water</div><div style="font-size:10px;opacity:0.95;font-weight:600">Plant quiz</div>
+      </button>
+    </div>
+
+    <!-- Active Game Stage -->
+    <div id="kidsStage" style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-md);padding:18px;min-height:300px">
+      <div style="text-align:center;padding:30px 10px;color:var(--muted)">
+        <div style="font-size:48px">👆</div>
+        <div style="font-size:14px;font-weight:800;margin-top:8px;color:var(--text)">Pick a game above to start playing!</div>
+        <div style="font-size:11px;margin-top:6px">Each game teaches you something real about growing food.</div>
+      </div>
+    </div>
+
+    <!-- Parent Tip -->
+    <div style="background:#F0F9FF;border:1.5px dashed #60A5FA;border-radius:var(--radius);padding:12px;margin-top:14px">
+      <div style="font-size:11px;font-weight:900;color:#1E40AF;letter-spacing:0.5px;text-transform:uppercase">👨‍👩‍👧 For Parents</div>
+      <div style="font-size:12px;color:#1E3A8A;font-weight:600;margin-top:4px;line-height:1.4">Play together! After each game, take your child to the real garden — water a real plant, look for a real bug, or harvest a real veggie. That's how love for farming grows.</div>
+    </div>
+  </div></div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('learn')"><div class="nav-icon">🎓</div><div class="nav-label">Learn</div></div><div class="nav-item" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
+</div>
+
+<!-- ================ R&D LAB · GEO-ADAPTIVE GARDEN PLANNER (preview) ================ -->
+<div class="screen" id="screen-rd">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">🧪 R&amp;D Lab</div><div class="page-subtitle">Concept preview</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+
+    <!-- Coming-soon hero -->
+    <div style="background:linear-gradient(135deg,#2E7D32,#1B5E20);border-radius:var(--radius);padding:16px;color:#fff;box-shadow:var(--shadow-md);margin-bottom:14px">
+      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:4px 10px;border-radius:999px;font-size:10.5px;font-weight:900;letter-spacing:.5px;text-transform:uppercase">🚧 Coming Soon</div>
+      <div style="font-size:18px;font-weight:900;margin-top:8px;line-height:1.2">Geo-Adaptive Garden Planner</div>
+      <div style="font-size:12.5px;font-weight:700;opacity:.95;margin-top:4px;line-height:1.45">Tell us your <b>state</b> and <b>space</b>. We'll suggest the right ecology model, the right space split, and the right plants — tuned to your climate.</div>
+    </div>
+
+    <!-- Inputs (mini) -->
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:900;margin-bottom:10px">📍 Your conditions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div>
+          <div style="font-size:11px;font-weight:800;color:var(--muted);margin-bottom:4px">State</div>
+          <select id="rd-mini-state" style="width:100%;padding:9px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);font:800 13px Nunito,sans-serif;color:var(--text);outline:none"></select>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:800;color:var(--muted);margin-bottom:4px">Space (sq ft)</div>
+          <input id="rd-mini-space" type="number" min="10" max="20000" value="120" style="width:100%;padding:9px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);font:800 13px Nunito,sans-serif;color:var(--text);outline:none">
+        </div>
+      </div>
+    </div>
+
+    <!-- Zone result -->
+    <div id="rd-mini-zone" style="background:linear-gradient(135deg,#43A047,#1B5E20);border-radius:var(--radius);padding:14px;color:#fff;box-shadow:var(--shadow);margin-bottom:12px">
+      <div id="rd-mini-zico" style="font-size:30px;line-height:1">🌱</div>
+      <div id="rd-mini-zname" style="font-size:16px;font-weight:900;margin:6px 0 2px">Detecting…</div>
+      <div id="rd-mini-zsub" style="font-size:11.5px;font-weight:700;opacity:.95">Pick a state to start.</div>
+      <div id="rd-mini-ztags" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px"></div>
+    </div>
+
+    <!-- Allocation -->
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:900;margin-bottom:4px">📐 Smart space split</div>
+      <div style="font-size:11.5px;color:var(--muted);font-weight:700;margin-bottom:8px">For <b id="rd-mini-sumspace" style="color:var(--text)">120</b> sq ft · <span id="rd-mini-bname">Small</span> garden</div>
+      <div id="rd-mini-bar" style="display:flex;width:100%;height:16px;border-radius:999px;overflow:hidden;border:1px solid var(--border);margin-bottom:8px"></div>
+      <div id="rd-mini-buckets" style="display:grid;gap:8px"></div>
+    </div>
+
+    <!-- Continuous Harvest — compact preview -->
+    <div style="background:linear-gradient(180deg,var(--white),#F1F8E9);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+        <div style="font-size:13px;font-weight:900">🍌 Continuous Harvest</div>
+        <span style="font-size:9px;font-weight:900;color:#E65100;background:#FFF3E0;border:1px solid #FFE0B2;padding:1px 7px;border-radius:999px;letter-spacing:.4px;text-transform:uppercase;margin-left:auto">Concept</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--muted);font-weight:700;line-height:1.45;margin-bottom:10px">Beyond "what to plant" → <b style="color:var(--text)">"how to keep food coming every week."</b> Blend daily-rotation, seasonal, and perennial yields to shrink harvest gaps to zero.</div>
+
+      <!-- Food Security mini-grid -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px">
+          <div style="font-size:10px;font-weight:800;color:var(--muted)">Annual fruit %</div>
+          <div style="font:900 18px Nunito,sans-serif;color:var(--green-deep)">18<span style="font-size:11px;color:var(--muted)">%</span></div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px">
+          <div style="font-size:10px;font-weight:800;color:var(--muted)">Self-sufficient days</div>
+          <div style="font:900 18px Nunito,sans-serif;color:var(--blue)">~66</div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px">
+          <div style="font-size:10px;font-weight:800;color:var(--muted)">Nutrient diversity</div>
+          <div style="font:900 18px Nunito,sans-serif;color:#7B1FA2">7<span style="font-size:11px;color:var(--muted)">/10</span></div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px">
+          <div style="font-size:10px;font-weight:800;color:var(--muted)">Climate resilience</div>
+          <div style="font:900 18px Nunito,sans-serif;color:#EF6C00">B+</div>
+        </div>
+      </div>
+
+      <!-- Future Harvest 5-year mini timeline -->
+      <div style="font-size:10.5px;font-weight:900;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin:4px 0 4px">Future Harvest · 5-yr view</div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:54px 22px 1fr;gap:6px;padding:7px 9px;font:700 11.5px Nunito,sans-serif;border-bottom:1px solid var(--border)"><div style="font-weight:900;color:var(--green-deep)">3 mo</div><div>🥬</div><div>Leafy veg &amp; herbs · daily picks</div></div>
+        <div style="display:grid;grid-template-columns:54px 22px 1fr;gap:6px;padding:7px 9px;font:700 11.5px Nunito,sans-serif;border-bottom:1px solid var(--border)"><div style="font-weight:900;color:var(--green-deep)">8 mo</div><div>🍈</div><div>Papaya · chilli · tomato</div></div>
+        <div style="display:grid;grid-template-columns:54px 22px 1fr;gap:6px;padding:7px 9px;font:700 11.5px Nunito,sans-serif;border-bottom:1px solid var(--border)"><div style="font-weight:900;color:var(--green-deep)">1.5 yr</div><div>🍌</div><div>Banana cycle begins</div></div>
+        <div style="display:grid;grid-template-columns:54px 22px 1fr;gap:6px;padding:7px 9px;font:700 11.5px Nunito,sans-serif;border-bottom:1px solid var(--border)"><div style="font-weight:900;color:var(--green-deep)">3 yr</div><div>🥭</div><div>First mango yield · guava · pomegranate</div></div>
+        <div style="display:grid;grid-template-columns:54px 22px 1fr;gap:6px;padding:7px 9px;font:700 11.5px Nunito,sans-serif"><div style="font-weight:900;color:var(--green-deep)">5 yr</div><div>🌰</div><div>Tamarind · jackfruit · food-forest stability</div></div>
+      </div>
+    </div>
+
+    <!-- Open full prototype (in-app, embedded inside the phone frame) -->
+    <a href="#" onclick="event.preventDefault();showScreen('rdfull')" style="display:block;text-align:center;background:var(--green);color:#fff;border-radius:12px;padding:12px;font-weight:900;font-size:13px;text-decoration:none;box-shadow:0 2px 6px rgba(46,125,50,.25);margin-bottom:10px">🔬 Open full R&amp;D prototype →</a>
+
+    <!-- Roadmap mini -->
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px">
+      <div style="font-size:13px;font-weight:900;margin-bottom:8px">🛣️ What's next</div>
+      <div style="font-size:12px;font-weight:700;color:var(--text);line-height:1.55">
+        • <b>Continuous Harvest Engine</b> — zero-gap daily/seasonal/perennial mix<br>
+        • <b>Family Nutrition Mapping</b> — yield → diet coverage %<br>
+        • <b>Food Forest Simulator</b> — canopy spread over years<br>
+        • <b>Plant Lifetime ROI</b> — mango 20-yr · banana monthly · tamarind decadal<br>
+        • <b>Resilient Garden mode</b> — drought · disease · single-season failure<br>
+        • <b>Geo-Success Validator</b> (community telemetry)<br>
+        • <b>Health-Goal Engine</b> (immunity · diabetes · stress)<br>
+        • <b>Sustainability Score</b> (oxygen · heat · water · food)<br>
+        • <b>Companion Planting AI</b>
+      </div>
+    </div>
+
+  </div></div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item active" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
+</div>
+
+<!-- ================ R&D FULL PROTOTYPE (embedded inside phone frame) ================ -->
+<div class="screen" id="screen-rdfull">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">🧪 R&amp;D · Full Prototype</div><div class="page-subtitle">Concept preview</div></div>
+  <div class="scroll-body" style="padding:0;overflow:hidden">
+    <iframe id="rdfull-frame" data-src="growfresh-rd.html" src="about:blank" title="GrowFresh R&amp;D Full Prototype" style="width:100%;height:100%;border:0;display:block;background:#f6f8f7" loading="lazy"></iframe>
+  </div>
+  <div class="bottom-nav"><div class="nav-item" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div><div class="nav-item" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div><div class="nav-item" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div><div class="nav-item" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div><div class="nav-item active" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div></div>
 </div>
 
 <!-- ================ NEW: SOIL HEALTH DASHBOARD ================ -->
@@ -1837,6 +2029,15 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
   </div>
 </div>
 
+<!-- COMPANION PLANTS MODAL -->
+<div class="modal-overlay" id="companions-modal" onclick="if(event.target===this)hideCompanions()">
+  <div class="modal-sheet" style="max-height:88vh;overflow:hidden;display:flex;flex-direction:column">
+    <div class="modal-handle"></div>
+    <div id="companions-body" style="overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px"></div>
+    <button class="modal-cancel" onclick="hideCompanions()" style="margin-top:8px">Close</button>
+  </div>
+</div>
+
 <!-- BOOKING MODAL -->
 <div class="modal-overlay" id="booking-modal">
   <div class="booking-sheet"><div class="modal-handle"></div>
@@ -2356,7 +2557,7 @@ function goBack(){
   else{showScreen('home',{fromBack:true});}
 }
 function switchTab(tab,cat){
-  const map={home:'home',shop:'shop',garden:'garden',community:'community',profile:'profile',expert:'expert',calendar:'calendar',analyzer:'analyzer',subs:'subs',more:'more',rewards:'rewards',learn:'learn',soil:'soil',compost:'compost',wellness:'wellness',eating:'eating',aicoach:'aicoach',orders:'orders',editprofile:'editprofile',familymembers:'familymembers',family:'family',cart:'cart',wishlist:'wishlist',future:'future'};
+  const map={home:'home',shop:'shop',garden:'garden',community:'community',profile:'profile',expert:'expert',calendar:'calendar',analyzer:'analyzer',subs:'subs',more:'more',rewards:'rewards',learn:'learn',soil:'soil',compost:'compost',wellness:'wellness',eating:'eating',aicoach:'aicoach',orders:'orders',editprofile:'editprofile',familymembers:'familymembers',family:'family',cart:'cart',wishlist:'wishlist',future:'future',rd:'rd',kids:'kids'};
   showScreen(map[tab]||tab);
   if(tab==='calendar')renderPlantTimeline();
   if(tab==='shop'&&cat){
@@ -4813,11 +5014,12 @@ window.GF_PRODUCTS = [{"id": 1, "cat": "seeds", "name": "Tomato Seeds (Desi)", "
   }
   function cardHtml(p){
     return ''
-      + '<div class="product-card" data-cat="'+p.cat+'" data-region="'+(p.region||'')+'" data-pid="'+p.id+'">'
+      + '<div class="product-card" data-cat="'+p.cat+'" data-region="'+(p.region||'')+'" data-pid="'+p.id+'" onclick="if(!event.target.closest(\'#ctrl-'+p.id+'\'))showCompanions('+p.id+')" style="cursor:pointer">'
       +   '<div class="product-img" style="background:'+bgFor(p)+';position:relative;font-size:42px;height:96px;display:flex;align-items:center;justify-content:center;">'
       +     regionChip(p.region)
       +     '<span>'+p.emoji+'</span>'
       +     '<div class="product-badge">'+badge(p)+'</div>'
+      +     '<div style="position:absolute;bottom:5px;right:5px;background:rgba(46,125,50,0.92);color:#fff;font-size:9px;font-weight:900;padding:2px 7px;border-radius:8px;letter-spacing:.3px;box-shadow:0 1px 3px rgba(0,0,0,.15)">🤝 COMPANIONS</div>'
       +   '</div>'
       +   '<div class="product-body">'
       +     '<div class="product-name">'+p.name+'</div>'
@@ -4870,6 +5072,719 @@ window.GF_PRODUCTS = [{"id": 1, "cat": "seeds", "name": "Tomato Seeds (Desi)", "
   }
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
   else init();
+})();
+</script>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     R&D LAB · GEO-ADAPTIVE GARDEN PLANNER (mini in-app preview)
+     Standalone module — drives the #screen-rd controls. Kept short
+     and self-contained; the full prototype lives in growfresh-rd.html
+     ════════════════════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  var ZONES = {
+    tropical:{e:'🌴',n:'Tropical Humid',s:'Long growing seasons · high humidity · dense layering thrives.',t:['Humid','Layered','Spice systems']},
+    semiarid:{e:'🌾',n:'Semi-Arid',s:'Hot summers · moderate rain · drought-tolerant + drip works best.',t:['Drought-tolerant','Drip','Mulch-heavy']},
+    desert:{e:'🏜️',n:'Desert / Dry Heat',s:'Very low rainfall · extreme heat · xeriscape + windbreaks.',t:['Xeriscape','Wind-break','Wide spacing']},
+    hill:{e:'🏔️',n:'Temperate Hill',s:'Cool nights · short summers · berry shrubs & stone fruits.',t:['Cool nights','Berry shrubs']},
+    rainforest:{e:'☔',n:'High Rainfall',s:'Heavy monsoon · fungal-rich soils · bamboo + dense canopy.',t:['Monsoon','Bamboo','Dense canopy']},
+    urbanhybrid:{e:'🏙️',n:'Urban Hybrid',s:'Heat island · terrace + balcony · Miyawaki pockets + edible.',t:['Heat-island','Terrace','Vertical']}
+  };
+  var STATE_ZONE = {
+    'Kerala':'tropical','Goa':'tropical','Tamil Nadu':'tropical','Puducherry':'tropical','Odisha':'tropical',
+    'Karnataka':'semiarid','Andhra Pradesh':'semiarid','Telangana':'semiarid','Maharashtra':'semiarid',
+    'Madhya Pradesh':'semiarid','Chhattisgarh':'semiarid','Jharkhand':'semiarid',
+    'Uttar Pradesh':'semiarid','Bihar':'semiarid','Haryana':'semiarid','Punjab':'semiarid',
+    'Rajasthan':'desert','Gujarat':'desert',
+    'Himachal Pradesh':'hill','Uttarakhand':'hill','Jammu & Kashmir':'hill','Ladakh':'hill','Sikkim':'hill',
+    'Arunachal Pradesh':'rainforest','Assam':'rainforest','Meghalaya':'rainforest','Manipur':'rainforest',
+    'Mizoram':'rainforest','Nagaland':'rainforest','Tripura':'rainforest','West Bengal':'rainforest',
+    'Delhi':'urbanhybrid','Chandigarh':'urbanhybrid'
+  };
+  var BUCKETS = [
+    {max:50,name:'Micro',d:70,s:30,l:0},
+    {max:150,name:'Small',d:50,s:30,l:20},
+    {max:500,name:'Medium',d:40,s:35,l:25},
+    {max:2000,name:'Large',d:30,s:30,l:40},
+    {max:99999,name:'Very large',d:20,s:30,l:50}
+  ];
+
+  function bucketFor(n){
+    var v = Math.max(10, Math.min(20000, Number(n) || 0));
+    for (var i=0;i<BUCKETS.length;i++) if (v <= BUCKETS[i].max) return BUCKETS[i];
+    return BUCKETS[BUCKETS.length-1];
+  }
+
+  function init(){
+    var sel = document.getElementById('rd-mini-state');
+    if (!sel) { setTimeout(init,120); return; }
+    if (sel.options.length === 0){
+      var states = Object.keys(STATE_ZONE).sort();
+      sel.innerHTML = '<option value="">— select state —</option>' +
+        states.map(function(s){return '<option value="'+s+'">'+s+'</option>';}).join('');
+      sel.value = 'Telangana';
+    }
+    ['rd-mini-state','rd-mini-space'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el && !el._rdBound) { el.addEventListener('input', render); el._rdBound = true; }
+    });
+    render();
+  }
+
+  function render(){
+    var stateEl = document.getElementById('rd-mini-state');
+    var spaceEl = document.getElementById('rd-mini-space');
+    if (!stateEl || !spaceEl) return;
+    var state = stateEl.value;
+    var space = Math.max(10, Math.min(20000, Number(spaceEl.value) || 120));
+    var zone  = ZONES[STATE_ZONE[state] || 'semiarid'];
+    var b     = bucketFor(space);
+
+    document.getElementById('rd-mini-zico').textContent  = zone.e;
+    document.getElementById('rd-mini-zname').textContent = zone.n + (state ? ' · ' + state : '');
+    document.getElementById('rd-mini-zsub').textContent  = zone.s;
+    document.getElementById('rd-mini-ztags').innerHTML   = zone.t.map(function(t){
+      return '<span style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);padding:3px 8px;border-radius:999px;font-size:10px;font-weight:800">'+t+'</span>';
+    }).join('');
+
+    document.getElementById('rd-mini-sumspace').textContent = space;
+    document.getElementById('rd-mini-bname').textContent    = b.name;
+
+    var bar = document.getElementById('rd-mini-bar');
+    bar.innerHTML = '';
+    var segs = [[b.d,'#43A047'],[b.s,'#FB8C00'],[b.l,'#6D4C41']];
+    segs.forEach(function(seg){
+      if (!seg[0]) return;
+      var d = document.createElement('div');
+      d.style.cssText = 'width:'+seg[0]+'%;background:'+seg[1]+';height:100%;display:flex;align-items:center;justify-content:center;font:900 10px Nunito,sans-serif;color:#fff';
+      d.textContent = seg[0] >= 10 ? seg[0] + '%' : '';
+      bar.appendChild(d);
+    });
+
+    var dSq = Math.round(space * b.d / 100);
+    var sSq = Math.round(space * b.s / 100);
+    var lSq = Math.max(0, space - dSq - sSq);
+    var rows = [
+      ['🥬','Daily Consumption', b.d+'%', dSq+' sq ft','Fast-cycle greens & herbs you pick almost every day.'],
+      ['🌽','Seasonal Rotation', b.s+'%', sSq+' sq ft','Rotated by monsoon · winter · summer.'],
+      ['🌳','Long-term Perennials', b.l+'%', (b.l===0?'skipped':lSq+' sq ft'), b.l===0 ? 'Too little space — focus on daily + seasonal first.' : 'Shade, future yield, ecosystem maturity.']
+    ];
+    document.getElementById('rd-mini-buckets').innerHTML = rows.map(function(r){
+      return '<div style="border:1px solid var(--border);border-radius:10px;padding:10px;background:#fafdfb">'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">'
+        +   '<div style="font:900 12.5px Nunito,sans-serif">'+r[0]+' '+r[1]+'</div>'
+        +   '<div style="font:900 10.5px Nunito,sans-serif;color:var(--green-deep);background:var(--green-pale);padding:2px 7px;border-radius:999px">'+r[2]+' · '+r[3]+'</div>'
+        + '</div>'
+        + '<div style="font:700 11px Nunito,sans-serif;color:var(--muted)">'+r[4]+'</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Re-init whenever the R&D screen becomes active (lazy bind)
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    while (t && t !== document.body) {
+      var oc = t.getAttribute && t.getAttribute('onclick');
+      if (oc && oc.indexOf("'rd'") !== -1) { setTimeout(init, 80); break; }
+      t = t.parentNode;
+    }
+  }, true);
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     R&D FULL PROTOTYPE — lazy iframe loader for #screen-rdfull
+     Only fetches growfresh-rd.html the first time the screen opens.
+     ════════════════════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  function load(){
+    var f = document.getElementById('rdfull-frame');
+    if (!f) return;
+    var src = f.getAttribute('data-src');
+    if (src && (!f.src || f.src === 'about:blank' || f.src.indexOf('about:blank') !== -1)) {
+      f.src = src;
+    }
+  }
+  // Wrap showScreen to trigger lazy load when navigating to rdfull
+  function wrap(){
+    if (typeof window.showScreen !== 'function') { setTimeout(wrap, 60); return; }
+    var _ss = window.showScreen;
+    window.showScreen = function(name){
+      var r = _ss.apply(this, arguments);
+      try { if (name === 'rdfull') load(); } catch(e){}
+      return r;
+    };
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wrap);
+  else wrap();
+})();
+</script>
+
+<!-- ============== KIDS FARMING GAMES ENGINE ============== -->
+<script>
+(function(){
+  // Persistent star wallet
+  var STAR_KEY='gf_kids_stars_v1';
+  function getStars(){ try{ return parseInt(localStorage.getItem(STAR_KEY)||'0',10)||0; }catch(e){ return 0; } }
+  function setStars(n){ try{ localStorage.setItem(STAR_KEY, String(n)); }catch(e){} renderStars(); }
+  function addStars(n){ setStars(getStars()+n); }
+  function renderStars(){ var el=document.getElementById('kidsStars'); if(el) el.textContent=getStars(); }
+
+  function stage(){ return document.getElementById('kidsStage'); }
+  function clearStage(){ var s=stage(); if(s) s.innerHTML=''; }
+  function celebrate(msg, starsEarned){
+    addStars(starsEarned||1);
+    var s=stage(); if(!s) return;
+    s.innerHTML='<div style="text-align:center;padding:24px 10px">'+
+      '<div style="font-size:64px;animation:kidsBounce 0.6s ease infinite alternate">🎉</div>'+
+      '<div style="font-size:18px;font-weight:900;color:#16A34A;margin-top:8px">'+msg+'</div>'+
+      '<div style="font-size:14px;font-weight:800;color:#F59E0B;margin-top:6px">+'+(starsEarned||1)+' 🌟 Garden Stars!</div>'+
+      '<div style="font-size:12px;color:var(--muted);margin-top:10px;font-weight:600">Show mom or dad your stars!</div>'+
+      '<button onclick="kidsPlay(window._lastKidsGame||\'seed\')" style="margin-top:14px;background:var(--grad-primary);color:white;border:none;border-radius:10px;padding:10px 18px;font-weight:900;font-size:13px;font-family:Nunito,sans-serif;cursor:pointer">🔁 Play Again</button>'+
+      '</div>';
+  }
+
+  // ===== GAME 1: SEED → SPROUT (tap-to-water) =====
+  function gameSeed(){
+    var taps=0, target=12;
+    var stages=['🌰','🌱','🌿','🪴','🌳','🥭'];
+    var msgs=['Plant the seed!','It sprouted!','Growing tall!','Getting bigger!','A real tree!','Yum! Fruit ready!'];
+    clearStage();
+    stage().innerHTML=
+      '<div style="text-align:center">'+
+        '<div style="font-size:12px;font-weight:900;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase">🌱 Seed → Sprout</div>'+
+        '<div style="font-size:14px;font-weight:800;color:var(--text);margin-top:4px">Tap the 💧 to water your plant!</div>'+
+        '<div id="kSeedPlant" style="font-size:90px;margin:18px 0;transition:transform 0.2s">🌰</div>'+
+        '<div id="kSeedMsg" style="font-size:13px;font-weight:800;color:#16A34A;min-height:20px">Plant the seed!</div>'+
+        '<div style="background:#E0F2FE;height:10px;border-radius:5px;margin:14px 0;overflow:hidden">'+
+          '<div id="kSeedBar" style="width:0%;height:100%;background:linear-gradient(90deg,#06B6D4,#0EA5E9);transition:width 0.3s"></div>'+
+        '</div>'+
+        '<button id="kSeedBtn" style="background:linear-gradient(135deg,#06B6D4,#0EA5E9);color:white;border:none;border-radius:50%;width:90px;height:90px;font-size:42px;cursor:pointer;box-shadow:0 6px 20px rgba(6,182,212,0.4);font-family:inherit">💧</button>'+
+        '<div style="font-size:11px;color:var(--muted);margin-top:10px;font-weight:600">'+target+' drops to grow fully</div>'+
+      '</div>';
+    var btn=document.getElementById('kSeedBtn');
+    var plant=document.getElementById('kSeedPlant');
+    var bar=document.getElementById('kSeedBar');
+    var msg=document.getElementById('kSeedMsg');
+    btn.onclick=function(){
+      taps++;
+      var idx=Math.min(stages.length-1, Math.floor((taps/target)*stages.length));
+      plant.textContent=stages[idx];
+      plant.style.transform='scale(1.15)';
+      setTimeout(function(){ plant.style.transform='scale(1)'; },180);
+      msg.textContent=msgs[idx];
+      bar.style.width=Math.min(100,(taps/target)*100)+'%';
+      if(taps>=target){
+        btn.disabled=true; btn.style.opacity='0.4';
+        setTimeout(function(){ celebrate('Your plant is fully grown! 🌳', 3); }, 600);
+      }
+    };
+  }
+
+  // ===== GAME 2: SPOT THE PEST =====
+  function gamePest(){
+    var leaves=['🍃','🍃','🍃','🍃','🍃','🍃','🍃','🍃'];
+    var bugIdx=Math.floor(Math.random()*8);
+    leaves[bugIdx]='🍃🐛';
+    clearStage();
+    var html='<div style="text-align:center">'+
+      '<div style="font-size:12px;font-weight:900;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase">🐛 Spot the Pest</div>'+
+      '<div style="font-size:14px;font-weight:800;color:var(--text);margin-top:4px">Find the leaf with the bug! 🔍</div>'+
+      '<div id="kPestGrid" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin:18px 0">';
+    for(var i=0;i<8;i++){
+      html+='<button data-i="'+i+'" class="kPestLeaf" style="background:linear-gradient(135deg,#86EFAC,#4ADE80);border:none;border-radius:14px;padding:18px 0;font-size:36px;cursor:pointer;font-family:inherit;aspect-ratio:1">🍃</button>';
+    }
+    html+='</div><div id="kPestMsg" style="font-size:13px;font-weight:800;min-height:20px;color:var(--muted)">Tap a leaf to check…</div></div>';
+    stage().innerHTML=html;
+    document.querySelectorAll('.kPestLeaf').forEach(function(b){
+      b.onclick=function(){
+        var i=parseInt(b.getAttribute('data-i'),10);
+        if(i===bugIdx){
+          b.textContent='🐛'; b.style.background='linear-gradient(135deg,#FCA5A5,#EF4444)';
+          setTimeout(function(){ celebrate('You found the bug! 🐛 Good eye!', 2); }, 500);
+        } else {
+          b.style.opacity='0.3'; b.disabled=true;
+          document.getElementById('kPestMsg').textContent='Not this one. Keep looking! 👀';
+        }
+      };
+    });
+  }
+
+  // ===== GAME 3: HARVEST MATCH (tap ripe ones) =====
+  function gameHarvest(){
+    // 6 veggies, each ripe or unripe
+    var items=[
+      {emoji:'🍅',ripe:true,name:'tomato'},
+      {emoji:'🥕',ripe:true,name:'carrot'},
+      {emoji:'🥒',ripe:false,name:'cucumber'},
+      {emoji:'🌽',ripe:true,name:'corn'},
+      {emoji:'🍆',ripe:false,name:'eggplant'},
+      {emoji:'🫑',ripe:true,name:'pepper'}
+    ];
+    // shuffle
+    items.sort(function(){ return Math.random()-0.5; });
+    var ripeCount=items.filter(function(x){return x.ripe;}).length;
+    var picked=0, mistakes=0;
+    clearStage();
+    var html='<div style="text-align:center">'+
+      '<div style="font-size:12px;font-weight:900;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase">🥕 Harvest Match</div>'+
+      '<div style="font-size:14px;font-weight:800;color:var(--text);margin-top:4px">Tap the <span style="color:#16A34A">RIPE</span> veggies to harvest!</div>'+
+      '<div style="font-size:11px;color:var(--muted);margin-top:2px;font-weight:600">Ripe = bright &amp; bouncing · Unripe = pale &amp; still</div>'+
+      '<div id="kHvGrid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0">';
+    items.forEach(function(it,i){
+      var opacity=it.ripe?'1':'0.45';
+      var animation=it.ripe?'kidsBounce 1.2s ease-in-out infinite alternate':'none';
+      html+='<button data-i="'+i+'" data-ripe="'+it.ripe+'" class="kHvItem" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);border:none;border-radius:14px;padding:18px 0;font-size:42px;cursor:pointer;font-family:inherit;opacity:'+opacity+';animation:'+animation+'">'+it.emoji+'</button>';
+    });
+    html+='</div>'+
+      '<div style="display:flex;gap:14px;justify-content:center;font-size:12px;font-weight:800">'+
+      '<div>🧺 <span id="kHvPicked">0</span>/'+ripeCount+'</div>'+
+      '<div style="color:#EF4444">❌ <span id="kHvMistakes">0</span></div>'+
+      '</div>'+
+      '<div id="kHvMsg" style="font-size:12px;color:var(--muted);margin-top:8px;font-weight:700;min-height:18px">Tap a veggie!</div>'+
+    '</div>';
+    stage().innerHTML=html;
+    document.querySelectorAll('.kHvItem').forEach(function(b){
+      b.onclick=function(){
+        if(b.disabled) return;
+        var ripe=b.getAttribute('data-ripe')==='true';
+        b.disabled=true;
+        if(ripe){
+          b.style.background='linear-gradient(135deg,#86EFAC,#16A34A)';
+          b.style.animation='none';
+          picked++;
+          document.getElementById('kHvPicked').textContent=picked;
+          document.getElementById('kHvMsg').textContent='Yum! Into the basket 🧺';
+          if(picked===ripeCount){
+            setTimeout(function(){ celebrate('All ripe veggies harvested! 🧺', mistakes===0?3:2); }, 500);
+          }
+        } else {
+          b.style.background='linear-gradient(135deg,#FCA5A5,#EF4444)';
+          mistakes++;
+          document.getElementById('kHvMistakes').textContent=mistakes;
+          document.getElementById('kHvMsg').textContent='Oh no — that one needs more time to ripen!';
+        }
+      };
+    });
+  }
+
+  // ===== GAME 4: SUN & WATER QUIZ =====
+  var QUIZ=[
+    {q:'Which plant LOVES the most sunshine? ☀️', opts:[{e:'🌻',t:'Sunflower',ok:true},{e:'🍄',t:'Mushroom',ok:false},{e:'🌿',t:'Mint',ok:false}], why:'Sunflowers turn to face the sun all day!'},
+    {q:'Which plant needs LOTS of water? 💧', opts:[{e:'🌵',t:'Cactus',ok:false},{e:'🌾',t:'Rice',ok:true},{e:'🪴',t:'Succulent',ok:false}], why:'Rice grows in flooded fields called paddies!'},
+    {q:'What helps plants grow from kitchen waste? ♻️', opts:[{e:'🥤',t:'Soda',ok:false},{e:'🌱',t:'Compost',ok:true},{e:'🧂',t:'Salt',ok:false}], why:'Compost is plant food made from veggie scraps!'},
+    {q:'Which insect HELPS the garden? 🐝', opts:[{e:'🐝',t:'Bee',ok:true},{e:'🦟',t:'Mosquito',ok:false},{e:'🦗',t:'Locust',ok:false}], why:'Bees pollinate flowers so fruits can grow!'},
+    {q:'When do most plants drink water best? 🌅', opts:[{e:'☀️',t:'Hot noon',ok:false},{e:'🌅',t:'Early morning',ok:true},{e:'🌙',t:'Midnight',ok:false}], why:'Morning watering = roots drink before the heat!'}
+  ];
+  function gameQuiz(){
+    var qIdx=0, score=0;
+    function renderQ(){
+      if(qIdx>=QUIZ.length){
+        var stars = score>=4?3 : score>=2?2 : 1;
+        celebrate('Quiz done! You scored '+score+'/'+QUIZ.length+' 🌻', stars);
+        return;
+      }
+      var q=QUIZ[qIdx];
+      clearStage();
+      var html='<div>'+
+        '<div style="font-size:12px;font-weight:900;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase;text-align:center">🌻 Sun &amp; Water Quiz</div>'+
+        '<div style="font-size:11px;color:var(--muted);text-align:center;margin-top:2px;font-weight:700">Question '+(qIdx+1)+' of '+QUIZ.length+' · Score: '+score+'</div>'+
+        '<div style="background:linear-gradient(135deg,#FEF3C7,#FCD34D);padding:16px;border-radius:14px;margin:14px 0;text-align:center"><div style="font-size:15px;font-weight:900;color:#78350F">'+q.q+'</div></div>'+
+        '<div style="display:grid;gap:10px">';
+      q.opts.forEach(function(o,i){
+        html+='<button class="kQzOpt" data-ok="'+o.ok+'" style="background:white;border:2.5px solid #E5E7EB;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;font-family:Nunito,sans-serif;text-align:left">'+
+          '<div style="font-size:32px">'+o.e+'</div>'+
+          '<div style="font-size:14px;font-weight:800;color:var(--text);flex:1">'+o.t+'</div>'+
+          '</button>';
+      });
+      html+='</div><div id="kQzFb" style="font-size:12px;font-weight:700;text-align:center;margin-top:12px;min-height:20px"></div></div>';
+      stage().innerHTML=html;
+      document.querySelectorAll('.kQzOpt').forEach(function(b){
+        b.onclick=function(){
+          if(b.disabled) return;
+          document.querySelectorAll('.kQzOpt').forEach(function(x){ x.disabled=true; });
+          var ok=b.getAttribute('data-ok')==='true';
+          if(ok){
+            b.style.background='linear-gradient(135deg,#86EFAC,#16A34A)'; b.style.color='white'; b.style.borderColor='#16A34A';
+            score++;
+            document.getElementById('kQzFb').innerHTML='<span style="color:#16A34A">✅ Correct! </span>'+q.why;
+          } else {
+            b.style.background='linear-gradient(135deg,#FCA5A5,#EF4444)'; b.style.color='white'; b.style.borderColor='#EF4444';
+            document.getElementById('kQzFb').innerHTML='<span style="color:#EF4444">❌ Not quite. </span>'+q.why;
+          }
+          setTimeout(function(){ qIdx++; renderQ(); }, 1800);
+        };
+      });
+    }
+    renderQ();
+  }
+
+  // Public dispatcher
+  window.kidsPlay=function(g){
+    window._lastKidsGame=g;
+    if(g==='seed') gameSeed();
+    else if(g==='pest') gamePest();
+    else if(g==='harvest') gameHarvest();
+    else if(g==='quiz') gameQuiz();
+  };
+
+  // Bounce keyframes (inject once)
+  if(!document.getElementById('kidsAnimCSS')){
+    var st=document.createElement('style'); st.id='kidsAnimCSS';
+    st.textContent='@keyframes kidsBounce{0%{transform:translateY(0)}100%{transform:translateY(-6px)}}';
+    document.head.appendChild(st);
+  }
+
+  // Render initial star count when screen opens
+  var prev=window.showScreen;
+  if(typeof prev==='function'){
+    window.showScreen=function(name,opts){
+      var r=prev.apply(this,arguments);
+      try{ if(name==='kids') renderStars(); }catch(e){}
+      return r;
+    };
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', renderStars);
+  else renderStars();
+})();
+</script>
+
+<!-- ============== COMPANION PLANTS ENGINE ============== -->
+<!-- Implements the M(i,j) compatibility matrix from the Mathematical Ecology -->
+<!-- Blueprint. When user taps a product image, we show a popup with         -->
+<!-- ecologically-compatible plants that thrive together (self-sustaining).  -->
+<script>
+(function(){
+  // ── 7-Layer Food-Forest taxonomy (Permaculture · Mollison/Holmgren) ──
+  // Used to tag every companion so the user can pick plants that fit
+  // the space they actually have (balcony pot · terrace bed · backyard).
+  var LAYERS = {
+    canopy:     {label:'Canopy',     emoji:'🌳', color:'#2E7D32', bg:'#E8F5E9', hint:'Tall tree · backyard / ground only'},
+    understory: {label:'Understory', emoji:'🌴', color:'#388E3C', bg:'#F1F8E9', hint:'Small tree · 4-8 ft · pot or ground'},
+    shrub:      {label:'Shrub',      emoji:'🌿', color:'#558B2F', bg:'#F1F8E9', hint:'Bushy · 2-5 ft · large pot ok'},
+    herb:       {label:'Herbaceous', emoji:'🌱', color:'#7CB342', bg:'#F9FBE7', hint:'Soft-stem · small pot · balcony'},
+    ground:     {label:'Ground cover',emoji:'🍓',color:'#9CCC65', bg:'#F9FBE7', hint:'Spreads low · fills gaps'},
+    vine:       {label:'Vine',       emoji:'🥒', color:'#00897B', bg:'#E0F2F1', hint:'Climbs · needs trellis or string'},
+    root:       {label:'Root',       emoji:'🥕', color:'#6D4C41', bg:'#EFEBE9', hint:'Underground · uses lower layer'},
+    flower:     {label:'Flower',     emoji:'🌼', color:'#F57C00', bg:'#FFF3E0', hint:'Pollinator · pest deterrent'}
+  };
+
+  // Keyword → layer key (case-insensitive contains match against companion name)
+  // Covers everything used in COMPANIONS.good[] below.
+  var PLANT_LAYER_RULES = [
+    [/coconut|mango|jackfruit|tamarind|neem|walnut|apple|pear|drumstick.*tree|date palm|bamboo|areca/i, 'canopy'],
+    [/banana|papaya|moringa|drumstick|curry leaf tree|lemon|lime|citrus|guava|pomegranate|custard apple|ber|fig/i, 'understory'],
+    [/curry leaf|hibiscus|chilli|chili|pepper.*plant|brinjal|eggplant|capsicum|bell pepper|tomato|okra|bhindi|aloe|tulsi|rose|berry|stevia/i, 'shrub'],
+    [/basil|mint|tulsi|coriander|cilantro|dhania|parsley|dill|fennel|methi|fenugreek|spinach|palak|lettuce|amaranthus|microgreens|sage|rosemary|chives/i, 'herb'],
+    [/strawberry|clover|sweet potato|nasturtium/i, 'ground'],
+    [/cucumber|bean|pea|bottle gourd|bitter gourd|snake gourd|ridge gourd|grape|cluster bean|lobia|rajma|peas/i, 'vine'],
+    [/carrot|onion|garlic|turmeric|ginger|haldi|adrak|potato|beetroot|sweet potato|radish|parsnip|maize|corn|broccoli|cauliflower|cabbage/i, 'root'],
+    [/marigold|sunflower|nasturtium|flower|roses/i, 'flower']
+  ];
+
+  function layerFor(plantName){
+    var n = String(plantName||'');
+    for(var i=0;i<PLANT_LAYER_RULES.length;i++){
+      if(PLANT_LAYER_RULES[i][0].test(n)) return LAYERS[PLANT_LAYER_RULES[i][1]];
+    }
+    return null;
+  }
+
+  // ── Companion knowledge base (permaculture + Indian-context curated) ──
+  // Each key is a lowercase plant keyword found in product names.
+  // good:  [emoji, name, reason, score 0-100]
+  // avoid: [emoji, name, reason]
+  // role:  ecological role (for the M(i,j) explanation)
+  var COMPANIONS = {
+    tomato: {
+      role:'🍅 Sun-loving fruiting · medium nutrient feeder',
+      good:[
+        ['🌿','Basil','Repels whitefly · improves tomato flavor',95],
+        ['🌼','Marigold','Repels nematodes & aphids · pollinator magnet',92],
+        ['🧅','Onion','Deters spider mites · shares root depth well',85],
+        ['🥕','Carrot','Loosens soil for tomato roots · uses different layer',80],
+        ['🌿','Parsley','Attracts hoverflies that eat tomato pests',75],
+        ['🥬','Lettuce','Ground-cover · keeps soil cool & moist for tomato',72]
+      ],
+      avoid:[
+        ['🥒','Cucumber','Shares same fungal diseases (blight, mildew)'],
+        ['🥔','Potato','Same family → same blight risk · root competition'],
+        ['🥦','Brassicas','Heavy feeders — compete for nitrogen']
+      ]
+    },
+    chilli: {
+      role:'🌶️ Sun-loving fruiting · warm-season heavy feeder',
+      good:[
+        ['🌿','Basil','Repels aphids & spider mites · boosts pungency',93],
+        ['🌼','Marigold','Suppresses root nematodes near chilli roots',90],
+        ['🍅','Tomato','Same care needs · share pest-control sprays',82],
+        ['🌿','Coriander','Attracts beneficial wasps · light shade for soil',78],
+        ['🧄','Garlic','Strong-smell pest deterrent · fungus control',85],
+        ['🫛','Beans','Fix nitrogen for chilli (heavy feeder)',88]
+      ],
+      avoid:[
+        ['🥦','Brassicas','Stunts chilli growth'],
+        ['🌿','Fennel','Allelopathic — inhibits chilli germination']
+      ]
+    },
+    coriander: {
+      role:'🌿 Fast-cycle herb · short root · cool-season friendly',
+      good:[
+        ['🍅','Tomato','Coriander attracts hoverflies that eat tomato aphids',88],
+        ['🌶️','Chilli','Same bed cycle · pollinator support',82],
+        ['🥬','Spinach','Both shallow-root · share moisture needs',80],
+        ['🥔','Potato','Coriander deters Colorado beetle',75],
+        ['🫛','Beans','Beans fix N · coriander attracts predator insects',85]
+      ],
+      avoid:[
+        ['🌿','Fennel','Strong allelopathy — kills coriander'],
+        ['🌼','Dill','Cross-pollinates · weakens flavour']
+      ]
+    },
+    spinach: {
+      role:'🥬 Leafy ground-layer · light feeder · partial shade ok',
+      good:[
+        ['🍓','Strawberry','Spinach shades soil for strawberry roots',86],
+        ['🥕','Carrot','Different root depths · efficient space use',82],
+        ['🫛','Peas / Beans','Fix nitrogen — spinach loves N',92],
+        ['🌼','Marigold','Pest deterrent for spinach leaf-miner',80],
+        ['🧅','Onion','Repels aphids that swarm spinach',78]
+      ],
+      avoid:[
+        ['🥔','Potato','Heavy feeder — out-competes spinach for N']
+      ]
+    },
+    brinjal: {
+      role:'🍆 Warm-season fruiting · heavy feeder · pest-prone',
+      good:[
+        ['🫛','Beans','Fix nitrogen for hungry brinjal',92],
+        ['🌼','Marigold','Repels nematodes & fruit borer',90],
+        ['🌿','Basil','Deters thrips & whitefly',85],
+        ['🌶️','Chilli','Same care · share pest defence',80],
+        ['🌿','Mint (potted)','Confuses brinjal shoot borer',78]
+      ],
+      avoid:[
+        ['🥔','Potato','Same family — shared pests (blight, beetle)'],
+        ['🍅','Tomato','Same family — pest amplification']
+      ]
+    },
+    capsicum: {
+      role:'🫑 Bell pepper · warm-season · medium feeder',
+      good:[
+        ['🌿','Basil','Repels aphids · improves pepper flavor',90],
+        ['🥕','Carrot','Shares space efficiently · loosens soil',82],
+        ['🧅','Onion','Strong-smell pest deterrent',85],
+        ['🍅','Tomato','Same care · share trellis structure',78],
+        ['🌼','Marigold','Pollinator magnet · soil pest control',88]
+      ],
+      avoid:[
+        ['🌿','Fennel','Inhibits capsicum growth'],
+        ['🥦','Brassicas','Compete for nutrients']
+      ]
+    },
+    cucumber: {
+      role:'🥒 Vining · climbing · heavy water needs',
+      good:[
+        ['🌻','Sunflower','Natural trellis · attracts pollinators',92],
+        ['🫛','Beans','Fix nitrogen · also climb same trellis',88],
+        ['🌽','Corn','Living trellis (3-Sisters method)',95],
+        ['🌿','Dill','Attracts predatory wasps for cucumber beetle',85],
+        ['🌼','Nasturtium','Trap crop for aphids',80]
+      ],
+      avoid:[
+        ['🍅','Tomato','Share blight + mildew · fight for water'],
+        ['🌿','Sage','Stunts cucumber vines']
+      ]
+    },
+    cabbage:{role:'🥬 Brassica · heavy feeder · cool season',good:[['🌿','Dill','Attracts wasps that eat cabbage worms',88],['🌼','Nasturtium','Trap crop for aphids',85],['🧅','Onion','Repels cabbage maggot',82],['🌿','Mint','Deters cabbage moth',78]],avoid:[['🍅','Tomato','Compete for N'],['🍓','Strawberry','Mutual growth inhibition']]},
+    onion:{role:'🧅 Allium · pungent · pest-repellent',good:[['🥕','Carrot','Onion repels carrot fly · classic pair',95],['🥬','Lettuce','Onion deters aphids on lettuce',82],['🍅','Tomato','Onion confuses tomato hornworm',80],['🍓','Strawberry','Onion-fungus protection',75]],avoid:[['🫛','Beans','Onion stunts bean nitrogen fixing'],['🫛','Peas','Same — inhibits N-fixing bacteria']]},
+    garlic:{role:'🧄 Allium · strong antifungal · pest deterrent',good:[['🍅','Tomato','Repels spider mites & aphids',92],['🌹','Roses (or flowers)','Famous fungal protector',90],['🥬','Lettuce','Aphid deterrent',82],['🥕','Carrot','Repels carrot fly',85]],avoid:[['🫛','Beans / Peas','Inhibits legume N-fixation']]},
+    carrot:{role:'🥕 Root · long taproot · light feeder',good:[['🧅','Onion','Onion repels carrot fly — gold-standard pair',95],['🌿','Rosemary','Repels carrot fly',88],['🥬','Lettuce','Different layer · shares space',82],['🍅','Tomato','Tomato shades carrot in summer',80],['🌿','Chives','Improves carrot flavour',78]],avoid:[['🌿','Dill','Stunts carrot growth'],['🌿','Parsnip','Same pest profile']]},
+    lemon:{role:'🍋 Citrus tree · perennial canopy · long-term',good:[['🌿','Basil','Repels citrus pests · shares partial shade',88],['🌼','Marigold','Pest control · pollinator',85],['🌿','Mint (potted)','Aphid deterrent around base',80],['🌳','Curry leaf','Same care · share organic mulch',90],['🫛','Beans (climber)','Fix N for citrus tree',82]],avoid:[['🥦','Brassicas','Acidify soil — citrus prefers slightly acidic but…']]},
+    mango:{role:'🥭 Long-term tree · deep root · top canopy',good:[['🍌','Banana','Banana mulches mango roots · shares humidity',92],['🌿','Turmeric','Ground cover · loves mango shade',90],['🌿','Ginger','Loves filtered light under mango',88],['🍃','Curry leaf','Same eco-zone · pest support',85],['🫛','Pigeon pea','Fix N · windbreak for young mango',82]],avoid:[]},
+    banana:{role:'🍌 Perennial · year-round fruit · heavy feeder',good:[['🌿','Turmeric','Loves banana shade · shares moisture',92],['🌿','Ginger','Ground layer · partial shade',90],['🫛','Beans','Fix N for hungry banana',88],['🌼','Marigold','Nematode control',85],['🍃','Curry leaf','Pest support · same zone',82]],avoid:[]},
+    moringa:{role:'🌳 Fast-growing tree · drought-tolerant',good:[['🌶️','Chilli','Moringa leaf mulch fertilizes chilli',88],['🍅','Tomato','Light shade · windbreak',82],['🌿','Turmeric','Loves moringa filtered light',85],['🌼','Marigold','Pest control under moringa',80]],avoid:[]},
+    curry:{role:'🍃 Curry leaf · perennial herb · year-round',good:[['🍋','Lemon','Same care · same garden corner',90],['🌶️','Chilli','Same Indian-kitchen combo',88],['🌿','Mint','Shade-tolerant ground cover',82],['🥭','Mango','Loves mango filtered shade',85]],avoid:[]},
+    mint:{role:'🌿 Aggressive herb · ground cover · grow in pot!',good:[['🍅','Tomato','Mint deters tomato hornworm',85],['🥬','Cabbage','Confuses cabbage moth',88],['🌶️','Chilli','Mint repels chilli aphids',82],['🌹','Roses (or flowers)','Aphid repellent',80]],avoid:[['🌿','Parsley','Mint takes over · keep separate'],['🌿','Coriander','Mint is too aggressive']]},
+    basil:{role:'🌿 Annual herb · pungent · sun-loving',good:[['🍅','Tomato','Basil improves tomato flavour · repels whitefly',95],['🌶️','Chilli','Pest control · same care',92],['🫑','Capsicum','Aphid control',90],['🌼','Marigold','Pollinator boost',82]],avoid:[['🌿','Rue','Stunts basil'],['🌿','Sage','Different water needs']]},
+    spinach_palak:{role:'🥬 Leafy green · cool-season',good:[]}, // alias handled
+    methi:{role:'🌿 Fenugreek · legume herb · fast-cycle',good:[['🍅','Tomato','Methi fixes nitrogen · feeds tomato',88],['🌶️','Chilli','N-fixer for hungry chilli',85],['🥬','Spinach','Soft soil + N boost',82],['🌽','Maize','Classic Indian intercrop',90]],avoid:[]},
+    okra:{role:'🌶️ Lady-finger / Bhindi · warm-season',good:[['🌶️','Chilli','Same heat-tolerance · share trellis',85],['🫛','Beans','Fix N for okra',88],['🌼','Marigold','Aphid control',82],['🌿','Basil','Whitefly deterrent',80]],avoid:[]},
+    drumstick:{role:'🌳 Moringa drumstick tree · long-term',good:[['🌶️','Chilli','Moringa leaf mulch · light shade',88],['🌿','Turmeric','Shade tolerant',85],['🌼','Marigold','Soil pest control',80]],avoid:[]},
+    papaya:{role:'🍈 Fast perennial · year-round fruit',good:[['🍌','Banana','Same care · share humidity',88],['🌿','Turmeric','Loves papaya shade',85],['🌿','Ginger','Ground layer',82],['🌶️','Chilli','Beneath young papaya',78]],avoid:[]},
+    turmeric:{role:'🌿 Rhizome · shade-loving · ground layer',good:[['🍌','Banana','Loves banana shade & moisture',92],['🥭','Mango','Ground cover under mango canopy',90],['🌳','Moringa','Filtered shade',85],['🌿','Ginger','Same care · same bed',95]],avoid:[]},
+    ginger:{role:'🌿 Rhizome · shade-loving · ground layer',good:[['🌿','Turmeric','Same bed · same care',95],['🍌','Banana','Loves the moisture & shade',92],['🥭','Mango','Filtered shade ground cover',88],['🌳','Curry leaf','Same eco-zone',82]],avoid:[]},
+    beans:{role:'🫛 Legume · nitrogen fixer · feeds everything!',good:[['🌽','Corn / Maize','3-Sisters · corn = trellis',95],['🥒','Cucumber','Climb together',90],['🍅','Tomato','Beans feed tomato N',88],['🌶️','Chilli','N for chilli',85],['🥕','Carrot','Loosens soil',82]],avoid:[['🧅','Onion / Garlic','Allium inhibits N-fixing bacteria']]}
+  };
+
+  // Lowercase keyword → resolve to a companion entry
+  function findKey(name){
+    var n=(name||'').toLowerCase();
+    if(n.indexOf('tomato')>=0) return 'tomato';
+    if(n.indexOf('chilli')>=0 || n.indexOf('chili')>=0 || n.indexOf('pepper')>=0 && n.indexOf('bell')<0) return 'chilli';
+    if(n.indexOf('coriander')>=0 || n.indexOf('cilantro')>=0 || n.indexOf('dhania')>=0) return 'coriander';
+    if(n.indexOf('spinach')>=0 || n.indexOf('palak')>=0) return 'spinach';
+    if(n.indexOf('brinjal')>=0 || n.indexOf('eggplant')>=0 || n.indexOf('baingan')>=0) return 'brinjal';
+    if(n.indexOf('capsicum')>=0 || n.indexOf('bell pepper')>=0) return 'capsicum';
+    if(n.indexOf('cucumber')>=0) return 'cucumber';
+    if(n.indexOf('cabbage')>=0) return 'cabbage';
+    if(n.indexOf('onion')>=0) return 'onion';
+    if(n.indexOf('garlic')>=0) return 'garlic';
+    if(n.indexOf('carrot')>=0) return 'carrot';
+    if(n.indexOf('lemon')>=0 || n.indexOf('lime')>=0 || n.indexOf('citrus')>=0) return 'lemon';
+    if(n.indexOf('mango')>=0) return 'mango';
+    if(n.indexOf('banana')>=0) return 'banana';
+    if(n.indexOf('moringa')>=0 || n.indexOf('drumstick')>=0) return 'moringa';
+    if(n.indexOf('curry')>=0) return 'curry';
+    if(n.indexOf('mint')>=0 || n.indexOf('pudina')>=0) return 'mint';
+    if(n.indexOf('basil')>=0 || n.indexOf('tulsi')>=0) return 'basil';
+    if(n.indexOf('methi')>=0 || n.indexOf('fenugreek')>=0) return 'methi';
+    if(n.indexOf('okra')>=0 || n.indexOf('bhindi')>=0 || n.indexOf('lady')>=0) return 'okra';
+    if(n.indexOf('papaya')>=0) return 'papaya';
+    if(n.indexOf('turmeric')>=0 || n.indexOf('haldi')>=0) return 'turmeric';
+    if(n.indexOf('ginger')>=0 || n.indexOf('adrak')>=0) return 'ginger';
+    if(n.indexOf('bean')>=0 || n.indexOf('lobia')>=0 || n.indexOf('rajma')>=0) return 'beans';
+    return null;
+  }
+
+  // Try to find a matching product in GF_PRODUCTS for a companion name
+  // so we can show price + add-to-cart button.
+  function findProductFor(companionName){
+    var prods = (window.GF_PRODUCTS||[]);
+    var n = companionName.toLowerCase();
+    for(var i=0;i<prods.length;i++){
+      var pn = (prods[i].name||'').toLowerCase();
+      // simple keyword overlap
+      var words = n.split(/[^a-z]+/).filter(function(w){return w.length>3;});
+      for(var j=0;j<words.length;j++){
+        if(pn.indexOf(words[j])>=0) return prods[i];
+      }
+    }
+    return null;
+  }
+
+  function scoreColor(s){
+    if(s>=90) return '#2E7D32';
+    if(s>=80) return '#558B2F';
+    if(s>=70) return '#9E9D24';
+    return '#EF6C00';
+  }
+  function scoreLabel(s){
+    if(s>=90) return 'Excellent';
+    if(s>=80) return 'Very good';
+    if(s>=70) return 'Good';
+    return 'Decent';
+  }
+
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
+
+  window.showCompanions = function(productId){
+    var prods = (window.GF_PRODUCTS||[]);
+    var p = null;
+    for(var i=0;i<prods.length;i++){ if(prods[i].id===productId){ p=prods[i]; break; } }
+    if(!p) return;
+
+    var key = findKey(p.name);
+    var data = key ? COMPANIONS[key] : null;
+
+    var body = document.getElementById('companions-body');
+    var modal = document.getElementById('companions-modal');
+    if(!body||!modal) return;
+
+    // Header
+    var html = ''
+      + '<div style="display:flex;align-items:center;gap:12px;padding:4px 4px 12px">'
+      +   '<div style="font-size:46px;background:linear-gradient(135deg,#E8F5E9,#C8E6C9);width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+p.emoji+'</div>'
+      +   '<div style="flex:1;min-width:0">'
+      +     '<div style="font-size:10px;font-weight:900;color:var(--green-deep);letter-spacing:.5px;text-transform:uppercase">🤝 Companion Plants</div>'
+      +     '<div style="font-size:16px;font-weight:900;color:var(--text);line-height:1.15;margin-top:2px">'+esc(p.name)+'</div>'
+      +     '<div style="font-size:11px;color:var(--muted);font-weight:700;margin-top:2px;line-height:1.3">'+(data ? esc(data.role) : 'Plants that grow well alongside this one')+'</div>'
+      +   '</div>'
+      + '</div>';
+
+    if(!data){
+      html += '<div style="background:#FFF8E1;border:1.5px dashed #FFB300;border-radius:12px;padding:14px;text-align:center;margin-bottom:10px">'
+        + '<div style="font-size:32px">🌱</div>'
+        + '<div style="font-size:13px;font-weight:800;color:#E65100;margin-top:4px">Companion data coming soon</div>'
+        + '<div style="font-size:11px;color:#8D6E63;font-weight:600;margin-top:4px">We\'re still building the ecology profile for this plant. Check back soon — or explore our R&amp;D Lab for the science.</div>'
+        + '<button onclick="hideCompanions();showScreen(\'rd\')" style="margin-top:10px;background:var(--grad-primary);color:white;border:none;border-radius:8px;padding:8px 14px;font-weight:900;font-size:12px;cursor:pointer;font-family:Nunito,sans-serif">🧪 Open R&amp;D Lab</button>'
+        + '</div>';
+    } else {
+      // Why card (M(i,j) explanation)
+      html += '<div style="background:linear-gradient(135deg,#EDE7F6,#D1C4E9);border-radius:12px;padding:11px 13px;margin-bottom:12px">'
+        + '<div style="font-size:10px;font-weight:900;color:#4527A0;letter-spacing:.5px;text-transform:uppercase">🧮 Why these pairings?</div>'
+        + '<div style="font-size:11.5px;color:#311B92;font-weight:700;margin-top:3px;line-height:1.4">From our <b>M(i,j) compatibility matrix</b> — plants that share pollinators, deter each other\'s pests, fix nitrogen, or stack vertically without root competition. Self-sustaining mini-ecosystem.</div>'
+        + '</div>';
+
+      // GOOD companions
+      html += '<div style="font-size:11px;font-weight:900;color:var(--green-deep);letter-spacing:.5px;text-transform:uppercase;margin:4px 0 6px">✅ Plant Together · Self-Sustaining</div>';
+      // Layer legend — helps user pick by available space
+      html += '<div style="background:#FAFAFA;border:1px dashed #CFD8DC;border-radius:10px;padding:8px 9px;margin-bottom:10px">'
+        + '<div style="font-size:9px;font-weight:900;color:#455A64;letter-spacing:.4px;text-transform:uppercase;margin-bottom:5px">📐 Pick by your space · 7-layer guide</div>'
+        + '<div style="display:flex;flex-wrap:wrap;gap:4px">'
+        +   Object.keys(LAYERS).map(function(k){var L=LAYERS[k];return '<span style="font-size:9px;font-weight:800;background:'+L.bg+';color:'+L.color+';padding:2px 6px;border-radius:7px;border:1px solid '+L.color+'33;display:inline-flex;align-items:center;gap:3px">'+L.emoji+' '+L.label+'</span>';}).join('')
+        + '</div></div>';
+      var addable = [];
+      data.good.forEach(function(c){
+        var prod = findProductFor(c[1]);
+        if(prod) addable.push(prod);
+        var col = scoreColor(c[3]);
+        var L = layerFor(c[1]);
+        var layerChip = L ? '<div title="'+esc(L.hint)+'" style="font-size:9px;font-weight:900;background:'+L.bg+';color:'+L.color+';padding:2px 6px;border-radius:8px;letter-spacing:.2px;border:1px solid '+L.color+'33;display:inline-flex;align-items:center;gap:3px"><span>'+L.emoji+'</span><span>'+L.label+'</span></div>' : '';
+        html += '<div style="display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #E0F2F1;border-radius:12px;padding:10px;margin-bottom:8px">'
+          + '<div style="font-size:30px;flex-shrink:0">'+c[0]+'</div>'
+          + '<div style="flex:1;min-width:0">'
+          +   '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
+          +     '<div style="font-size:13.5px;font-weight:900;color:var(--text)">'+esc(c[1])+'</div>'
+          +     '<div style="font-size:9.5px;font-weight:900;background:'+col+'1A;color:'+col+';padding:2px 7px;border-radius:8px;letter-spacing:.3px">'+c[3]+' · '+scoreLabel(c[3])+'</div>'
+          +     layerChip
+          +   '</div>'
+          +   '<div style="font-size:11px;color:var(--muted);font-weight:700;margin-top:2px;line-height:1.35">'+esc(c[2])+'</div>'
+          +   (L ? '<div style="font-size:10px;color:'+L.color+';font-weight:700;margin-top:2px;line-height:1.3">📐 '+esc(L.hint)+'</div>' : '')
+          + '</div>'
+          + (prod ? '<button onclick="addAnalyzerToCart('+prod.price+',\''+esc(prod.name).replace(/\'/g,'\\\'')+'\',\''+prod.emoji+'\')" style="background:var(--grad-primary);color:white;border:none;border-radius:8px;padding:8px 10px;font-weight:900;font-size:11px;cursor:pointer;font-family:Nunito,sans-serif;flex-shrink:0">+ ₹'+prod.price+'</button>' : '')
+          + '</div>';
+      });
+
+      // Add-all CTA if multiple available
+      if(addable.length>=2){
+        html += '<button onclick="(function(){var a='+JSON.stringify(addable.map(function(x){return [x.price,x.name,x.emoji];}))+';a.forEach(function(it){addAnalyzerToCart(it[0],it[1],it[2]);});showToast(\'🤝 Added '+addable.length+' companion plants to cart!\');hideCompanions();})()" style="width:100%;background:linear-gradient(135deg,#FF9A8B,#FFB347);color:white;border:none;border-radius:12px;padding:12px;font-weight:900;font-size:13px;cursor:pointer;font-family:Nunito,sans-serif;margin:4px 0 14px;box-shadow:0 4px 12px rgba(255,154,139,0.4)">🛒 Add all '+addable.length+' companions to cart</button>';
+      } else {
+        html += '<div style="height:6px"></div>';
+      }
+
+      // AVOID companions
+      if(data.avoid && data.avoid.length){
+        html += '<div style="font-size:11px;font-weight:900;color:#C62828;letter-spacing:.5px;text-transform:uppercase;margin:4px 0 8px">⚠️ Avoid Planting Nearby</div>';
+        data.avoid.forEach(function(c){
+          html += '<div style="display:flex;align-items:flex-start;gap:10px;background:#FFEBEE;border:1.5px solid #FFCDD2;border-radius:12px;padding:10px;margin-bottom:8px">'
+            + '<div style="font-size:26px;flex-shrink:0">'+c[0]+'</div>'
+            + '<div style="flex:1;min-width:0">'
+            +   '<div style="font-size:13px;font-weight:900;color:#B71C1C">'+esc(c[1])+'</div>'
+            +   '<div style="font-size:11px;color:#7B1F1F;font-weight:700;margin-top:2px;line-height:1.35">'+esc(c[2])+'</div>'
+            + '</div></div>';
+        });
+      }
+
+      // Footer link
+      html += '<div style="background:#F0F9FF;border:1.5px dashed #60A5FA;border-radius:12px;padding:11px;margin-top:6px;text-align:center">'
+        + '<div style="font-size:11px;color:#1E3A8A;font-weight:700;line-height:1.4">Want to see the full math? <a onclick="hideCompanions();showScreen(\'rd\')" style="color:#1E40AF;font-weight:900;cursor:pointer;text-decoration:underline">Open R&amp;D Lab →</a></div>'
+        + '</div>';
+    }
+
+    body.innerHTML = html;
+    body.scrollTop = 0;
+    modal.classList.add('show');
+  };
+
+  window.hideCompanions = function(){
+    var m = document.getElementById('companions-modal');
+    if(m) m.classList.remove('show');
+  };
 })();
 </script>
 

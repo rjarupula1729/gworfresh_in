@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Complete Specification — GrowFresh AI Ecological Optimization System</title>
+<style>
+  @page { size: A4; margin: 22mm 20mm 22mm 20mm; }
+  @page :first { margin-top: 0; }
+  html, body { margin: 0; padding: 0; color:#111; font-family: "Times New Roman", Times, Georgia, serif; font-size: 11.5pt; line-height: 1.5; }
+  h1, h2, h3, h4 { font-family: "Helvetica Neue", Arial, sans-serif; color:#0b1a12; page-break-after: avoid; }
+  h1 { font-size: 18pt; text-align:center; margin: 0 0 6pt; }
+  h2 { font-size: 13.5pt; margin: 22pt 0 6pt; border-bottom:1.2pt solid #1B5E20; padding-bottom: 3pt; }
+  h3 { font-size: 12pt; margin: 14pt 0 4pt; }
+  h4 { font-size: 11pt; margin: 10pt 0 2pt; }
+  p  { margin: 0 0 8pt; text-align: justify; }
+  ul, ol { margin: 0 0 8pt 18pt; padding: 0; }
+  li { margin-bottom: 3pt; }
+  table { border-collapse: collapse; width: 100%; margin: 6pt 0 10pt; font-size: 10.5pt; page-break-inside: avoid; }
+  th, td { border: 0.6pt solid #444; padding: 4pt 6pt; vertical-align: top; }
+  th { background: #ECEFEA; text-align:left; }
+  .center { text-align:center; }
+  .small { font-size: 9.5pt; color:#555; }
+  .mono { font-family: "Menlo", "Consolas", monospace; font-size: 10pt; background:#F6F8F5; border:0.6pt solid #ccc; padding: 6pt 8pt; white-space: pre-wrap; }
+  .claim { margin: 0 0 8pt; padding-left: 0; text-align: justify; }
+  .claim .n { font-weight: 700; }
+  .fig { page-break-inside: avoid; margin: 14pt 0; text-align:center; border:0.6pt solid #999; padding: 10pt; }
+  .fig svg { width: 100%; height: auto; max-width: 165mm; display:block; margin: 0 auto; }
+  .figcap { font-size: 10pt; font-style: italic; margin-top: 6pt; }
+  .pagebreak { page-break-before: always; }
+  .cover { page-break-after: always; padding: 40mm 0 0; text-align:center; }
+  .cover .lead { font-size:14pt; }
+  .cover .meta { margin-top: 50pt; font-size: 11pt; }
+  .cover .seal { margin-top: 80pt; font-size:10pt; color:#555; border-top: 1pt solid #999; padding-top:10pt; }
+  .toc li { list-style: none; margin: 3pt 0; }
+  .toc a, .toc { color:#000; text-decoration:none; }
+  .header-strip { font-size:9pt; color:#555; text-align:center; border-bottom:0.4pt solid #aaa; padding-bottom:3pt; margin-bottom:10pt; }
+  .signblock { margin-top: 30pt; }
+  .signblock td { border:none; padding: 4pt 0; }
+  .label { font-weight:700; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════ COVER PAGE ════════════════════════════════ -->
+<section class="cover">
+  <div style="font-size:11pt; letter-spacing:2pt;">GOVERNMENT OF INDIA · THE PATENTS ACT, 1970 (39 of 1970)<br>
+  &amp; THE PATENTS RULES, 2003</div>
+  <h1 style="margin-top:30pt; font-size:22pt;">COMPLETE SPECIFICATION</h1>
+  <div class="lead">(Section 10 and Rule 13)</div>
+
+  <div style="margin-top:60pt; font-size:18pt; font-weight:700;">
+    Artificial Intelligence-Based Ecological Optimization System for Dynamic Organic Plant Allocation and Adaptive Garden Management in Constrained Spaces
+  </div>
+
+  <div class="meta">
+    <table style="width:auto; margin: 30pt auto 0; border:none;">
+      <tr><td class="label" style="border:none; padding:4pt 12pt; text-align:right;">Applicant / Inventor:</td>
+          <td style="border:none; padding:4pt 12pt;">Ravi Jarupula</td></tr>
+      <tr><td class="label" style="border:none; padding:4pt 12pt; text-align:right;">Nationality:</td>
+          <td style="border:none; padding:4pt 12pt;">Indian</td></tr>
+      <tr><td class="label" style="border:none; padding:4pt 12pt; text-align:right;">Address for Service:</td>
+          <td style="border:none; padding:4pt 12pt;">Hyderabad, Telangana, India</td></tr>
+      <tr><td class="label" style="border:none; padding:4pt 12pt; text-align:right;">Application Type:</td>
+          <td style="border:none; padding:4pt 12pt;">Ordinary / Complete Specification (Form 2)</td></tr>
+      <tr><td class="label" style="border:none; padding:4pt 12pt; text-align:right;">International Classification (IPC):</td>
+          <td style="border:none; padding:4pt 12pt;">G06Q&nbsp;50/02 · G06N&nbsp;3/08 · A01G&nbsp;7/00 · G06N&nbsp;20/00</td></tr>
+      <tr><td class="label" style="border:none; padding:4pt 12pt; text-align:right;">Document version:</td>
+          <td style="border:none; padding:4pt 12pt;">v1.0 · Draft for filing</td></tr>
+      <tr><td class="label" style="border:none; padding:4pt 12pt; text-align:right;">Date of preparation:</td>
+          <td style="border:none; padding:4pt 12pt;">18 May 2026</td></tr>
+    </table>
+  </div>
+
+  <div class="seal">Confidential — Pre-filing draft prepared from the GrowFresh R&amp;D Lab working prototype<br>
+  Source: <code>docs/patent/</code> and <code>docs/rd/</code> of the GrowFresh repository
+  </div>
+</section>
+
+<!-- ════════════════════════════════ TOC ════════════════════════════════ -->
+<section>
+  <div class="header-strip">Complete Specification · GrowFresh Ecological Optimization System</div>
+  <h2 style="border:none;">Table of Contents</h2>
+  <ol class="toc">
+    <li>1. Preamble to the Description</li>
+    <li>2. Title of Invention</li>
+    <li>3. Field of Invention</li>
+    <li>4. Background of Invention &amp; Prior Art</li>
+    <li>5. Objects of Invention</li>
+    <li>6. Summary of Invention</li>
+    <li>7. Brief Description of the Drawings</li>
+    <li>8. Detailed Description of the Invention</li>
+    <li>9. Working Embodiment &amp; Reduction to Practice</li>
+    <li>10. Industrial Applicability</li>
+    <li>11. Advantages of the Invention</li>
+    <li>12. Claims (1 – 25)</li>
+    <li>13. Abstract</li>
+    <li>14. Drawings (FIG.1 – FIG.10)</li>
+  </ol>
+</section>
+
+<!-- ════════════════════════════════ 1. PREAMBLE ════════════════════════════════ -->
+<section class="pagebreak">
+  <div class="header-strip">Complete Specification · GrowFresh Ecological Optimization System</div>
+
+  <h2>1. Preamble to the Description</h2>
+  <p>The following specification particularly describes the invention and the manner in which it is to be performed.</p>
+
+  <h2>2. Title of the Invention</h2>
+  <p><strong>Artificial Intelligence-Based Ecological Optimization System for Dynamic Organic Plant Allocation and Adaptive Garden Management in Constrained Spaces.</strong></p>
+
+  <h2>3. Field of the Invention</h2>
+  <p>The invention relates broadly to the field of artificial intelligence (AI) applied to agricultural and horticultural planning, and more particularly to a self-adaptive, closed-loop system that dynamically allocates plants in spatially constrained gardens such as balconies, terraces, rooftops, kitchen gardens and small-holdings, using ecological interaction modelling, multi-objective optimization and continuous feedback learning, while enforcing an organic-only growth constraint.</p>
+
+  <h2>4. Background of the Invention &amp; Prior Art</h2>
+  <p>Urban and peri-urban households increasingly desire to grow a meaningful portion of their food at home — for nutrition, sustainability, food-security and well-being. However, the average household lacks both the ecological knowledge and the planning tools required to convert a constrained physical space (typically 10–500 square feet) into a productive, self-sustaining and continuously yielding food garden.</p>
+
+  <h3>4.1 Known systems</h3>
+  <ol>
+    <li><strong>Static plant-suggestion mobile applications</strong> that list plants suitable for a given region but do not factor space, family consumption, or inter-plant ecology.</li>
+    <li><strong>IoT-based irrigation and sensing systems</strong> that monitor soil moisture and trigger watering, but do not generate planting layouts or ecological strategies.</li>
+    <li><strong>Permaculture and food-forest design manuals</strong> that document zone, layer and companion-planting principles, but require expert human interpretation for each new site.</li>
+    <li><strong>Crop-suggestion engines</strong> used in large-scale agriculture, optimized for monoculture yield rather than multi-plant household ecosystems.</li>
+    <li><strong>Generic AI chatbots</strong> that produce free-text gardening advice without quantitative spatial allocation, constraint enforcement, or feedback re-optimization.</li>
+  </ol>
+
+  <h3>4.2 Limitations of the prior art</h3>
+  <p>None of the foregoing prior-art systems, individually or in combination, simultaneously provide:</p>
+  <ul>
+    <li>quantitative <em>multi-zone spatial allocation</em> of plants within a constrained area;</li>
+    <li>a <em>plant-interaction matrix</em> capturing pair-wise synergy, competition and pest-suppression;</li>
+    <li>a <em>hard organic-only constraint</em> excluding chemically-dependent plants and inputs;</li>
+    <li>a <em>continuous feedback loop</em> that updates model parameters from observed growth, pest and soil deviations and automatically re-optimizes the plan;</li>
+    <li>an <em>edge-case recovery mode</em> for germination failure, pest outbreaks, water shortage and partial crop loss, producing a self-healing ecosystem; and</li>
+    <li>a <em>multi-objective optimization</em> that balances household consumption satisfaction, yield, ecosystem stability and soil health, while penalising pest risk.</li>
+  </ul>
+
+  <h2>5. Objects of the Invention</h2>
+  <p>The principal objects of the present invention are:</p>
+  <ol>
+    <li>To provide an AI-based ecological optimization system that converts a constrained physical garden space into an optimized, continuously-yielding, organic food ecosystem.</li>
+    <li>To provide a quantitative plant-interaction matrix capturing synergy, competition, pest-suppression and nutrient-cycling between candidate plants.</li>
+    <li>To provide a multi-zone spatial allocation engine that partitions a user-specified area among short-cycle, seasonal and perennial plant buckets in proportions tuned to the available area and the local climate zone.</li>
+    <li>To provide an organic-only constraint filter that excludes any plant requiring chemical inputs incompatible with household-scale organic cultivation.</li>
+    <li>To provide a closed-loop feedback module that updates model parameters as a function of observed deviations in growth, pest occurrence and soil nutrient status, in accordance with the update rule <span class="mono" style="display:inline; padding:1pt 4pt;">θ(t+1) = θ(t) + η·error</span>, and automatically re-generates the planting layout.</li>
+    <li>To provide an edge-case recovery engine that, upon detection of germination failure, pest outbreak, water shortage or partial crop loss, locally re-optimizes the affected zone(s) without disturbing healthy zones.</li>
+    <li>To provide a generative AI module that converts free-form natural-language user input into a structured ecological-farming blueprint comprising at least a zone-level allocation, a companion-plant map, and a rotation schedule.</li>
+    <li>To provide a system architecture that is hardware-optional — operable purely as a software service on a personal computing device, and extendable with optional IoT soil-moisture, temperature, light and pest-detection sensors that feed the same feedback loop.</li>
+  </ol>
+
+  <h2>6. Summary of the Invention</h2>
+  <p>In accordance with one aspect, the present invention provides an artificial-intelligence based ecological optimization system comprising a spatial allocation engine, a plant interaction matrix engine, a generative AI planning layer, an organic constraint filter, a seasonal rotation engine, an edge-case recovery engine, and an environmental adaptation layer, said system configured to (i) receive environmental, spatial, human-consumption and plant-database inputs; (ii) normalize said inputs into feature vectors; (iii) compute pair-wise ecological interaction scores; (iv) maximize a multi-objective function balancing household satisfaction, yield, ecosystem stability and soil health while penalising pest risk, subject to space, season, soil, water and organic-only constraints; (v) generate a multi-zone planting layout, a companion-plant map and a rotation schedule; and (vi) continuously re-optimize the layout in response to observed deviations, thereby producing a self-healing organic food ecosystem.</p>
+  <p>In accordance with a further aspect, the invention provides a computer-implemented method for adaptive organic garden management, and in still further aspects, a generative AI sub-system, a vertical-farming embodiment, a hydroponic embodiment, and an IoT-augmented embodiment, each as set out in the claims that follow.</p>
+
+  <h2>7. Brief Description of the Drawings</h2>
+  <p>The invention is described with reference to the accompanying drawings, in which:</p>
+  <ul>
+    <li><strong>FIG.&nbsp;1</strong> shows the overall system architecture, depicting data flow from user input through the AI engine, plant database, optimization engine and output plan, with the feedback loop returning to the AI engine.</li>
+    <li><strong>FIG.&nbsp;2</strong> depicts the spatial allocation engine, partitioning a constrained area <em>A</em> into Zone A (short-cycle crops), Zone B (seasonal crops) and Zone C (perennial crops).</li>
+    <li><strong>FIG.&nbsp;3</strong> shows the plant interaction matrix <em>M(i,j)</em>, including representative synergy, competition and neutral cells.</li>
+    <li><strong>FIG.&nbsp;4</strong> shows the ecological scoring engine combining growth compatibility, pest resistance and nutrient interaction sub-scores into a weighted aggregate.</li>
+    <li><strong>FIG.&nbsp;5</strong> depicts the rotation scheduler as a cyclic harvest → soil-recovery → replant timeline.</li>
+    <li><strong>FIG.&nbsp;6</strong> shows the organic constraint filter excluding chemical-dependent candidates and admitting organic-compatible candidates.</li>
+    <li><strong>FIG.&nbsp;7</strong> depicts the generative AI pipeline transforming user prompts via NLP into structured JSON blueprints.</li>
+    <li><strong>FIG.&nbsp;8</strong> depicts the edge-case handling system handling plant failure, pest outbreak and water shortage.</li>
+    <li><strong>FIG.&nbsp;9</strong> shows the environmental adaptation layer re-tuning objective-function weights in response to sunlight, rainfall and temperature anomalies.</li>
+    <li><strong>FIG.&nbsp;10</strong> depicts the system recovery mode performing zone-level reset and partial ecosystem rebuild.</li>
+  </ul>
+</section>
+
+<!-- ════════════════════════════════ 8. DETAILED DESCRIPTION ════════════════════════════════ -->
+<section class="pagebreak">
+  <div class="header-strip">Complete Specification · GrowFresh Ecological Optimization System</div>
+  <h2>8. Detailed Description of the Invention</h2>
+
+  <h3>8.1 Overall system architecture (with reference to FIG.&nbsp;1)</h3>
+  <p>Referring to FIG.&nbsp;1, the system <strong>(100)</strong> comprises a user-input interface <strong>(110)</strong>, an AI engine <strong>(120)</strong>, a plant-and-ecology knowledge database <strong>(130)</strong>, an optimization engine <strong>(140)</strong>, an output plan generator <strong>(150)</strong> and a feedback module <strong>(160)</strong>. The user-input interface accepts at least: geographic state, optional city, total available area <em>A</em>, sun exposure, water availability and family size. The AI engine extracts and normalises these inputs into feature vectors, retrieves candidate plants and ecological data from the database, and forwards the assembled context to the optimization engine. The optimization engine maximises a multi-objective function (defined in §8.5) subject to a set of physical and biological constraints (defined in §8.4) and emits a multi-zone planting layout. The output plan generator renders the layout, companion-plant map and rotation schedule for display and download. The feedback module monitors deviations between predicted and observed plant growth, pest incidence and soil nutrient status, and updates model parameters before triggering re-optimization.</p>
+
+  <h3>8.2 Input vectors</h3>
+  <p>The system operates on four canonical input vectors:</p>
+  <table>
+    <tr><th>Vector</th><th>Symbol</th><th>Components</th></tr>
+    <tr><td>Environment</td><td>E⃗</td><td>weather W(t), climate C(region), rainfall R(t), season T(t), geography G(lat,alt)</td></tr>
+    <tr><td>Human</td><td>H⃗</td><td>family size, consumption vector F(i), nutritional needs N</td></tr>
+    <tr><td>Space</td><td>S⃗</td><td>total area A, soil type, sunlight exposure</td></tr>
+    <tr><td>Plant database</td><td>P⃗</td><td>growth rate Y(i), cycle time T(i), compatibility row M(i,·), pest resistance P(i)</td></tr>
+  </table>
+  <p>All components are normalised to the interval [0,1] in a normalisation layer before further processing.</p>
+
+  <h3>8.3 Spatial allocation engine (with reference to FIG.&nbsp;2)</h3>
+  <p>The spatial allocation engine partitions the area <em>A</em> into three primary zones:</p>
+  <ul>
+    <li><strong>Zone A (210)</strong> — short-cycle daily-rotation crops (e.g. leafy greens, herbs);</li>
+    <li><strong>Zone B (220)</strong> — seasonal crops cycled by monsoon, winter and summer (e.g. tomato, brinjal, methi);</li>
+    <li><strong>Zone C (230)</strong> — long-term perennial crops and trees (e.g. banana, papaya, mango, tamarind).</li>
+  </ul>
+  <p>The proportions among the three zones are returned by a bucket-curve function <em>b(A)</em> that, in a preferred embodiment, follows the schedule below:</p>
+  <table>
+    <tr><th>Bucket</th><th>Range (sq ft)</th><th>Daily %</th><th>Seasonal %</th><th>Long-term %</th></tr>
+    <tr><td>Micro</td><td>&lt; 50</td><td>70</td><td>30</td><td>0</td></tr>
+    <tr><td>Small</td><td>50 – 149</td><td>50</td><td>30</td><td>20</td></tr>
+    <tr><td>Medium</td><td>150 – 499</td><td>40</td><td>35</td><td>25</td></tr>
+    <tr><td>Large</td><td>500 – 1999</td><td>30</td><td>30</td><td>40</td></tr>
+    <tr><td>Very Large</td><td>≥ 2000</td><td>20</td><td>30</td><td>50</td></tr>
+  </table>
+
+  <h3>8.4 Plant interaction matrix &amp; ecological scoring (FIG.&nbsp;3, FIG.&nbsp;4)</h3>
+  <p>An <em>n × n</em> matrix <em>M(i,j) ∈ [−1, +1]</em> captures pair-wise plant interactions, where +1 denotes maximal synergy and −1 denotes maximal competition. The matrix is populated from curated horticultural knowledge supplemented by community telemetry. The ecological scoring engine computes a per-plant score:</p>
+  <div class="mono">Score(i) = w₁·Growth(i) + w₂·PestResistance(i) + w₃·NutrientInteraction(i)</div>
+  <p>and a pair-wise contribution to the ecosystem-stability term of the objective function, S_total = Σᵢ xᵢ·Sᵢ, where xᵢ denotes the area allocated to plant i.</p>
+
+  <h3>8.5 Multi-objective optimization</h3>
+  <p>The optimization engine maximises the objective function:</p>
+  <div class="mono">maximize  F = α·H_satisfaction
+             + β·Yield
+             + γ·Ecosystem_Stability
+             + δ·Soil_Health
+             − λ·Pest_Risk</div>
+  <p>subject to the constraint set:</p>
+  <div class="mono">space:    Σᵢ xᵢ ≤ A
+season:   growth_valid(i, T)
+soil:     nutrient_required(i) ≤ soil_capacity
+water:    water_need(i) ≤ rainfall + irrigation
+organic:  chemical_dependency(i) = FALSE</div>
+  <p>The weights α, β, γ, δ, λ are user-tunable presets including (a) yield-maximising, (b) resilience-maximising, (c) beginner-safe and (d) regenerative. Solution methods include linear programming, greedy selection, evolutionary / genetic algorithms, and constraint-satisfaction solvers, selected as a function of problem size and latency requirements.</p>
+
+  <h3>8.6 Organic constraint filter (FIG.&nbsp;6)</h3>
+  <p>The organic constraint filter <strong>(610)</strong> intercepts the candidate plant set prior to optimization and excludes any plant whose growth profile in the plant database is flagged as chemical-dependent (for example, requiring synthetic pesticides, synthetic fertiliser regimes, or non-organic fungicides), thereby enforcing organic-only output by construction.</p>
+
+  <h3>8.7 Seasonal rotation engine (FIG.&nbsp;5)</h3>
+  <p>The rotation engine schedules each plant's lifecycle as a cyclic sequence: harvest → soil recovery (compost / fallow) → replant. Rotation decisions consider crop-family alternation, nutrient depletion profiles, and pest cycles, and are emitted as a quarter-by-quarter calendar in the output plan.</p>
+
+  <h3>8.8 Generative AI planning layer (FIG.&nbsp;7)</h3>
+  <p>A generative AI module accepts natural-language input such as <em>"balcony in Hyderabad, family of 4, full sun"</em>, performs intent extraction and entity recognition, emits structured JSON parameters and passes them to the optimization engine. The blueprint returned to the user comprises at least: zone-level allocation, companion-plant map, and rotation schedule.</p>
+
+  <h3>8.9 Edge-case recovery engine (FIG.&nbsp;8) and system recovery mode (FIG.&nbsp;10)</h3>
+  <p>Upon detection of (i) germination failure, (ii) pest outbreak, (iii) water shortage, or (iv) partial crop loss, the edge-case recovery engine triggers a localised re-optimization of the affected zone, preserving healthy zones. In the more severe system-recovery mode (FIG.&nbsp;10), planting is frozen, compost is topped up, the layout is recomputed greedily, and only the stressed zones are partially rebuilt before normal operation resumes.</p>
+
+  <h3>8.10 Environmental adaptation layer (FIG.&nbsp;9)</h3>
+  <p>The environmental adaptation layer continuously monitors deltas in sunlight, rainfall and temperature; on exceeding pre-set thresholds it re-tunes the weights α, β, γ, δ, λ of the objective function and triggers a re-optimization, thereby keeping the recommendation aligned with the prevailing micro-climate.</p>
+
+  <h3>8.11 Continuous feedback loop</h3>
+  <p>The feedback module computes:</p>
+  <div class="mono">ΔY = expected_yield − actual_yield
+ΔP = expected_pest  − actual_pest
+ΔN = expected_soil_N − actual_soil_N
+
+error  = w_y·ΔY + w_p·ΔP + w_n·ΔN
+θ(t+1) = θ(t) + η · error</div>
+  <p>where θ represents the vector of model parameters (objective weights, compatibility-matrix entries, plant-specific HFS scores), and η is the learning rate. Sources of the <em>actual</em> signals include user-logged harvest weights, user-reported pest sightings (optionally photo-tagged), community telemetry, and optional IoT sensor inputs.</p>
+
+  <h3>8.12 Optional IoT embodiment</h3>
+  <p>In an optional embodiment, the system is augmented by physical sensors comprising at least one of: a soil-moisture sensor, an ambient-temperature sensor, a light-intensity sensor, and a pest-imaging camera; the sensor outputs are time-stamped, transmitted to the feedback module and used as <em>actual</em> signals in the update law above.</p>
+
+  <h2>9. Working Embodiment &amp; Reduction to Practice</h2>
+  <p>A working prototype of the invention has been implemented in HTML / JavaScript form as the <em>GrowFresh R&amp;D Lab · Garden Planner</em>, embedded within the GrowFresh mobile/web application. In the prototype, the user enters state and area, the system identifies the climate zone (one of: tropical humid, semi-arid, desert, temperate hill, high-rainfall, urban-hybrid), applies the bucket curve of §8.3 to derive the three-zone split, and renders the corresponding plant chips per zone — thereby demonstrating <em>reduction to practice</em> of claims 1, 2, 4, 5, 15 and 16 in real-time on a consumer device.</p>
+
+  <h2>10. Industrial Applicability</h2>
+  <p>The invention has direct industrial applicability in the urban-farming, smart-city, agri-tech, organic-food and home-wellness sectors. It is deployable as (a) a consumer mobile/web application, (b) a B2B API for partner agri-tech platforms, (c) a white-label engine for smart-city greening programmes, and (d) an OEM software module for IoT garden-hardware vendors.</p>
+
+  <h2>11. Advantages of the Invention</h2>
+  <ul>
+    <li>Converts arbitrary constrained spaces into productive, organic, continuously-yielding ecosystems.</li>
+    <li>Quantitatively models plant-to-plant ecological interactions — absent in commodity gardening apps.</li>
+    <li>Hard-enforces organic cultivation by construction, ensuring food safety.</li>
+    <li>Self-heals through automatic detection of failure modes and zone-level re-optimization.</li>
+    <li>Learns continuously from community and optional sensor telemetry.</li>
+    <li>Supports multiple user preferences via tunable objective-function weights.</li>
+    <li>Operates without hardware while remaining extendable with optional IoT sensors.</li>
+  </ul>
+</section>
+
+<!-- ════════════════════════════════ 12. CLAIMS ════════════════════════════════ -->
+<section class="pagebreak">
+  <div class="header-strip">Complete Specification · GrowFresh Ecological Optimization System</div>
+
+  <h2>12. We Claim</h2>
+
+  <p class="claim"><span class="n">1.</span> An artificial-intelligence based ecological optimization system for dynamic organic plant allocation in a constrained space, said system comprising:
+    (a) a <em>spatial allocation engine</em> configured to divide a user-specified constrained area into a plurality of crop zones including at least a short-cycle zone, a seasonal zone and a perennial zone;
+    (b) a <em>plant interaction matrix engine</em> configured to store and apply a pair-wise interaction matrix M(i,j) ∈ [−1, +1] capturing synergy and competition between candidate plants;
+    (c) a <em>generative AI module</em> configured to convert natural-language user inputs into structured ecological planning parameters;
+    (d) an <em>organic constraint filter</em> configured to exclude chemical-dependent plants and inputs;
+    (e) an <em>optimization engine</em> configured to maximise a multi-objective function balancing household satisfaction, yield, ecosystem stability and soil health while penalising pest risk, subject to space, season, soil and water constraints; and
+    (f) a <em>feedback module</em> configured to update model parameters according to the law θ(t+1) = θ(t) + η·error, where the error is computed from observed deviations in plant growth, pest occurrence and soil nutrient status, and to trigger re-generation of an updated multi-zone planting layout in response thereto.
+  </p>
+
+  <p class="claim"><span class="n">2.</span> A computer-implemented method for adaptive organic garden management, comprising the steps of: receiving spatial and environmental inputs; normalising said inputs into feature vectors; computing pair-wise ecological compatibility scores between candidate plants; generating an optimised multi-zone plant layout under organic-only constraints; monitoring deviations in growth, pest and soil parameters; updating model parameters in accordance with θ(t+1) = θ(t) + η·error; and re-generating the layout in response to said updated parameters.</p>
+
+  <p class="claim"><span class="n">3.</span> A generative AI sub-system, operable in cooperation with the system of claim 1, configured to convert a free-form natural-language input describing space, location and household requirements into a structured ecological farming blueprint comprising at least a zone-level allocation, a companion-plant map, and a rotation schedule.</p>
+
+  <p class="claim"><span class="n">4.</span> The system of claim 1, wherein the spatial allocation is performed in accordance with a bucket function b(A) that selects, as a function of the total area A, proportions among said short-cycle, seasonal and perennial zones from a predetermined schedule.</p>
+
+  <p class="claim"><span class="n">5.</span> The system of claim 1, wherein said pair-wise interaction matrix M(i,j) comprises synergy, competition and neutral scoring for each pair of plants in the plant database.</p>
+
+  <p class="claim"><span class="n">6.</span> The system of claim 1, further comprising a pest-resistance modelling module that determines a pest-suppression score for a candidate plant as a function of pair-wise influence factors derived from M(i,j).</p>
+
+  <p class="claim"><span class="n">7.</span> The system of claim 1, further comprising a soil-regeneration scheduling module that schedules harvest, soil-recovery and replant phases for each plant on a per-lifecycle basis.</p>
+
+  <p class="claim"><span class="n">8.</span> The system of claim 1, further comprising a real-time environmental adaptation engine configured to re-tune the weights of the multi-objective function upon detection of deltas in sunlight, rainfall or temperature exceeding predetermined thresholds.</p>
+
+  <p class="claim"><span class="n">9.</span> The system of claim 1, further comprising a water-constraint-based crop-substitution engine configured to substitute high-water plants with low-water alternatives upon detection of irrigation deficit.</p>
+
+  <p class="claim"><span class="n">10.</span> The system of claim 1, further comprising a sunlight-based plant-relocation module configured to recommend spatial relocation of plants within the constrained area in response to changes in observed sun-hour distribution.</p>
+
+  <p class="claim"><span class="n">11.</span> The system of claim 1, further comprising a failure-recovery module configured to detect germination failure for a candidate plant and to re-allocate the affected sub-area to an alternative plant.</p>
+
+  <p class="claim"><span class="n">12.</span> The system of claim 1, further comprising a localised replanting module configured to re-optimize only those zones affected by partial crop loss, while preserving healthy zones.</p>
+
+  <p class="claim"><span class="n">13.</span> The system of claim 1, further comprising a dynamic pest-outbreak response module configured to introduce pest-suppressing companions and/or remove highly susceptible plants from an affected zone.</p>
+
+  <p class="claim"><span class="n">14.</span> The system of claim 1, further comprising a biodiversity-optimization engine configured to maximise the number of distinct plant families represented within the layout, subject to the area and yield constraints.</p>
+
+  <p class="claim"><span class="n">15.</span> The system of claim 1, wherein the optimization is multi-objective, balancing yield, ecosystem stability, soil health, pest risk and household satisfaction under user-selectable weight presets including yield-maximising, resilience-maximising, beginner-safe and regenerative.</p>
+
+  <p class="claim"><span class="n">16.</span> The system of claim 1, wherein the organic constraint filter operates as a hard constraint that excludes any candidate plant whose growth profile is flagged in the plant database as requiring chemical inputs.</p>
+
+  <p class="claim"><span class="n">17.</span> The system of claim 1, further comprising an edge-case recovery mode configured to perform a zone-level reset and partial ecosystem rebuild upon detection of system-wide ecological stress.</p>
+
+  <p class="claim"><span class="n">18.</span> The system of claim 1, further comprising a confidence-based AI fallback module configured to defer to curated default plans when the confidence of an AI recommendation falls below a predetermined threshold.</p>
+
+  <p class="claim"><span class="n">19.</span> The system of claim 1, further comprising a low-maintenance mode configured to bias the optimization toward plants requiring minimal user intervention.</p>
+
+  <p class="claim"><span class="n">20.</span> The system of claim 1, further comprising a vertical-farming transformation module configured to convert a planar layout into a vertically stacked layout suitable for wall and rack installations.</p>
+
+  <p class="claim"><span class="n">21.</span> The system of claim 1, further comprising a hydroponic adaptation module configured to translate a soil-based plan into a corresponding hydroponic plan with adjusted nutrient and water schedules.</p>
+
+  <p class="claim"><span class="n">22.</span> The method of claim 2, further comprising the step of receiving feedback signals from one or more of: user-logged harvest weights, user-reported pest sightings, community telemetry, and IoT sensors comprising at least one of soil-moisture, ambient-temperature, light-intensity and pest-imaging sensors.</p>
+
+  <p class="claim"><span class="n">23.</span> The system of claim 1, further comprising a user-behaviour adaptation engine configured to refine the recommendations as a function of observed user maintenance patterns.</p>
+
+  <p class="claim"><span class="n">24.</span> The system of claim 1, further comprising a predictive crop-yield estimation module configured to forecast expected yield per plant per period as a function of E⃗, S⃗ and historical telemetry.</p>
+
+  <p class="claim"><span class="n">25.</span> The system of claim 1, further comprising an auto-reallocation engine configured to trigger re-optimization upon receipt of an ecological-stress signal exceeding a predetermined threshold.</p>
+
+  <h2>13. Abstract of the Invention</h2>
+  <p style="border:0.6pt solid #444; padding:10pt;">
+    Disclosed is an artificial-intelligence based ecological optimization system for dynamic organic plant allocation in constrained spaces. The system receives environmental, spatial, human-consumption and plant-database inputs, normalises them into feature vectors, and computes pair-wise ecological interactions including synergy, competition, pest-suppression and nutrient cycling. A constraint-based optimization engine maximises a multi-objective function balancing household satisfaction, yield, ecosystem stability and soil health while penalising pest risk, subject to space, season, soil and water constraints and an organic-only hard filter. The system outputs a multi-zone planting layout, a companion-plant map and a rotation schedule, and continuously re-optimizes via a feedback law θ(t+1) = θ(t) + η·error driven by deviations in growth, pest and soil indicators. Edge-case handlers recover automatically from plant failure, pest outbreaks and environmental anomalies, producing a self-healing organic ecosystem suitable for balconies, terraces, rooftops and small farms.
+  </p>
+</section>
+
+<!-- ════════════════════════════════ 14. DRAWINGS ════════════════════════════════ -->
+<section class="pagebreak">
+  <div class="header-strip">Complete Specification · GrowFresh Ecological Optimization System · Sheet of Drawings</div>
+  <h2>14. Drawings</h2>
+  <p class="small">Black-and-white line drawings prepared in accordance with Rule 15 of the Patents Rules 2003. Reference numerals correspond to those used in the detailed description (§8).</p>
+
+  <!-- FIG 1 -->
+  <div class="fig">
+    <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg">
+      
+      <defs><marker id="arrow_universal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker></defs>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="20" y="60" width="120" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="80" y="85" text-anchor="middle">User Input</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="80" y="102" text-anchor="middle">(110)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="170" y="60" width="120" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="230" y="82" text-anchor="middle">AI Engine</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="230" y="98" text-anchor="middle">NLP · scoring (120)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="320" y="60" width="130" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="385" y="82" text-anchor="middle">Plant + Eco DB</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="385" y="98" text-anchor="middle">(130)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="480" y="60" width="150" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="555" y="82" text-anchor="middle">Optimization Engine</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="555" y="98" text-anchor="middle">LP · greedy · GA (140)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="660" y="60" width="120" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="720" y="82" text-anchor="middle">Output Plan</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="720" y="98" text-anchor="middle">zones · rotation (150)</text>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="140" y1="90" x2="170" y2="90"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="290" y1="90" x2="320" y2="90"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="450" y1="90" x2="480" y2="90"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="630" y1="90" x2="660" y2="90"/>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="280" y="170" width="240" height="36"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="400" y="193" text-anchor="middle">Feedback Module (160) — ΔY · ΔP · ΔN</text>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="720" y1="120" x2="720" y2="188"/><line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="720" y1="188" x2="520" y2="188"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="280" y1="188" x2="80"  y2="188"/><line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="80"  y1="188" x2="80"  y2="120"/>
+    </svg>
+    <div class="figcap">FIG.&nbsp;1 — Overall system architecture (100).</div>
+  </div>
+
+  <!-- FIG 2 -->
+  <div class="fig">
+    <svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrow_universal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker></defs>
+      
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="30" y="20" width="740" height="240"/>
+      <text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="400" y="44" text-anchor="middle">Constrained Area A (200)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="60" y="70"  width="320" height="80"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="220" y="100" text-anchor="middle">Zone A · Short-cycle (210)</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="220" y="120" text-anchor="middle">leafy greens · herbs · daily picks</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="420" y="70" width="320" height="80"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="580" y="100" text-anchor="middle">Zone B · Seasonal (220)</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="580" y="120" text-anchor="middle">tomato · brinjal · methi · cauliflower</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="180" y="170" width="440" height="70"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="400" y="200" text-anchor="middle">Zone C · Perennial / Trees (230)</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="400" y="220" text-anchor="middle">mango · papaya · banana · tamarind · drumstick</text>
+    </svg>
+    <div class="figcap">FIG.&nbsp;2 — Spatial allocation engine: partitioning of area A into Zones A, B and C.</div>
+  </div>
+
+  <!-- FIG 3 -->
+  <div class="fig">
+    <svg viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrow_universal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker></defs>
+      
+      <rect fill="#ECEFEA" stroke="#000" stroke-width="1.4" x="60" y="40" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="100" y="65" text-anchor="middle">M(i,j)</text>
+      <g><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="180" y="65" text-anchor="middle">P1</text><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="260" y="65" text-anchor="middle">P2</text><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="340" y="65" text-anchor="middle">P3</text><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="420" y="65" text-anchor="middle">P4</text><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="500" y="65" text-anchor="middle">P5</text></g>
+      <g><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="100" y="115" text-anchor="middle">P1</text><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="100" y="165" text-anchor="middle">P2</text><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="100" y="215" text-anchor="middle">P3</text><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="100" y="265" text-anchor="middle">P4</text><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="100" y="315" text-anchor="middle">P5</text></g>
+      <!-- cells -->
+      <g>
+        <!-- row 1 -->
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="140" y="90" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="180" y="115" text-anchor="middle">—</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="220" y="90" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="260" y="115" text-anchor="middle">+0.6</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="300" y="90" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="340" y="115" text-anchor="middle">−0.4</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="380" y="90" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="420" y="115" text-anchor="middle">0</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="460" y="90" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="500" y="115" text-anchor="middle">+0.2</text>
+        <!-- row 2 -->
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="140" y="140" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="180" y="165" text-anchor="middle">+0.6</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="220" y="140" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="260" y="165" text-anchor="middle">—</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="300" y="140" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="340" y="165" text-anchor="middle">0</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="380" y="140" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="420" y="165" text-anchor="middle">+0.8</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="460" y="140" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="500" y="165" text-anchor="middle">−0.3</text>
+        <!-- row 3 -->
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="140" y="190" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="180" y="215" text-anchor="middle">−0.4</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="220" y="190" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="260" y="215" text-anchor="middle">0</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="300" y="190" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="340" y="215" text-anchor="middle">—</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="380" y="190" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="420" y="215" text-anchor="middle">+0.5</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="460" y="190" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="500" y="215" text-anchor="middle">0</text>
+        <!-- row 4 -->
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="140" y="240" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="180" y="265" text-anchor="middle">0</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="220" y="240" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="260" y="265" text-anchor="middle">+0.8</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="300" y="240" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="340" y="265" text-anchor="middle">+0.5</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="380" y="240" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="420" y="265" text-anchor="middle">—</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="460" y="240" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="500" y="265" text-anchor="middle">−0.7</text>
+        <!-- row 5 -->
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="140" y="290" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="180" y="315" text-anchor="middle">+0.2</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="220" y="290" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="260" y="315" text-anchor="middle">−0.3</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="300" y="290" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="340" y="315" text-anchor="middle">0</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="380" y="290" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="420" y="315" text-anchor="middle">−0.7</text>
+        <rect fill="#fff" stroke="#000" stroke-width="1.4" x="460" y="290" width="80" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="500" y="315" text-anchor="middle">—</text>
+      </g>
+    </svg>
+    <div class="figcap">FIG.&nbsp;3 — Plant interaction matrix M(i,j) (300): + synergy · 0 neutral · − competition.</div>
+  </div>
+
+  <!-- FIG 4 -->
+  <div class="fig">
+    <svg viewBox="0 0 800 260" xmlns="http://www.w3.org/2000/svg">
+      
+      <defs><marker id="arrow_universal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker></defs>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="40"  y="40" width="180" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="130" y="65" text-anchor="middle">Growth Compatibility</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="130" y="82" text-anchor="middle">(410)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="290" y="40" width="180" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="380" y="65" text-anchor="middle">Pest Resistance</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="380" y="82" text-anchor="middle">(420)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="540" y="40" width="220" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="650" y="65" text-anchor="middle">Nutrient Interaction</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="650" y="82" text-anchor="middle">(430)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="220" y="180" width="380" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="410" y="208" text-anchor="middle">Weighted Aggregator (440)</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="410" y="225" text-anchor="middle">Score(i) = w₁·G + w₂·P + w₃·N</text>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="130" y1="100" x2="320" y2="180"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="380" y1="100" x2="410" y2="180"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="650" y1="100" x2="500" y2="180"/>
+    </svg>
+    <div class="figcap">FIG.&nbsp;4 — Ecological scoring engine (400).</div>
+  </div>
+
+  <!-- FIG 5 -->
+  <div class="fig">
+    <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+      
+      <defs><marker id="arrow_universal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker></defs>
+      <circle cx="350" cy="130" r="105" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="290" y="30"  width="120" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="350" y="55" text-anchor="middle">Harvest (500)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="470" y="115" width="160" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="550" y="140" text-anchor="middle">Soil Recovery (510)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="290" y="195" width="120" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="350" y="220" text-anchor="middle">Replant (520)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="80"  y="115" width="160" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="160" y="140" text-anchor="middle">Cycle loop (530)</text>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="410" y1="50"  x2="500" y2="115"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="550" y1="155" x2="410" y2="215"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="290" y1="215" x2="200" y2="155"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="200" y1="115" x2="290" y2="50"/>
+    </svg>
+    <div class="figcap">FIG.&nbsp;5 — Rotation scheduler: cyclic harvest → soil recovery → replant.</div>
+  </div>
+
+  <!-- FIG 6 -->
+  <div class="fig">
+    <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg">
+      
+      <defs><marker id="arrow_universal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker><marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker></defs>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="30"  y="80" width="200" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="130" y="105" text-anchor="middle">All Candidate Plants</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="130" y="122" text-anchor="middle">(600)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="290" y="60" width="220" height="100"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="400" y="95" text-anchor="middle">Organic Constraint Filter</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="400" y="115" text-anchor="middle">chem-dependent ❌</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="400" y="132" text-anchor="middle">organic-compatible ✅ (610)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="560" y="80" width="210" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="665" y="105" text-anchor="middle">Allowed Set → Optimizer</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="665" y="122" text-anchor="middle">(620)</text>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="230" y1="110" x2="290" y2="110"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="510" y1="110" x2="560" y2="110"/>
+    </svg>
+    <div class="figcap">FIG.&nbsp;6 — Organic constraint filter.</div>
+  </div>
+
+  <!-- FIG 7 -->
+  <div class="fig">
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+      
+      <defs><marker id="arrow_universal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker><marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker></defs>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="20"  y="70" width="170" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="105" y="95" text-anchor="middle">User Prompt (700)</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="105" y="112" text-anchor="middle">"balcony in Hyd, 4"</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="220" y="70" width="160" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="300" y="95" text-anchor="middle">NLP / intent</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="300" y="112" text-anchor="middle">(710)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="410" y="70" width="180" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="500" y="95" text-anchor="middle">Structured JSON</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="500" y="112" text-anchor="middle">{state, space, sun,…} (720)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="620" y="70" width="160" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="700" y="95" text-anchor="middle">Garden Plan</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="700" y="112" text-anchor="middle">(730)</text>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="190" y1="100" x2="220" y2="100"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="380" y1="100" x2="410" y2="100"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="590" y1="100" x2="620" y2="100"/>
+    </svg>
+    <div class="figcap">FIG.&nbsp;7 — Generative AI pipeline.</div>
+  </div>
+
+  <!-- FIG 8 -->
+  <div class="fig">
+    <svg viewBox="0 0 800 260" xmlns="http://www.w3.org/2000/svg">
+      
+      <defs><marker id="arrow_universal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker><marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker></defs>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="40"  y="40"  width="220" height="50"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="150" y="70" text-anchor="middle">Plant failure (810)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="40"  y="110" width="220" height="50"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="150" y="140" text-anchor="middle">Pest outbreak (820)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="40"  y="180" width="220" height="50"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="150" y="210" text-anchor="middle">Water shortage (830)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="320" y="80"  width="260" height="130"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="450" y="115" text-anchor="middle">Edge-Case Recovery Engine</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="450" y="140" text-anchor="middle">localised re-optimization (800)</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="450" y="160" text-anchor="middle">preserve healthy zones</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="630" y="115" width="150" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="705" y="140" text-anchor="middle">Partial Replan</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="705" y="158" text-anchor="middle">(840)</text>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="260" y1="65" x2="320" y2="125"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="260" y1="135" x2="320" y2="145"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="260" y1="205" x2="320" y2="170"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="580" y1="145" x2="630" y2="145"/>
+    </svg>
+    <div class="figcap">FIG.&nbsp;8 — Edge-case handling system.</div>
+  </div>
+
+  <!-- FIG 9 -->
+  <div class="fig">
+    <svg viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg">
+      
+      <defs><marker id="arrow_universal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker><marker id="a9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker></defs>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="60"  y="30" width="160" height="50"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="140" y="60" text-anchor="middle">Sunlight Δ (900)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="320" y="30" width="160" height="50"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="400" y="60" text-anchor="middle">Rain Δ (910)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="580" y="30" width="160" height="50"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="660" y="60" text-anchor="middle">Temperature Δ (920)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="220" y="120" width="360" height="60"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="400" y="150" text-anchor="middle">Environmental Adaptation Layer</text><text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="400" y="168" text-anchor="middle">re-tune α, β, γ, δ, λ (930)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="320" y="200" width="160" height="30"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="400" y="220" text-anchor="middle">Re-optimization</text>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="140" y1="80" x2="280" y2="120"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="400" y1="80" x2="400" y2="120"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="660" y1="80" x2="520" y2="120"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="400" y1="180" x2="400" y2="200"/>
+    </svg>
+    <div class="figcap">FIG.&nbsp;9 — Environmental adaptation layer.</div>
+  </div>
+
+  <!-- FIG 10 -->
+  <div class="fig">
+    <svg viewBox="0 0 800 260" xmlns="http://www.w3.org/2000/svg">
+      
+      <defs><marker id="arrow_universal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker><marker id="a10" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker></defs>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="280" y="20"  width="240" height="40"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="400" y="46" text-anchor="middle">System-wide stress detected (1000)</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="180" y="90"  width="440" height="120"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="400" y="118" text-anchor="middle">Zone Reset Sequence (1010)</text>
+      <text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="400" y="140" text-anchor="middle">1. freeze planting</text>
+      <text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="400" y="156" text-anchor="middle">2. compost top-up</text>
+      <text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="400" y="172" text-anchor="middle">3. recompute layout (greedy)</text>
+      <text font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#000" x="400" y="188" text-anchor="middle">4. partial rebuild of stressed zones only</text>
+      <rect fill="#fff" stroke="#000" stroke-width="1.4" x="280" y="220" width="240" height="30"/><text font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#000" x="400" y="240" text-anchor="middle">Resume normal operation (1020)</text>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="400" y1="60"  x2="400" y2="90"/>
+      <line fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#arrow_universal)" x1="400" y1="210" x2="400" y2="220"/>
+    </svg>
+    <div class="figcap">FIG.&nbsp;10 — System recovery mode.</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SIGN-OFF ════════════════════════════════ -->
+<section class="pagebreak">
+  <div class="header-strip">Complete Specification · GrowFresh Ecological Optimization System</div>
+  <h2 style="border:none;">Dated this 18th day of May 2026</h2>
+  <table class="signblock" style="border:none;">
+    <tr><td style="width:50%; border:none;"><span class="label">Signature:</span></td><td style="width:50%; border:none;">____________________________</td></tr>
+    <tr><td style="border:none;">Name:</td><td style="border:none;">Ravi Jarupula</td></tr>
+    <tr><td style="border:none;">Capacity:</td><td style="border:none;">Inventor / Applicant</td></tr>
+    <tr><td style="border:none;">Place:</td><td style="border:none;">Hyderabad, India</td></tr>
+  </table>
+
+  <p class="small" style="margin-top:30pt;">
+    <strong>Notice:</strong> This document is a pre-filing draft prepared from the GrowFresh R&amp;D Lab working prototype.
+    It is intended as input to a qualified Indian patent agent / attorney for conversion to Form 2 (Complete Specification)
+    under the Patents Rules 2003 and accompanying Forms 1, 3, 5 and 26. No filing has been made on the basis of this draft as of the date hereof.
+  </p>
+</section>
+
+</body>
+</html>

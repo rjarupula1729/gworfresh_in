@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>GrowFresh R&D · Geo-Adaptive Garden Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#2E7D32; --green-deep:#1B5E20; --green-pale:#E8F5E9;
+    --teal:#00897B; --teal-pale:#E0F2F1;
+    --blue:#1976D2; --blue-pale:#E3F2FD;
+    --orange:#F57C00; --orange-pale:#FFF3E0;
+    --brown:#5D4037; --brown-pale:#EFEBE9;
+    --red:#C62828;
+    --text:#1B2A1F; --muted:#637377;
+    --bg:#F4F8F5; --white:#fff; --border:#E0E5E2;
+    --radius:14px;
+    --shadow:0 6px 20px rgba(20,40,30,0.08);
+    --shadow-sm:0 2px 8px rgba(20,40,30,0.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Nunito',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:18px 14px 80px}
+  .badge{display:inline-flex;align-items:center;gap:6px;background:#FFF3E0;color:#E65100;border:1px solid #FFE0B2;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.5px;text-transform:uppercase}
+  h1{margin:10px 0 4px;font-size:24px;line-height:1.15;font-weight:900;letter-spacing:-0.3px}
+  .lead{margin:0;color:var(--muted);font-size:13.5px;font-weight:600;line-height:1.45}
+  .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:16px;margin-top:14px;border:1px solid var(--border)}
+  .card h2{margin:0 0 10px;font-size:16px;font-weight:900;display:flex;align-items:center;gap:8px}
+  .sec-label{font-size:11px;font-weight:900;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin:18px 0 8px}
+  label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px}
+  select,input[type=number],input[type=text]{
+    width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);
+    font:800 14px Nunito,sans-serif;color:var(--text);outline:none;-webkit-appearance:none;appearance:none;
+  }
+  select:focus,input:focus{border-color:var(--green)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:420px){.row{grid-template-columns:1fr}}
+
+  /* Zone hero */
+  .zone-hero{background:linear-gradient(135deg,var(--green),var(--green-deep));color:#fff;border-radius:var(--radius);padding:16px;margin-top:14px;box-shadow:var(--shadow)}
+  .zone-hero .ico{font-size:34px;line-height:1}
+  .zone-hero .nm{font-size:18px;font-weight:900;margin:6px 0 2px}
+  .zone-hero .sub{font-size:12px;font-weight:700;opacity:.95}
+  .zone-hero .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .zone-hero .chip{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);padding:3px 9px;border-radius:999px;font-size:10.5px;font-weight:800}
+
+  /* Allocation bar */
+  .alloc-bar{display:flex;width:100%;height:18px;border-radius:999px;overflow:hidden;border:1px solid var(--border);margin:10px 0 6px}
+  .alloc-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;letter-spacing:.3px}
+  .alloc-legend{display:flex;justify-content:space-between;gap:8px;font-size:11px;font-weight:800;color:var(--muted)}
+  .alloc-legend span b{color:var(--text)}
+
+  /* Buckets */
+  .bucket{border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px;background:#fafdfb}
+  .bucket-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .bucket-h .t{font-size:13.5px;font-weight:900}
+  .bucket-h .p{font-size:11px;font-weight:900;color:var(--green-deep);background:var(--green-pale);padding:3px 8px;border-radius:999px}
+  .bucket-sub{font-size:11.5px;color:var(--muted);font-weight:700;margin-bottom:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{background:var(--white);border:1px solid var(--border);padding:5px 10px;border-radius:999px;font-size:11.5px;font-weight:800;display:inline-flex;align-items:center;gap:5px}
+  .chip .e{font-size:13px}
+
+  /* Coming-soon */
+  .pill-soon{display:inline-flex;align-items:center;gap:6px;background:#E3F2FD;color:#1565C0;border:1px solid #BBDEFB;padding:4px 10px;border-radius:999px;font-size:10.5px;font-weight:900;letter-spacing:.5px;text-transform:uppercase}
+
+  .footer{margin-top:20px;text-align:center;color:var(--muted);font-size:11px;font-weight:700}
+  a{color:var(--green-deep);font-weight:800;text-decoration:none}
+
+  .layer-list{display:grid;gap:6px;margin-top:8px}
+  .layer-list .lr{display:flex;gap:10px;align-items:flex-start;background:#fafdfb;border:1px solid var(--border);border-radius:10px;padding:9px 11px}
+  .layer-list .lr .n{font-size:13px;font-weight:900;color:var(--text)}
+  .layer-list .lr .d{font-size:11.5px;font-weight:700;color:var(--muted);line-height:1.35}
+  .layer-list .lr .e{font-size:20px;line-height:1;margin-top:1px}
+
+  .ref-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+  @media(max-width:420px){.ref-list{grid-template-columns:1fr}}
+  .ref{background:#fafdfb;border:1px solid var(--border);border-radius:10px;padding:9px 11px;font-size:12px;font-weight:800}
+  .ref small{display:block;color:var(--muted);font-weight:700;margin-top:2px;font-size:10.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="badge">🧪 R&amp;D · Concept Preview</div>
+  <h1>Geo-Adaptive Garden Planner</h1>
+  <p class="lead">Tell us your <b>state</b> and the <b>space you have</b>. We'll suggest the right ecology model, the right space split (daily / seasonal / long-term), and the right plants — tuned to your climate.</p>
+
+  <!-- ────────── INPUTS ────────── -->
+  <div class="card">
+    <h2>📍 Your conditions</h2>
+    <div class="row">
+      <div>
+        <label>State</label>
+        <select id="rd-state"></select>
+      </div>
+      <div>
+        <label>City (optional)</label>
+        <input id="rd-city" type="text" placeholder="e.g. Hyderabad">
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div>
+        <label>Available space (sq ft)</label>
+        <input id="rd-space" type="number" min="10" max="20000" value="120">
+      </div>
+      <div>
+        <label>Sunlight</label>
+        <select id="rd-sun">
+          <option value="full">☀️ Full sun (6+ hrs)</option>
+          <option value="partial" selected>🌤️ Partial sun (3–6 hrs)</option>
+          <option value="shade">☁️ Mostly shade (&lt; 3 hrs)</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div>
+        <label>Water availability</label>
+        <select id="rd-water">
+          <option value="abundant">💧 Abundant</option>
+          <option value="moderate" selected>💧 Moderate</option>
+          <option value="scarce">💧 Scarce</option>
+        </select>
+      </div>
+      <div>
+        <label>Family size</label>
+        <input id="rd-family" type="number" min="1" max="20" value="4">
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────── ZONE OUTPUT ────────── -->
+  <div class="zone-hero" id="rd-zone">
+    <div class="ico" id="rd-zone-ico">🌱</div>
+    <div class="nm" id="rd-zone-name">Detecting…</div>
+    <div class="sub" id="rd-zone-sub">Pick a state to start.</div>
+    <div class="meta" id="rd-zone-meta"></div>
+  </div>
+
+  <!-- ────────── ALLOCATION ────────── -->
+  <div class="card">
+    <h2>📐 Smart space allocation</h2>
+    <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px">For <b id="rd-sumspace" style="color:var(--text)">120</b> sq ft · <span id="rd-bucket-name">Small</span> garden</div>
+    <div class="alloc-bar" id="rd-bar"></div>
+    <div class="alloc-legend">
+      <span>🥬 Daily <b id="rd-daily-pct">50%</b></span>
+      <span>🌽 Seasonal <b id="rd-seas-pct">30%</b></span>
+      <span>🌳 Long-term <b id="rd-long-pct">20%</b></span>
+    </div>
+
+    <div class="bucket" data-key="daily">
+      <div class="bucket-h"><div class="t">🥬 Daily Consumption</div><div class="p"><span id="rd-daily-sqft">60</span> sq ft</div></div>
+      <div class="bucket-sub">Fast-cycle leafy greens &amp; herbs you pick almost every day.</div>
+      <div class="chips" id="rd-daily-chips"></div>
+    </div>
+    <div class="bucket" data-key="seasonal">
+      <div class="bucket-h"><div class="t">🌽 Seasonal Rotation</div><div class="p"><span id="rd-seas-sqft">36</span> sq ft</div></div>
+      <div class="bucket-sub">Rotated by monsoon · winter · summer for nutritional diversity.</div>
+      <div class="chips" id="rd-seas-chips"></div>
+    </div>
+    <div class="bucket" data-key="longterm">
+      <div class="bucket-h"><div class="t">🌳 Long-term Perennials</div><div class="p"><span id="rd-long-sqft">24</span> sq ft</div></div>
+      <div class="bucket-sub">Shade, future yield &amp; ecosystem maturity. Skipped on very small plots.</div>
+      <div class="chips" id="rd-long-chips"></div>
+    </div>
+  </div>
+
+  <!-- ────────── 7-LAYER FOOD FOREST ────────── -->
+  <div class="card">
+    <h2>🌳 7-Layer food forest <span class="pill-soon" style="margin-left:auto">v2 preview</span></h2>
+    <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px">Vertical stacking turns small plots into self-sustaining ecosystems.</div>
+    <div class="layer-list" id="rd-layers"></div>
+  </div>
+
+  <!-- ────────── CONTINUOUS HARVEST & FOOD CONTINUITY ────────── -->
+  <div class="card" style="background:linear-gradient(180deg,#ffffff,#F1F8E9)">
+    <h2>🍌 Continuous Harvest Engine <span class="pill-soon" style="margin-left:auto">R&amp;D concept</span></h2>
+    <div style="font-size:12.5px;color:var(--muted);font-weight:700;line-height:1.5;margin-bottom:12px">
+      Go beyond "what to plant" → answer <b style="color:var(--text)">"how to keep food coming every week of the year."</b>
+      The engine blends daily-rotation crops, seasonal fruiting, and perennial trees so harvest gaps shrink toward zero.
+    </div>
+
+    <!-- Harvest Frequency Score table -->
+    <div style="font-size:11.5px;font-weight:900;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin:4px 0 6px">Harvest Frequency Score</div>
+    <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;margin-bottom:14px">
+      <div style="display:grid;grid-template-columns:1fr 1.1fr 80px;font:900 11px Nunito,sans-serif;background:var(--green-pale);color:var(--green-deep);padding:8px 10px">
+        <div>Plant</div><div>Cadence</div><div style="text-align:right">Score</div>
+      </div>
+      <div id="rd-harvest-rows"></div>
+    </div>
+
+    <!-- Food Security Score -->
+    <div style="font-size:11.5px;font-weight:900;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin:4px 0 6px">Food Security Score (preview)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px">
+        <div style="font-size:11px;font-weight:800;color:var(--muted)">Annual fruit need covered</div>
+        <div style="font:900 24px Nunito,sans-serif;color:var(--green-deep);margin-top:2px">18<span style="font-size:14px;color:var(--muted)">% / yr</span></div>
+        <div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:6px"><div style="width:18%;height:100%;background:linear-gradient(90deg,#FFB300,var(--green))"></div></div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px">
+        <div style="font-size:11px;font-weight:800;color:var(--muted)">Self-sufficiency days/yr</div>
+        <div style="font:900 24px Nunito,sans-serif;color:var(--blue);margin-top:2px">~66 <span style="font-size:13px;color:var(--muted)">days</span></div>
+        <div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:6px"><div style="width:18%;height:100%;background:linear-gradient(90deg,#64B5F6,var(--blue))"></div></div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px">
+        <div style="font-size:11px;font-weight:800;color:var(--muted)">Nutritional diversity</div>
+        <div style="font:900 24px Nunito,sans-serif;color:#7B1FA2;margin-top:2px">7<span style="font-size:14px;color:var(--muted)">/10</span></div>
+        <div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:6px"><div style="width:70%;height:100%;background:linear-gradient(90deg,#CE93D8,#7B1FA2)"></div></div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px">
+        <div style="font-size:11px;font-weight:800;color:var(--muted)">Climate resilience</div>
+        <div style="font:900 24px Nunito,sans-serif;color:#EF6C00;margin-top:2px">B+ </div>
+        <div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:6px"><div style="width:62%;height:100%;background:linear-gradient(90deg,#FFCC80,#EF6C00)"></div></div>
+      </div>
+    </div>
+
+    <!-- Future Harvest Timeline -->
+    <div style="font-size:11.5px;font-weight:900;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin:4px 0 6px">Future Harvest Timeline · 5-Year View</div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 6px 6px;margin-bottom:8px">
+      <div id="rd-timeline-slider" style="display:flex;justify-content:space-between;padding:0 6px 8px;font:900 10.5px Nunito,sans-serif;color:var(--muted)">
+        <span>3 mo</span><span>1 yr</span><span>1.5 yr</span><span>3 yr</span><span>5 yr</span>
+      </div>
+      <div id="rd-timeline-list"></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);font-weight:700">Long-term trees + fast crops = food now <b style="color:var(--text)">and</b> food forever.</div>
+  </div>
+
+  <!-- ────────── REAL-WORLD REFERENCES ────────── -->
+  <div class="card">
+    <h2>🌍 Inspirations referenced</h2>
+    <div class="ref-list">
+      <div class="ref">Miyawaki Dense Forests<small>Urban heat reduction · rapid greening</small></div>
+      <div class="ref">Auroville Food Forest<small>Regenerative, layered tropical</small></div>
+      <div class="ref">Solitude Farm (Auroville)<small>No-till natural farming</small></div>
+      <div class="ref">Pitchandikulam Forest<small>Native ecology + medicinal</small></div>
+      <div class="ref">Deccan Development Society<small>Telangana millet + dryland</small></div>
+      <div class="ref">Syntropic Agroforestry<small>Accelerated succession</small></div>
+    </div>
+  </div>
+
+  <!-- ────────── ROADMAP ────────── -->
+  <div class="card">
+    <h2>🛣️ Roadmap <span class="pill-soon" style="margin-left:auto">Coming Soon</span></h2>
+    <div style="font-size:12.5px;font-weight:700;color:var(--text);line-height:1.55">
+      • <b>Continuous Harvest Engine</b> — daily / seasonal / perennial balancing for zero-gap supply.<br>
+      • <b>Family Nutrition Mapping</b> — family-size aware yield → diet coverage %.<br>
+      • <b>Food Forest Simulator</b> — drag-drop trees · canopy spread over years.<br>
+      • <b>Plant Lifetime ROI</b> — mango 20-yr yield, banana monthly, tamarind decadal.<br>
+      • <b>Resilient Garden mode</b> — drought · disease · single-season-failure protection.<br>
+      • <b>Geo-Success Validator</b> — learns which combos thrive from community telemetry.<br>
+      • <b>Health-Goal Engine</b> — immunity, diabetes, respiratory, stress → curated pairings.<br>
+      • <b>Sustainability Score</b> — oxygen · heat-reduction · water-saving · food-independence.<br>
+      • <b>Companion Planting AI</b> — root depth · sunlight · nutrient compatibility.
+    </div>
+  </div>
+
+  <!-- ────────── MATHEMATICAL ECOLOGY BLUEPRINT (algorithm design reference) ────────── -->
+  <div class="card" style="background:linear-gradient(180deg,#ffffff,#EDE7F6);border-color:#D1C4E9">
+    <h2>🧮 Mathematical Ecology Blueprint <span class="pill-soon" style="margin-left:auto;background:#EDE7F6;color:#4527A0;border-color:#D1C4E9">Algorithm spec · v0.1</span></h2>
+    <div style="font-size:12.5px;color:var(--muted);font-weight:700;line-height:1.5;margin-bottom:12px">
+      Formal model that turns GrowFresh into a closed-loop, self-adaptive ecology engine.
+      <b style="color:var(--text)">Inputs → Models → Optimization → Output → Feedback.</b>
+      Used as the design reference for future modules (Continuous Harvest, Companion AI, Resilient Garden, Geo-Success Validator).
+    </div>
+
+    <!-- 8-step pipeline -->
+    <div style="font-size:11.5px;font-weight:900;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin:4px 0 8px">System Pipeline (8 stages)</div>
+    <div id="rd-mathpipe" style="display:grid;gap:8px;margin-bottom:14px"></div>
+
+    <!-- Inputs -->
+    <div style="font-size:11.5px;font-weight:900;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin:4px 0 6px">Input Vectors</div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;font:700 12px Nunito,sans-serif;line-height:1.55;margin-bottom:14px">
+      <div><span style="display:inline-block;min-width:28px;font-weight:900;color:#1565C0">E⃗</span> Environment · weather W(t) · climate C(region) · rain R(t) · season T(t) · geography G(lat,alt)</div>
+      <div><span style="display:inline-block;min-width:28px;font-weight:900;color:#2E7D32">H⃗</span> Human · family size · consumption F(i) · nutrition needs N</div>
+      <div><span style="display:inline-block;min-width:28px;font-weight:900;color:#6D4C41">S⃗</span> Space · area A · soil type · sun exposure</div>
+      <div><span style="display:inline-block;min-width:28px;font-weight:900;color:#7B1FA2">P⃗</span> Plant DB · growth Y(i) · cycle T(i) · compatibility M(i,j) · pest resistance P(i)</div>
+    </div>
+
+    <!-- Objective function -->
+    <div style="font-size:11.5px;font-weight:900;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin:4px 0 6px">Objective Function</div>
+    <div style="background:#0f172a;color:#E8F5E9;border-radius:12px;padding:12px 14px;font:800 12.5px ui-monospace,Menlo,Consolas,monospace;line-height:1.65;margin-bottom:6px;overflow-x:auto">
+      <div>maximize&nbsp; F = α·H_satisfaction</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ β·Yield</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ γ·Ecosystem_Stability</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ δ·Soil_Health</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− λ·Pest_Risk</div>
+      <div style="opacity:.65;margin-top:6px">subject to:&nbsp; Σ x_i ≤ A  ·  growth_valid(i,T)  ·  water_need(i) ≤ rain + irrigation</div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:14px">Weights α, β, γ, δ, λ are user-tunable (e.g. "maximize yield" vs "maximize resilience").</div>
+
+    <!-- Constraints & ecological interactions -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px">
+        <div style="font:900 12px Nunito,sans-serif;color:var(--text);margin-bottom:6px">🔗 Ecological interactions</div>
+        <div style="font:700 11.5px ui-monospace,Menlo,monospace;color:var(--muted);line-height:1.7">
+          M(i,j) plant compat<br>
+          S_total = Σ x_i · S_i<br>
+          N(t+1) = N(t) + compost − uptake<br>
+          B_total = Σ b_k · impact_k
+        </div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px">
+        <div style="font:900 12px Nunito,sans-serif;color:var(--text);margin-bottom:6px">⛓️ Constraints</div>
+        <div style="font:700 11.5px ui-monospace,Menlo,monospace;color:var(--muted);line-height:1.7">
+          space:  Σ x_i ≤ A<br>
+          season: growth_valid(i,T)<br>
+          soil:   nutrient(i) ≤ capacity<br>
+          water:  need(i) ≤ rain+irrig
+        </div>
+      </div>
+    </div>
+
+    <!-- Optimization methods -->
+    <div style="font-size:11.5px;font-weight:900;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin:4px 0 6px">Optimization Engine</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+      <span class="chip" style="background:#E8F5E9;color:#1B5E20;border-color:#C8E6C9">Linear programming</span>
+      <span class="chip" style="background:#E3F2FD;color:#0D47A1;border-color:#BBDEFB">Greedy selection</span>
+      <span class="chip" style="background:#F3E5F5;color:#4A148C;border-color:#E1BEE7">Evolutionary AI</span>
+      <span class="chip" style="background:#FFF3E0;color:#E65100;border-color:#FFE0B2">Constraint solver</span>
+    </div>
+
+    <!-- Feedback loop -->
+    <div style="font-size:11.5px;font-weight:900;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin:4px 0 6px">Self-Adaptive Feedback Loop</div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;font:700 12px Nunito,sans-serif;line-height:1.6;margin-bottom:14px">
+      Monitor: <b>ΔY</b> growth deviation · <b>ΔP</b> pest occurrence · <b>ΔN</b> soil change.<br>
+      Update: <span style="font-family:ui-monospace,Menlo,monospace;color:var(--green-deep)">θ(t+1) = θ(t) + η · error</span><br>
+      Re-optimize → re-plant guidance → community telemetry feeds the next iteration.
+    </div>
+
+    <!-- Why it matters -->
+    <div style="background:#fff;border:1px solid #C8E6C9;border-left:4px solid var(--green);border-radius:10px;padding:12px;font:700 12px Nunito,sans-serif;line-height:1.55;color:var(--text)">
+      <div style="font-weight:900;color:var(--green-deep);margin-bottom:4px">🏆 Why this matters for the product</div>
+      ✔ Multi-system integration (environment + humans + biology)<br>
+      ✔ Mathematical optimization core (defensible IP)<br>
+      ✔ Ecological interaction modeling (companion + pest + soil)<br>
+      ✔ Closed-loop self-adaptive learning from community data<br>
+      ✔ Direct path to a patent claim: <i>"Dynamic AI-driven space allocation for continuous organic household food production based on climate, family consumption, growth cycles, and perennial yield balancing."</i>
+    </div>
+  </div>
+
+  <div class="footer">GrowFresh · R&amp;D preview · v0.1 · <a href="growfresh-app.html">← back to app</a></div>
+</div>
+
+<script>
+/* ──────────────────────────────────────────────────────────────────
+   ECO-ZONE ENGINE
+   Maps Indian states (and a few hint-cities) to one of 6 ecology
+   zones. Each zone exposes:
+     - id, label, emoji, gradient hint
+     - notes: short descriptor
+     - tags: 3–4 attributes
+     - plants: { daily:[], seasonal:[], longterm:[] }  curated chips
+   ────────────────────────────────────────────────────────────────── */
+const ZONES = {
+  tropical: {
+    id:'tropical', label:'Tropical Humid', emoji:'🌴',
+    notes:'Long growing seasons · high humidity · dense layering thrives.',
+    tags:['Humid','Layered','Spice systems','Coconut-banana base'],
+    plants:{
+      daily:[['🌿','Curry leaf'],['🌿','Mint'],['🥬','Amaranthus'],['🌿','Coriander'],['🌶️','Green chilli']],
+      seasonal:[['🥒','Snake gourd'],['🍠','Sweet potato'],['🌽','Cluster bean'],['🥒','Bitter gourd']],
+      longterm:[['🥥','Coconut'],['🍌','Banana'],['🌳','Moringa'],['🌳','Jackfruit']]
+    }
+  },
+  semiarid: {
+    id:'semiarid', label:'Semi-Arid', emoji:'🌾',
+    notes:'Hot summers · moderate rain · drought-tolerant + drip works best.',
+    tags:['Drought-tolerant','Drip irrigation','Mulch-heavy','Medicinal'],
+    plants:{
+      daily:[['🌿','Curry leaf'],['🌿','Tulsi'],['🌶️','Guntur chilli'],['🌿','Mint'],['🥬','Spinach (Palak)']],
+      seasonal:[['🍅','Tomato (Desi)'],['🍆','Brinjal'],['🥒','Ridge gourd'],['🌽','Cluster bean']],
+      longterm:[['🌳','Moringa'],['🍋','Lemon'],['🍐','Custard apple'],['🌵','Aloe vera']]
+    }
+  },
+  desert: {
+    id:'desert', label:'Desert / Dry Heat', emoji:'🏜️',
+    notes:'Very low rainfall · extreme heat · xeriscape + windbreaks.',
+    tags:['Xeriscape','Wind-break','Heavy mulch','Wide spacing'],
+    plants:{
+      daily:[['🌵','Aloe vera'],['🌿','Tulsi'],['🌿','Mint (potted)'],['🌶️','Chilli']],
+      seasonal:[['🍈','Watermelon'],['🍈','Muskmelon'],['🥒','Bottle gourd']],
+      longterm:[['🌳','Moringa'],['🌳','Ber'],['🌳','Pomegranate'],['🌳','Date palm']]
+    }
+  },
+  hill: {
+    id:'hill', label:'Temperate Hill', emoji:'🏔️',
+    notes:'Cool nights · short summers · stone fruits & berry shrubs love it.',
+    tags:['Cool nights','Berry shrubs','Stone fruits','Greenhouse-friendly'],
+    plants:{
+      daily:[['🥬','Lettuce'],['🥬','Spinach'],['🌿','Parsley'],['🌿','Coriander']],
+      seasonal:[['🥦','Broccoli'],['🥕','Carrot'],['🥔','Potato'],['🫛','Peas']],
+      longterm:[['🍎','Apple'],['🍐','Pear'],['🍓','Strawberry'],['🌳','Walnut']]
+    }
+  },
+  rainforest: {
+    id:'rainforest', label:'High Rainfall', emoji:'☔',
+    notes:'Heavy monsoon · fungal-rich soils · bamboo + dense edible canopy.',
+    tags:['Heavy monsoon','Bamboo','Dense canopy','Fungal-rich soil'],
+    plants:{
+      daily:[['🌿','Mint'],['🌿','Coriander'],['🥬','Spinach'],['🌿','Curry leaf']],
+      seasonal:[['🥒','Cucumber'],['🥒','Snake gourd'],['🌶️','Chilli'],['🍆','Brinjal']],
+      longterm:[['🎋','Bamboo'],['🌳','Areca'],['🌳','Jackfruit'],['🍌','Banana']]
+    }
+  },
+  urbanhybrid: {
+    id:'urbanhybrid', label:'Urban Hybrid', emoji:'🏙️',
+    notes:'Heat island · terrace + balcony · Miyawaki dense pockets + edible.',
+    tags:['Heat-island','Terrace ready','Vertical vines','Rainwater-friendly'],
+    plants:{
+      daily:[['🌿','Mint'],['🌿','Tulsi'],['🌿','Coriander'],['🥬','Microgreens'],['🌶️','Chilli']],
+      seasonal:[['🍅','Cherry tomato'],['🫑','Capsicum'],['🥒','Bottle gourd'],['🥬','Lettuce']],
+      longterm:[['🍋','Lemon'],['🌳','Curry leaf tree'],['🌳','Moringa'],['🌿','Stevia']]
+    }
+  }
+};
+
+/* state → zone map.  Urban hybrid wins for major metros. */
+const STATE_ZONE = {
+  'Kerala':'tropical','Goa':'tropical','Andaman & Nicobar':'tropical',
+  'Tamil Nadu':'tropical','Karnataka':'semiarid','Andhra Pradesh':'semiarid',
+  'Telangana':'semiarid','Maharashtra':'semiarid','Madhya Pradesh':'semiarid',
+  'Chhattisgarh':'semiarid','Odisha':'tropical','Jharkhand':'semiarid',
+  'Rajasthan':'desert','Gujarat':'desert',
+  'Himachal Pradesh':'hill','Uttarakhand':'hill','Jammu & Kashmir':'hill','Ladakh':'hill','Sikkim':'hill',
+  'Arunachal Pradesh':'rainforest','Assam':'rainforest','Meghalaya':'rainforest','Manipur':'rainforest',
+  'Mizoram':'rainforest','Nagaland':'rainforest','Tripura':'rainforest','West Bengal':'rainforest',
+  'Uttar Pradesh':'semiarid','Bihar':'semiarid','Haryana':'semiarid','Punjab':'semiarid',
+  'Delhi':'urbanhybrid','Chandigarh':'urbanhybrid','Puducherry':'tropical'
+};
+/* metro city overrides → urbanhybrid */
+const METRO_CITIES = new Set([
+  'hyderabad','bengaluru','bangalore','mumbai','pune','delhi','new delhi',
+  'noida','gurugram','gurgaon','kolkata','chennai','ahmedabad','surat',
+  'jaipur','lucknow','indore'
+]);
+
+const STATES = Object.keys(STATE_ZONE).sort();
+
+/* ──────────────────────────────────────────────────────────────────
+   SPACE ALLOCATION BUCKETS
+   Curve per the doc; pick the row matching the entered sq ft.
+   ────────────────────────────────────────────────────────────────── */
+const BUCKETS = [
+  { max:50,    name:'Micro',  daily:70, seasonal:30, longterm:0  },
+  { max:150,   name:'Small',  daily:50, seasonal:30, longterm:20 },
+  { max:500,   name:'Medium', daily:40, seasonal:35, longterm:25 },
+  { max:2000,  name:'Large',  daily:30, seasonal:30, longterm:40 },
+  { max:99999, name:'Very large', daily:20, seasonal:30, longterm:50 }
+];
+function bucketFor(sqft){
+  const n = Math.max(10, Math.min(20000, Number(sqft)||0));
+  for (const b of BUCKETS) if (n <= b.max) return b;
+  return BUCKETS[BUCKETS.length-1];
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   7-LAYER FOOD FOREST (static reference content)
+   ────────────────────────────────────────────────────────────────── */
+const LAYERS = [
+  ['🌳','Canopy','Mango · Coconut · Jackfruit · Neem'],
+  ['🍋','Understory','Lemon · Guava · Papaya · Pomegranate'],
+  ['🌿','Shrub','Curry leaf · Hibiscus · Chilli · Berry'],
+  ['🌱','Herbaceous','Tulsi · Mint · Coriander · Spinach'],
+  ['🍓','Ground cover','Strawberry · Sweet potato · Clover'],
+  ['🥒','Vine','Beans · Bitter gourd · Bottle gourd · Grapes'],
+  ['🥕','Root','Turmeric · Ginger · Garlic · Beetroot']
+];
+
+/* ─────────────────────── INIT ─────────────────────── */
+(function init(){
+  // Populate state dropdown
+  const sel = document.getElementById('rd-state');
+  sel.innerHTML = '<option value="">— select your state —</option>' +
+    STATES.map(s=>`<option value="${s}">${s}</option>`).join('');
+  // Pre-pick Telangana as a sensible default
+  sel.value = 'Telangana';
+
+  // Render the layer list once
+  document.getElementById('rd-layers').innerHTML =
+    LAYERS.map((l,i)=>`<div class="lr"><div class="e">${l[0]}</div>
+      <div><div class="n">Layer ${i+1} · ${l[1]}</div><div class="d">${l[2]}</div></div></div>`).join('');
+
+  // ── Continuous Harvest table (static R&D demo) ──
+  const HARVEST = [
+    ['🥬','Spinach / Methi','Every 25–30 days · re-sow',95,'#43A047'],
+    ['🌶️','Chilli','Continuous · 6+ months',90,'#E53935'],
+    ['🍌','Banana','Year-round once mature',92,'#FB8C00'],
+    ['🍈','Papaya','Year-round · 2–3 yr cycle',88,'#F9A825'],
+    ['🥭','Mango','Seasonal · Apr–Jun yearly',60,'#EF6C00'],
+    ['🐉','Dragon Fruit','Multiple flushes · Jun–Nov',75,'#7B1FA2'],
+    ['🌰','Tamarind','Multi-season · decadal yield',55,'#5D4037']
+  ];
+  const harvestRowsEl = document.getElementById('rd-harvest-rows');
+  if (harvestRowsEl) {
+    harvestRowsEl.innerHTML = HARVEST.map(h=>(
+      `<div style="display:grid;grid-template-columns:1fr 1.1fr 80px;align-items:center;gap:6px;padding:9px 10px;border-top:1px solid var(--border);font:700 12px Nunito,sans-serif">
+        <div><span style="font-size:14px;margin-right:6px">${h[0]}</span>${h[1]}</div>
+        <div style="color:var(--muted)">${h[2]}</div>
+        <div style="text-align:right"><span style="display:inline-block;min-width:46px;text-align:center;padding:3px 8px;border-radius:999px;background:${h[4]}1A;color:${h[4]};font-weight:900;font-size:11px">${h[3]}</span></div>
+      </div>`
+    )).join('');
+  }
+
+  // ── Future Harvest timeline (5-yr view) ──
+  const TIMELINE = [
+    ['3 months','🥬','Leafy vegetables, herbs',  'Spinach · Methi · Coriander · Mint'],
+    ['8 months','🍈','First papaya fruit set',   'Papaya · Chilli · Tomato'],
+    ['1.5 years','🍌','Banana cycle begins',     'Banana · Drumstick · Curry leaf'],
+    ['3 years','🥭','First mango yield',         'Mango · Guava · Pomegranate'],
+    ['5 years','🌰','Tamarind & food-forest stability','Tamarind · Jackfruit · Coconut']
+  ];
+  const tlEl = document.getElementById('rd-timeline-list');
+  if (tlEl) {
+    tlEl.innerHTML = TIMELINE.map((t,i)=>(
+      `<div style="display:grid;grid-template-columns:64px 28px 1fr;align-items:flex-start;gap:8px;padding:9px 10px;border-top:1px solid var(--border)">
+        <div style="font:900 11px Nunito,sans-serif;color:var(--green-deep);background:var(--green-pale);padding:3px 6px;border-radius:8px;text-align:center">${t[0]}</div>
+        <div style="font-size:18px;line-height:1">${t[1]}</div>
+        <div>
+          <div style="font:900 12.5px Nunito,sans-serif;color:var(--text)">${t[2]}</div>
+          <div style="font:700 11px Nunito,sans-serif;color:var(--muted);margin-top:1px">${t[3]}</div>
+        </div>
+      </div>`
+    )).join('');
+  }
+
+  // Bind all inputs to a single recomputer
+  ['rd-state','rd-city','rd-space','rd-sun','rd-water','rd-family']
+    .forEach(id => document.getElementById(id).addEventListener('input', render));
+
+  // ── Mathematical Ecology pipeline (8-stage flowchart) ──
+  const PIPE = [
+    ['1','📥','Input collection',     'E⃗ environment · H⃗ human · S⃗ space · P⃗ plant DB','#1565C0'],
+    ['2','🧪','Normalization',         'All inputs scaled to [0,1] feature vectors','#00838F'],
+    ['3','🔗','Ecological interaction','Plant compat M(i,j) · pest suppression · nutrient cycle','#2E7D32'],
+    ['4','⛓️','Constraints',           'space · season · soil · water bounds','#EF6C00'],
+    ['5','🎯','Objective function',    'F = αH + βY + γStability + δSoil − λPest','#7B1FA2'],
+    ['6','⚙️','Optimization',          'LP · greedy · evolutionary AI · constraint solver','#0D47A1'],
+    ['7','🗺️','Eco-planting layout',   'Zone split · companion map · rotation schedule','#1B5E20'],
+    ['8','🔁','Feedback loop',         'ΔY · ΔP · ΔN → θ(t+1) update → re-optimize','#C2185B']
+  ];
+  const pipeEl = document.getElementById('rd-mathpipe');
+  if (pipeEl) {
+    pipeEl.innerHTML = PIPE.map(p => (
+      `<div style="display:grid;grid-template-columns:28px 28px 1fr;gap:8px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-left:4px solid ${p[4]};border-radius:10px;padding:10px 12px">
+        <div style="font:900 12px Nunito,sans-serif;color:${p[4]};background:${p[4]}1A;border-radius:6px;text-align:center;padding:2px 0">${p[0]}</div>
+        <div style="font-size:18px;line-height:1.1">${p[1]}</div>
+        <div>
+          <div style="font:900 12.5px Nunito,sans-serif;color:var(--text)">${p[2]}</div>
+          <div style="font:700 11px Nunito,sans-serif;color:var(--muted);margin-top:1px">${p[3]}</div>
+        </div>
+      </div>`
+    )).join('');
+  }
+
+  render();
+})();
+
+function detectZone(state, city){
+  const c = String(city||'').trim().toLowerCase();
+  if (c && METRO_CITIES.has(c)) return ZONES.urbanhybrid;
+  return ZONES[STATE_ZONE[state] || 'semiarid'] || ZONES.semiarid;
+}
+
+function chip(emoji, name){
+  return `<span class="chip"><span class="e">${emoji}</span>${name}</span>`;
+}
+
+function render(){
+  const state = document.getElementById('rd-state').value;
+  const city  = document.getElementById('rd-city').value;
+  const space = Math.max(10, Math.min(20000, Number(document.getElementById('rd-space').value) || 120));
+  const zone  = detectZone(state, city);
+  const b     = bucketFor(space);
+
+  // Zone hero
+  document.getElementById('rd-zone-ico').textContent  = zone.emoji;
+  document.getElementById('rd-zone-name').textContent = zone.label + (state ? ' · ' + state : '');
+  document.getElementById('rd-zone-sub').textContent  = zone.notes;
+  document.getElementById('rd-zone-meta').innerHTML   = zone.tags.map(t=>`<span class="chip">${t}</span>`).join('');
+
+  // Allocation bar + percentages
+  document.getElementById('rd-sumspace').textContent  = space;
+  document.getElementById('rd-bucket-name').textContent = b.name;
+  document.getElementById('rd-daily-pct').textContent = b.daily + '%';
+  document.getElementById('rd-seas-pct').textContent  = b.seasonal + '%';
+  document.getElementById('rd-long-pct').textContent  = b.longterm + '%';
+
+  const bar = document.getElementById('rd-bar');
+  bar.innerHTML = '';
+  const segs = [
+    [b.daily,    '#43A047', b.daily + '%'],
+    [b.seasonal, '#FB8C00', b.seasonal + '%'],
+    [b.longterm, '#6D4C41', b.longterm + '%']
+  ];
+  segs.forEach(([w,c,t])=>{
+    if (!w) return;
+    const d = document.createElement('div');
+    d.className = 'alloc-seg';
+    d.style.width = w + '%';
+    d.style.background = c;
+    d.textContent = w >= 10 ? t : '';
+    bar.appendChild(d);
+  });
+
+  // Sq ft per bucket (rounded)
+  const dSq = Math.round(space * b.daily / 100);
+  const sSq = Math.round(space * b.seasonal / 100);
+  const lSq = space - dSq - sSq;
+  document.getElementById('rd-daily-sqft').textContent = dSq;
+  document.getElementById('rd-seas-sqft').textContent  = sSq;
+  document.getElementById('rd-long-sqft').textContent  = Math.max(0,lSq);
+
+  // Plant chips per bucket — zone-curated, deduped
+  const p = zone.plants;
+  document.getElementById('rd-daily-chips').innerHTML =
+    (p.daily || []).slice(0,6).map(([e,n])=>chip(e,n)).join('');
+  document.getElementById('rd-seas-chips').innerHTML =
+    (p.seasonal || []).slice(0,6).map(([e,n])=>chip(e,n)).join('');
+  document.getElementById('rd-long-chips').innerHTML = b.longterm === 0
+    ? `<span class="chip" style="background:#FFF3E0;color:#E65100;border-color:#FFE0B2">⚠️ Skipped — too little space for perennials</span>`
+    : (p.longterm || []).slice(0,6).map(([e,n])=>chip(e,n)).join('');
+}
+</script>
+</body>
+</html>
