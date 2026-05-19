@@ -1053,25 +1053,34 @@ function gfApplyLanguage(code){
   var dst = map[code] || 'en';
   try{ localStorage.setItem(GF_LANG_KEY, dst); }catch(e){}
   if(dst === 'en'){
-    // Clear translation cookie — need a reload to revert source DOM
+    // Need a reload to revert source DOM
     _gfSetCookie('googtrans','', -1);
     document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    setTimeout(function(){ location.reload(); }, 200);
+    setTimeout(function(){ location.reload(); }, 150);
     return;
   }
   _gfSetCookie('googtrans', '/en/'+dst, 365);
-  // Try to retranslate in-place (no full reload, no flash)
-  try{
+  // Poll for the widget <select> to appear (up to 3s), then trigger it
+  // in-place so the page translates instantly with no reload / flash.
+  var tries = 0, MAX = 30;   // 30 * 100ms = 3s
+  var poll = setInterval(function(){
     var sel = document.querySelector('select.goog-te-combo');
     if(sel){
-      sel.value = dst;
-      sel.dispatchEvent(new Event('change'));
+      clearInterval(poll);
+      try{
+        sel.value = dst;
+        sel.dispatchEvent(new Event('change'));
+        // remove banner that may have flashed during init
+        _gfKillBanner();
+      }catch(e){ location.reload(); }
       return;
     }
-  }catch(e){}
-  // Widget not ready yet → fall back to a one-time reload so the new
-  // cookie is picked up on next paint
-  setTimeout(function(){ location.reload(); }, 250);
+    if(++tries >= MAX){
+      clearInterval(poll);
+      // Last-resort fallback: reload (cookie already set, so next paint translates)
+      location.reload();
+    }
+  }, 100);
 }
 function _gfKillBanner(){
   // Google widget injects a top iframe + tooltip. Remove on sight.
@@ -1085,11 +1094,15 @@ function _gfKillBanner(){
 }
 function _gfBootGoogleTranslate(){
   if(window.top !== window) return;
+  // Body may not exist if called from <head>-stage script
+  if(!document.body){
+    document.addEventListener('DOMContentLoaded', function(){ _gfBootGoogleTranslate(); }, { once:true });
+    return;
+  }
   if(!document.getElementById('google_translate_element')){
     var host = document.createElement('div');
     host.id = 'google_translate_element';
-    host.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none';
-    document.body.appendChild(host);
+    document.body.appendChild(host);   // CSS positions it off-screen
   }
   if(!document.getElementById('gf-gt-css')){
     var css = document.createElement('style');
@@ -1130,18 +1143,19 @@ function _gfBootGoogleTranslate(){
 }
 if(typeof window!=='undefined'){
   window.gfApplyLanguage = gfApplyLanguage;
-  // Ensure saved lang is reflected (cookie may have been cleared by browser)
+  // Re-affirm cookie ASAP (before any text is painted in source language)
+  try{
+    var _saved = localStorage.getItem(GF_LANG_KEY) || '';
+    if(_saved && _saved !== 'en' && document.cookie.indexOf('googtrans=/en/'+_saved) < 0){
+      _gfSetCookie('googtrans', '/en/'+_saved, 365);
+    }
+  }catch(e){}
+  // Boot widget as early as possible — script tag injection works pre-DOM-ready
+  // (the script itself waits for body before injecting iframe)
+  try{ _gfBootGoogleTranslate(); }catch(e){}
+  // Also re-affirm on DOMContentLoaded in case body wasn't ready above
   document.addEventListener('DOMContentLoaded', function(){
-    try{
-      var saved = localStorage.getItem(GF_LANG_KEY) || '';
-      if(saved && saved !== 'en'){
-        // Re-affirm the cookie silently (no reload — cookie may already be present)
-        if(document.cookie.indexOf('googtrans=/en/'+saved) < 0){
-          _gfSetCookie('googtrans', '/en/'+saved, 365);
-        }
-      }
-      _gfBootGoogleTranslate();
-    }catch(e){}
+    try{ _gfBootGoogleTranslate(); _gfKillBanner(); }catch(e){}
   });
 }
 
