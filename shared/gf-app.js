@@ -14,8 +14,26 @@ const cl=k=>{try{localStorage.removeItem(k);}catch(e){}delete window['_'+k];};
 window.onload=async ()=>{
   await loadProductsFromJSON();
   const s=ld(SK,null);
-  if(s){applySession(s);goHome();}
-  else showScreen('splash');
+  // Only run goHome() (which calls showScreen('home')) on the actual home
+  // page. On other MPA pages (shop/garden/community/profile), calling
+  // showScreen('home') would trigger a cross-page redirect via the MPA
+  // patch and undo the ?screen=X activation that DOMContentLoaded just did
+  // (e.g. clicking Calendar from home would bounce back to home).
+  var _hereFile=(location.pathname||'').split('/').pop()||'growfresh-app.html';
+  var _onHome=(_hereFile===''||_hereFile==='growfresh-app.html'||_hereFile==='index.html');
+  if(s){
+    applySession(s);
+    if(_onHome){ goHome(); }
+    else {
+      // On non-home pages: refresh shared widgets that goHome() would have
+      // refreshed, but DO NOT switch the screen — the page's pre-marked
+      // .active screen (or the ?screen= deep-link) should stay active.
+      try{ renderHomePlants(); }catch(e){}
+      try{ renderWfh(); }catch(e){}
+      try{ updateGreeting(); }catch(e){}
+    }
+  }
+  else if(_onHome){ showScreen('splash'); }
   Object.keys(products).forEach(id=>renderCtrl(id));
   renderCommunityFeed();
   updateStreak();
