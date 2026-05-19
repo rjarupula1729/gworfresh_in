@@ -62,12 +62,27 @@ function updateStatusTime(){
 function updateGreeting(){
   try{
     var h=new Date().getHours();
-    var g=h<12?'Good morning 🌅':h<17?'Good afternoon ☀️':'Good evening 🌙';
-    var el=document.getElementById('home-greeting'); if(el) el.textContent=g;
-    // Refresh the name too in case profile was edited
+    // Time-of-day emoji that walks across the day:
+    //   05-08 sunrise  · 09-11 sun rising · 12-15 sun · 16-18 sunset
+    //   19-21 evening  · 22-04 night
+    var icon = (h>=5 && h<9)   ? '🌅'   // early morning / sunrise
+             : (h>=9 && h<12)  ? '🌤️'  // late morning
+             : (h>=12 && h<16) ? '☀️'   // afternoon
+             : (h>=16 && h<19) ? '🌇'   // sunset / dusk
+             : (h>=19 && h<22) ? '🌆'   // evening
+             :                   '🌙'; // night
+    var el=document.getElementById('home-greeting');
+    if(el) el.textContent=icon;
+    // Show ONLY the first name so a long full name doesn't push the avatar.
     if(typeof window.gfUserName==='function'){
       var nEl=document.getElementById('home-name');
-      if(nEl){ var n=window.gfUserName(); if(n && n!=='You') nEl.textContent=n; }
+      if(nEl){
+        var n=window.gfUserName();
+        if(n && n!=='You'){
+          var first=String(n).trim().split(/\s+/)[0];
+          nEl.textContent='Hi, '+first+' 👋';
+        }
+      }
     }
   }catch(e){}
 }
@@ -97,9 +112,11 @@ function applySession(s){
   const displayName=(p&&p.display)||s.name||'User';
   updateAvatars(displayName);
   setEl('profile-name',displayName);
-  setEl('home-name',(typeof window.gfUserName==='function'?window.gfUserName():(s.name||'You')));
+  // First name only for the home greeting so a long full name doesn't overflow
+  var firstHome=String(displayName||s.name||'there').trim().split(/\s+/)[0];
+  setEl('home-name','Hi, '+firstHome+' 👋');
   // First name only for the AI Coach greeting
-  var first=String(displayName||s.name||'there').trim().split(/\s+/)[0];
+  var first=firstHome;
   setEl('ai-coach-name', first);
   setEl('profile-phone',s.method==='mobile'?'+91 '+s.phone:s.email);
   setEl('profile-method',s.method==='mobile'?'📱 Mobile OTP':'🔵 Google');

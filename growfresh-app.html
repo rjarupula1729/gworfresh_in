@@ -81,8 +81,10 @@
     <div class="home-header">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
         <div style="flex:1;min-width:0">
-          <div class="home-greeting" id="home-greeting">Good morning 🌅</div>
-          <div class="home-name" id="home-name">Welcome!</div>
+          <div style="display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden">
+            <span id="home-greeting" title="Time of day" style="font-size:22px;line-height:1;flex-shrink:0">🌅</span>
+            <span class="home-name" id="home-name" style="margin-top:0;overflow:hidden;text-overflow:ellipsis">Welcome!</span>
+          </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
           <!-- COMPACT STREAK BADGE (top-right) -->
