@@ -1057,34 +1057,14 @@ function gfApplyLanguage(code){
   var dst = map[code] || 'en';
   try{ localStorage.setItem(GF_LANG_KEY, dst); }catch(e){}
   if(dst === 'en'){
-    // Need a reload to revert source DOM
     _gfSetCookie('googtrans','', -1);
     document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    setTimeout(function(){ location.reload(); }, 150);
-    return;
+  } else {
+    _gfSetCookie('googtrans', '/en/'+dst, 365);
   }
-  _gfSetCookie('googtrans', '/en/'+dst, 365);
-  // Poll for the widget <select> to appear (up to 3s), then trigger it
-  // in-place so the page translates instantly with no reload / flash.
-  var tries = 0, MAX = 30;   // 30 * 100ms = 3s
-  var poll = setInterval(function(){
-    var sel = document.querySelector('select.goog-te-combo');
-    if(sel){
-      clearInterval(poll);
-      try{
-        sel.value = dst;
-        sel.dispatchEvent(new Event('change'));
-        // remove banner that may have flashed during init
-        _gfKillBanner();
-      }catch(e){ location.reload(); }
-      return;
-    }
-    if(++tries >= MAX){
-      clearInterval(poll);
-      // Last-resort fallback: reload (cookie already set, so next paint translates)
-      location.reload();
-    }
-  }, 100);
+  // Always reload — letting Google re-scan a clean DOM avoids the nested
+  // <font> duplication that an in-place select toggle produces.
+  setTimeout(function(){ location.reload(); }, 150);
 }
 function _gfKillBanner(){
   // Remove ONLY the banner iframe (class .goog-te-banner-frame). Do NOT
@@ -1098,77 +1078,18 @@ function _gfKillBanner(){
     document.body.style.position = '';
   }
 }
-/* Re-trigger translation for content injected AFTER initial page load
-   (e.g. Garden plant cards, Family Members list, Edit Profile inputs,
-   Smart Picks cards). Google Translate only auto-scans once at boot,
-   so dynamic innerHTML stays in English unless we nudge the widget.   */
+/* Re-translation strategy (post-loop-bug rewrite):
+   - When the user picks a language in Edit Profile, we set the googtrans
+     cookie and reload ONCE. From then on, Google auto-translates on every
+     page navigation because the cookie is read on each page load.
+   - We do NOT toggle the widget select in-place. That approach wrapped
+     text in nested <font> tags and duplicated emojis/logos visually.
+   - Dynamic content rendered after page load (Garden cards, Smart Picks)
+     will appear in English briefly; Google's own internal observer picks
+     it up within ~1s. This is the trade-off for not breaking the UI. */
 var _gfRetransPending = null;
-var _gfRetransInFlight = false;     // guard against observer→retranslate→observer loops
-var _gfDomObserver = null;
-function _gfRetranslate(){
-  // Skip when user is on English — nothing to do
-  try{ if((localStorage.getItem(GF_LANG_KEY)||'en') === 'en') return; }catch(e){}
-  if(_gfRetransInFlight) return;
-  if(_gfRetransPending) return;
-  _gfRetransPending = setTimeout(function(){
-    _gfRetransPending = null;
-    try{
-      var lang = localStorage.getItem(GF_LANG_KEY) || 'en';
-      if(lang === 'en') return;
-      var sel = document.querySelector('select.goog-te-combo');
-      if(!sel){ return; }
-      _gfRetransInFlight = true;
-      // Pause the DOM observer while Google swaps text — otherwise its own
-      // mutations trigger another retranslate → infinite loop → duplicated UI.
-      if(_gfDomObserver){ try{ _gfDomObserver.disconnect(); }catch(e){} }
-      sel.value = 'en'; sel.dispatchEvent(new Event('change'));
-      setTimeout(function(){
-        try{ sel.value = lang; sel.dispatchEvent(new Event('change')); }catch(e){}
-        // Re-arm observer after Google finishes its DOM swaps (~800ms safe)
-        setTimeout(function(){
-          _gfRetransInFlight = false;
-          if(_gfDomObserver && document.body){
-            try{ _gfDomObserver.observe(document.body, { childList:true, subtree:true }); }catch(e){}
-          }
-        }, 800);
-      }, 60);
-    }catch(e){ _gfRetransInFlight = false; }
-  }, 300);
-}
+function _gfRetranslate(){ /* intentional no-op — see comment above */ }
 if(typeof window!=='undefined'){ window._gfRetranslate = _gfRetranslate; }
-// Global safety net: observe the document for large DOM insertions and
-// re-translate. Carefully ignore Google's own injections / our own
-// retranslate cycles so we don't loop.
-(function _gfWatchDOM(){
-  if(typeof MutationObserver === 'undefined') return;
-  function _isGoogNode(n){
-    if(!n || n.nodeType !== 1) return true;
-    var cls = (n.className && n.className.toString && n.className.toString()) || '';
-    var id  = n.id || '';
-    if(/goog-|skiptranslate|VIiyi/.test(cls)) return true;
-    if(/goog|google_translate/.test(id)) return true;
-    if(n.tagName === 'FONT' || n.tagName === 'IFRAME' || n.tagName === 'SCRIPT' || n.tagName === 'STYLE' || n.tagName === 'LINK') return true;
-    return false;
-  }
-  function arm(){
-    _gfDomObserver = new MutationObserver(function(mutations){
-      if(_gfRetransInFlight) return;
-      for(var i=0;i<mutations.length;i++){
-        var added = mutations[i].addedNodes;
-        for(var j=0;j<added.length;j++){
-          var n = added[j];
-          if(!_isGoogNode(n) && (n.textContent||'').trim().length > 20){
-            _gfRetranslate();
-            return;
-          }
-        }
-      }
-    });
-    _gfDomObserver.observe(document.body, { childList:true, subtree:true });
-  }
-  if(document.body) arm();
-  else document.addEventListener('DOMContentLoaded', arm, { once:true });
-})();
 function _gfBootGoogleTranslate(){
   if(window.top !== window) return;
   // Body may not exist if called from <head>-stage script
