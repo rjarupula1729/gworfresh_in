@@ -74,15 +74,19 @@ function updateGreeting(){
     var el=document.getElementById('home-greeting');
     if(el) el.textContent=icon;
     // Show ONLY the first name so a long full name doesn't push the avatar.
-    if(typeof window.gfUserName==='function'){
-      var nEl=document.getElementById('home-name');
-      if(nEl){
-        var n=window.gfUserName();
-        if(n && n!=='You'){
-          var first=String(n).trim().split(/\s+/)[0];
-          nEl.textContent='Hi, '+first+' 👋';
-        }
+    // Always set SOMETHING so the line is never blank (defensive).
+    var nEl=document.getElementById('home-name');
+    if(nEl){
+      var n='';
+      try{ if(typeof window.gfUserName==='function') n=window.gfUserName(); }catch(_){}
+      if(!n || n==='You'){
+        try{ var s=ld(SK,null); if(s && s.name) n=s.name; }catch(_){}
       }
+      if(!n || n==='You'){
+        try{ var p=ld('userProfile',{}); if(p && p.display) n=p.display; }catch(_){}
+      }
+      var first = n ? String(n).trim().split(/\s+/)[0] : 'there';
+      nEl.textContent = 'Hi, ' + first + ' 👋';
     }
   }catch(e){}
 }
