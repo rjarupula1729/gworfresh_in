@@ -1049,42 +1049,60 @@ function _gfSetCookie(name, value, days){
 }
 function gfApplyLanguage(code){
   code = (code||'en').toLowerCase();
-  // Map our profile codes -> Google's ISO codes (same here, but kept for safety)
   var map = { en:'en', te:'te', hi:'hi', ta:'ta', kn:'kn' };
   var dst = map[code] || 'en';
   try{ localStorage.setItem(GF_LANG_KEY, dst); }catch(e){}
   if(dst === 'en'){
-    // Clear translation cookie + reload to revert to source language
+    // Clear translation cookie — need a reload to revert source DOM
     _gfSetCookie('googtrans','', -1);
     document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-  } else {
-    _gfSetCookie('googtrans', '/en/'+dst, 365);
+    setTimeout(function(){ location.reload(); }, 200);
+    return;
   }
-  // Force a reload so the new cookie is applied page-wide on next paint
-  setTimeout(function(){ location.reload(); }, 350);
+  _gfSetCookie('googtrans', '/en/'+dst, 365);
+  // Try to retranslate in-place (no full reload, no flash)
+  try{
+    var sel = document.querySelector('select.goog-te-combo');
+    if(sel){
+      sel.value = dst;
+      sel.dispatchEvent(new Event('change'));
+      return;
+    }
+  }catch(e){}
+  // Widget not ready yet → fall back to a one-time reload so the new
+  // cookie is picked up on next paint
+  setTimeout(function(){ location.reload(); }, 250);
+}
+function _gfKillBanner(){
+  // Google widget injects a top iframe + tooltip. Remove on sight.
+  var iframes = document.querySelectorAll('iframe.goog-te-banner-frame, iframe.skiptranslate');
+  iframes.forEach(function(f){ try{ f.parentNode && f.parentNode.removeChild(f); }catch(e){} });
+  var tt = document.getElementById('goog-gt-tt'); if(tt) tt.style.display='none';
+  if(document.body){
+    document.body.style.top = '0px';
+    document.body.style.position = '';
+  }
 }
 function _gfBootGoogleTranslate(){
-  // Skip on splash / iframe contexts to avoid double-init
   if(window.top !== window) return;
-  // 1) Ensure a host element exists (hidden) for the widget bar
   if(!document.getElementById('google_translate_element')){
     var host = document.createElement('div');
     host.id = 'google_translate_element';
     host.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none';
     document.body.appendChild(host);
   }
-  // 2) Add CSS to hide the Google top banner / tooltip the widget adds
   if(!document.getElementById('gf-gt-css')){
     var css = document.createElement('style');
     css.id = 'gf-gt-css';
     css.textContent = ''
-      + '.goog-te-banner-frame.skiptranslate,.goog-te-gadget-icon{display:none!important}'
-      + 'body{top:0!important}'
-      + '#goog-gt-tt,.goog-tooltip,.goog-tooltip:hover{display:none!important}'
-      + '.goog-text-highlight{background:none!important;box-shadow:none!important}';
+      + '.goog-te-banner-frame,.goog-te-banner-frame.skiptranslate,iframe.skiptranslate{display:none!important;visibility:hidden!important;height:0!important;width:0!important;border:0!important}'
+      + '.goog-te-gadget-icon,.goog-te-gadget-simple{display:none!important}'
+      + 'body{top:0!important;position:static!important}'
+      + 'html{margin-top:0!important}'
+      + '#goog-gt-tt,.goog-tooltip,.goog-tooltip:hover,.goog-text-highlight{display:none!important;background:none!important;box-shadow:none!important;border:0!important}'
+      + '.skiptranslate>iframe{display:none!important}';
     document.head.appendChild(css);
   }
-  // 3) Define the init callback the widget script will call
   window.googleTranslateElementInit = function(){
     try{
       new google.translate.TranslateElement({
@@ -1093,9 +1111,14 @@ function _gfBootGoogleTranslate(){
         autoDisplay: false,
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE
       }, 'google_translate_element');
+      // Kill banner immediately + observe future injections
+      _gfKillBanner();
+      var obs = new MutationObserver(function(){ _gfKillBanner(); });
+      obs.observe(document.documentElement, { childList:true, subtree:true });
+      // Stop observing after 10s — banner only appears at boot
+      setTimeout(function(){ try{ obs.disconnect(); }catch(e){} }, 10000);
     }catch(e){ console.warn('[gf-i18n] widget init failed', e); }
   };
-  // 4) Inject the widget script (idempotent)
   if(!document.getElementById('gf-gt-script')){
     var s = document.createElement('script');
     s.id = 'gf-gt-script';
