@@ -492,6 +492,7 @@ function _gfRunPicks(listId, ctxId, opts){
       var garden = _gfReadGarden();
       var picks = window.GFPlants.recommend(env, { existingGarden: garden, top: (opts&&opts.top)||5, climate: env.climate });
       _gfRenderPicksInto(listId, ctxId, picks, env);
+      try{ if(typeof _gfRetranslate==='function') _gfRetranslate(); }catch(e){}
     }catch(e){ console.warn('[gf] picks failed', e); }
   };
   if(window.GFPlants._state && window.GFPlants._state.loaded){ run(); }
@@ -907,6 +908,9 @@ function showScreen(name,opts){
     else if(name==='kids' && typeof window.renderStars==='function') window.renderStars();
     else if(name==='aicoach' && typeof window.gfRefreshAiCoach==='function') window.gfRefreshAiCoach();
   } catch(e) { console.warn('[gf] render hook failed for screen', name, e); }
+  // Re-translate any content the render hooks just injected (Garden cards,
+  // Family Members list, Edit Profile inputs, Smart Picks, etc.)
+  try{ if(typeof _gfRetranslate==='function') _gfRetranslate(); }catch(e){}
   if(name==='community'){
     // Always reset to the default "All" filter when entering Community fresh — don't
     // carry over a Tips/Harvest/Questions selection from a previous visit.
@@ -1094,6 +1098,77 @@ function _gfKillBanner(){
     document.body.style.position = '';
   }
 }
+/* Re-trigger translation for content injected AFTER initial page load
+   (e.g. Garden plant cards, Family Members list, Edit Profile inputs,
+   Smart Picks cards). Google Translate only auto-scans once at boot,
+   so dynamic innerHTML stays in English unless we nudge the widget.   */
+var _gfRetransPending = null;
+var _gfRetransInFlight = false;     // guard against observer→retranslate→observer loops
+var _gfDomObserver = null;
+function _gfRetranslate(){
+  // Skip when user is on English — nothing to do
+  try{ if((localStorage.getItem(GF_LANG_KEY)||'en') === 'en') return; }catch(e){}
+  if(_gfRetransInFlight) return;
+  if(_gfRetransPending) return;
+  _gfRetransPending = setTimeout(function(){
+    _gfRetransPending = null;
+    try{
+      var lang = localStorage.getItem(GF_LANG_KEY) || 'en';
+      if(lang === 'en') return;
+      var sel = document.querySelector('select.goog-te-combo');
+      if(!sel){ return; }
+      _gfRetransInFlight = true;
+      // Pause the DOM observer while Google swaps text — otherwise its own
+      // mutations trigger another retranslate → infinite loop → duplicated UI.
+      if(_gfDomObserver){ try{ _gfDomObserver.disconnect(); }catch(e){} }
+      sel.value = 'en'; sel.dispatchEvent(new Event('change'));
+      setTimeout(function(){
+        try{ sel.value = lang; sel.dispatchEvent(new Event('change')); }catch(e){}
+        // Re-arm observer after Google finishes its DOM swaps (~800ms safe)
+        setTimeout(function(){
+          _gfRetransInFlight = false;
+          if(_gfDomObserver && document.body){
+            try{ _gfDomObserver.observe(document.body, { childList:true, subtree:true }); }catch(e){}
+          }
+        }, 800);
+      }, 60);
+    }catch(e){ _gfRetransInFlight = false; }
+  }, 300);
+}
+if(typeof window!=='undefined'){ window._gfRetranslate = _gfRetranslate; }
+// Global safety net: observe the document for large DOM insertions and
+// re-translate. Carefully ignore Google's own injections / our own
+// retranslate cycles so we don't loop.
+(function _gfWatchDOM(){
+  if(typeof MutationObserver === 'undefined') return;
+  function _isGoogNode(n){
+    if(!n || n.nodeType !== 1) return true;
+    var cls = (n.className && n.className.toString && n.className.toString()) || '';
+    var id  = n.id || '';
+    if(/goog-|skiptranslate|VIiyi/.test(cls)) return true;
+    if(/goog|google_translate/.test(id)) return true;
+    if(n.tagName === 'FONT' || n.tagName === 'IFRAME' || n.tagName === 'SCRIPT' || n.tagName === 'STYLE' || n.tagName === 'LINK') return true;
+    return false;
+  }
+  function arm(){
+    _gfDomObserver = new MutationObserver(function(mutations){
+      if(_gfRetransInFlight) return;
+      for(var i=0;i<mutations.length;i++){
+        var added = mutations[i].addedNodes;
+        for(var j=0;j<added.length;j++){
+          var n = added[j];
+          if(!_isGoogNode(n) && (n.textContent||'').trim().length > 20){
+            _gfRetranslate();
+            return;
+          }
+        }
+      }
+    });
+    _gfDomObserver.observe(document.body, { childList:true, subtree:true });
+  }
+  if(document.body) arm();
+  else document.addEventListener('DOMContentLoaded', arm, { once:true });
+})();
 function _gfBootGoogleTranslate(){
   if(window.top !== window) return;
   // Body may not exist if called from <head>-stage script
