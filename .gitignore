@@ -45,3 +45,4 @@ Thumbs.db
 # Misc
 coverage/
 .nyc_output/
+.commit-msg.tmp
