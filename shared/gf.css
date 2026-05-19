@@ -158,21 +158,22 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
 .qa-badge.show{display:flex;}
 .qa-badge.done{background:#43A047;}
 
-/* ── Google Translate widget — hide everything visible (banner, tooltip,
-   highlight, gadget). Loaded BEFORE the widget script so the iframe never
-   gets a chance to paint. We still keep the widget alive in the DOM
-   (off-screen) so the page actually translates. ── */
+/* ── Google Translate widget — hide only the visible chrome (banner,
+   tooltip, gadget). Do NOT hide all .skiptranslate elements — that
+   class is also used on Google's translation-worker iframe and hiding
+   it breaks translation entirely. ── */
 html{margin-top:0!important;}
 body{top:0!important;position:static!important;}
-.skiptranslate,iframe.skiptranslate,.goog-te-banner-frame,iframe.goog-te-banner-frame,
-.goog-te-banner-frame.skiptranslate,.goog-te-spinner-pos,.goog-te-spinner-animation,
-.goog-te-gadget,.goog-te-gadget-icon,.goog-te-gadget-simple,.goog-te-menu-value{
+.goog-te-banner-frame,iframe.goog-te-banner-frame,.goog-te-banner-frame.skiptranslate{
   display:none!important;visibility:hidden!important;height:0!important;width:0!important;
   border:0!important;opacity:0!important;pointer-events:none!important;
 }
-#goog-gt-tt,.goog-tooltip,.goog-tooltip:hover,.goog-text-highlight{
-  display:none!important;background:none!important;box-shadow:none!important;border:0!important;
-}
+.goog-te-gadget,.goog-te-gadget-icon,.goog-te-gadget-simple,.goog-te-menu-value,
+.goog-te-spinner-pos,.goog-te-spinner-animation{display:none!important;}
+#goog-gt-tt,.goog-tooltip,.goog-tooltip:hover{display:none!important;background:none!important;box-shadow:none!important;border:0!important;}
+.goog-text-highlight{background:none!important;box-shadow:none!important;}
+/* Park the (visible) gadget host off-screen but keep it laid out so the
+   widget can initialise and we can drive the .goog-te-combo select. */
 #google_translate_element{position:fixed!important;top:-9999px!important;left:-9999px!important;
   width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important;}
 .home-streak{margin:12px 14px 0;background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:12px;}

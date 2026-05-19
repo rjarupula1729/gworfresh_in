@@ -1083,8 +1083,10 @@ function gfApplyLanguage(code){
   }, 100);
 }
 function _gfKillBanner(){
-  // Google widget injects a top iframe + tooltip. Remove on sight.
-  var iframes = document.querySelectorAll('iframe.goog-te-banner-frame, iframe.skiptranslate');
+  // Remove ONLY the banner iframe (class .goog-te-banner-frame). Do NOT
+  // touch other iframes with class .skiptranslate — one of those is the
+  // translation worker and removing it kills the whole feature.
+  var iframes = document.querySelectorAll('iframe.goog-te-banner-frame');
   iframes.forEach(function(f){ try{ f.parentNode && f.parentNode.removeChild(f); }catch(e){} });
   var tt = document.getElementById('goog-gt-tt'); if(tt) tt.style.display='none';
   if(document.body){
