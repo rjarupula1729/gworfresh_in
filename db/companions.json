@@ -1,0 +1,89 @@
+{
+  "_comment": "Symmetric companion/antagonist matrix. Values: 1.15 (companion), 1.0 (neutral, default when absent), 0.85 (antagonist). Loader auto-mirrors single-direction entries so only one of (a,b) or (b,a) is needed. Use plant.id slugs as keys.",
+  "tomato": {
+    "basil-sweet": 1.15, "tulsi": 1.15, "carrot": 1.15, "onion": 1.15, "parsley": 1.15, "oregano": 1.15,
+    "fennel": 0.85, "cabbage": 0.85, "potato": 0.85, "corn": 0.85
+  },
+  "tomato-cherry": {
+    "basil-sweet": 1.15, "tulsi": 1.15, "carrot": 1.15, "onion": 1.15,
+    "fennel": 0.85, "cabbage": 0.85
+  },
+  "chilli-green": {
+    "tomato": 1.15, "basil-sweet": 1.15, "tulsi": 1.15, "onion": 1.15, "lemongrass": 1.15,
+    "fennel": 0.85
+  },
+  "capsicum": {
+    "basil-sweet": 1.15, "onion": 1.15, "carrot": 1.15, "oregano": 1.15,
+    "fennel": 0.85
+  },
+  "brinjal": { "beans-french": 1.15, "spinach": 1.15, "amaranth-red": 1.15, "fennel": 0.85 },
+  "okra": { "basil-sweet": 1.15, "chilli-green": 1.15, "watermelon": 1.15 },
+  "cucumber": {
+    "beans-french": 1.15, "corn": 1.15, "radish": 1.15, "lettuce": 1.15,
+    "potato": 0.85, "sage": 0.85
+  },
+  "bottle-gourd": { "corn": 1.15, "beans-french": 1.15, "radish": 1.15, "potato": 0.85 },
+  "bitter-gourd": { "beans-french": 1.15, "corn": 1.15, "radish": 1.15, "potato": 0.85 },
+  "ridge-gourd":  { "beans-french": 1.15, "corn": 1.15, "potato": 0.85 },
+  "pumpkin": { "corn": 1.15, "beans-french": 1.15, "potato": 0.85 },
+  "radish": { "cucumber": 1.15, "carrot": 1.15, "lettuce": 1.15, "onion": 1.15 },
+  "carrot": {
+    "onion": 1.15, "tomato": 1.15, "rosemary": 1.15, "chives": 1.15, "lettuce": 1.15, "peas": 1.15,
+    "fennel": 0.85, "parsley": 0.85
+  },
+  "beetroot": { "onion": 1.15, "lettuce": 1.15, "cabbage": 1.15, "beans-french": 0.85 },
+  "onion": {
+    "carrot": 1.15, "tomato": 1.15, "beetroot": 1.15, "strawberry": 1.15, "chilli-green": 1.15,
+    "beans-french": 0.85, "peas": 0.85
+  },
+  "garlic": {
+    "tomato": 1.15, "carrot": 1.15, "beetroot": 1.15, "cucumber": 1.15, "strawberry": 1.15,
+    "beans-french": 0.85, "peas": 0.85
+  },
+  "potato": {
+    "beans-french": 1.15, "corn": 1.15, "cabbage": 1.15,
+    "tomato": 0.85, "cucumber": 0.85, "pumpkin": 0.85, "sunflower": 0.85
+  },
+  "sweet-potato": { "beans-french": 1.15, "peas": 1.15, "corn": 1.15, "pumpkin": 0.85 },
+  "ginger": { "turmeric": 1.15, "chilli-green": 1.15, "lemongrass": 1.15 },
+  "turmeric": { "ginger": 1.15, "chilli-green": 1.15 },
+  "cabbage": {
+    "beetroot": 1.15, "onion": 1.15, "potato": 1.15, "thyme": 1.15, "rosemary": 1.15, "mint": 1.15,
+    "tomato": 0.85, "strawberry": 0.85
+  },
+  "cauliflower": { "beans-french": 1.15, "onion": 1.15, "tomato": 0.85, "strawberry": 0.85 },
+  "broccoli":    { "onion": 1.15, "potato": 1.15, "tomato": 0.85, "strawberry": 0.85, "lettuce": 0.85 },
+  "beans-french": {
+    "corn": 1.15, "cucumber": 1.15, "carrot": 1.15, "radish": 1.15, "potato": 1.15, "brinjal": 1.15,
+    "onion": 0.85, "garlic": 0.85, "fennel": 0.85, "chives": 0.85
+  },
+  "peas": {
+    "carrot": 1.15, "cucumber": 1.15, "corn": 1.15, "radish": 1.15, "sweet-potato": 1.15,
+    "onion": 0.85, "garlic": 0.85
+  },
+  "corn": {
+    "beans-french": 1.15, "cucumber": 1.15, "pumpkin": 1.15, "watermelon": 1.15, "muskmelon": 1.15,
+    "tomato": 0.85
+  },
+  "spinach": { "strawberry": 1.15, "cabbage": 1.15, "radish": 1.15, "peas": 1.15, "brinjal": 1.15 },
+  "coriander": { "spinach": 1.15, "tomato": 1.15, "beans-french": 1.15, "fennel": 0.85 },
+  "mint": { "cabbage": 1.15, "tomato": 1.15, "parsley": 0.85 },
+  "basil-sweet": { "tomato": 1.15, "capsicum": 1.15, "oregano": 1.15, "sage": 0.85 },
+  "tulsi": { "tomato": 1.15, "chilli-green": 1.15 },
+  "oregano": { "tomato": 1.15, "beans-french": 1.15, "capsicum": 1.15 },
+  "rosemary": { "carrot": 1.15, "beans-french": 1.15, "sage": 1.15, "cabbage": 1.15 },
+  "thyme": { "cabbage": 1.15, "strawberry": 1.15, "tomato": 1.15 },
+  "parsley": { "tomato": 1.15, "carrot": 1.15, "corn": 1.15, "mint": 0.85, "lettuce": 0.85 },
+  "lemongrass": { "chilli-green": 1.15, "ginger": 1.15 },
+  "chives": { "carrot": 1.15, "tomato": 1.15, "beans-french": 0.85, "peas": 0.85 },
+  "sage": { "rosemary": 1.15, "cabbage": 1.15, "carrot": 1.15, "cucumber": 0.85, "onion": 0.85 },
+  "strawberry": {
+    "spinach": 1.15, "lettuce": 1.15, "onion": 1.15, "thyme": 1.15,
+    "cabbage": 0.85, "broccoli": 0.85
+  },
+  "lettuce": { "carrot": 1.15, "radish": 1.15, "cucumber": 1.15, "strawberry": 1.15, "broccoli": 0.85 },
+  "kale": { "beetroot": 1.15, "onion": 1.15, "potato": 1.15, "tomato": 0.85, "strawberry": 0.85 },
+  "mustard-greens": { "peas": 1.15, "beans-french": 1.15 },
+  "watermelon": { "corn": 1.15, "beans-french": 1.15, "potato": 0.85 },
+  "muskmelon":  { "corn": 1.15, "beans-french": 1.15, "potato": 0.85 }
+}

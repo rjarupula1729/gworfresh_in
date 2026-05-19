@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#1B5E20">
 <title>GrowFresh — My Garden</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared/gf.css?v=20260519e">
-<link rel="stylesheet" href="shared/gf-extras.css?v=20260519e">
+<link rel="stylesheet" href="shared/gf.css?v=20260519g">
+<link rel="stylesheet" href="shared/gf-extras.css?v=20260519g">
 </head>
 <body>
 <div class="phone">
@@ -20,6 +20,15 @@
   </div>
   <div class="reminders-banner" id="reminders-banner" style="display:none"><div class="reminders-title">🔔 Today's Care Tasks</div><div id="reminders-list"></div></div>
   <div class="scroll-body"><div class="garden-body">
+    <!-- 🌱 Smart Plant Picks — same engine as AI Coach, scoped to Garden context -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase">🌱 Suggested for your garden <span id="garden-picks-context" style="font-weight:700;text-transform:none;letter-spacing:0;color:var(--muted);font-size:10px"></span></div>
+      <button onclick="window.gfRefreshGardenPicks && window.gfRefreshGardenPicks(true)" style="background:transparent;border:1px solid #ddd;border-radius:8px;padding:4px 8px;font-size:10px;font-weight:800;color:var(--muted);cursor:pointer">↻ Refresh</button>
+    </div>
+    <div id="garden-picks-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+      <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);text-align:center;color:var(--muted);font-size:12px;font-weight:700">Loading plant recommendations…</div>
+    </div>
+
     <div id="plants-list"></div>
     <div class="empty-state" id="empty-garden" style="flex:none;padding:26px 14px"><div class="empty-icon">🪴</div><div class="empty-title">No plants yet</div><div class="empty-sub">Add your first plant and get daily care reminders!</div><button class="empty-btn" onclick="showAddPlant()">＋ Add First Plant</button></div>
   </div></div>
@@ -486,6 +495,6 @@
 <!-- Implements the M(i,j) compatibility matrix from the Mathematical Ecology -->
 <!-- Blueprint. When user taps a product image, we show a popup with         -->
 <!-- ecologically-compatible plants that thrive together (self-sustaining).  -->
-<script src="shared/gf-app.js?v=20260519e"></script>
+<script src="shared/gf-plants.js?v=20260519i"></script><script src="shared/gf-app.js?v=20260519i"></script>
 </body>
 </html>

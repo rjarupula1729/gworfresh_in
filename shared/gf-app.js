@@ -12,7 +12,11 @@ const cl=k=>{try{localStorage.removeItem(k);}catch(e){}delete window['_'+k];};
 
 // INIT
 window.onload=async ()=>{
-  await loadProductsFromJSON();
+  // Guard the products fetch — if backend is down (e.g. localhost without a
+  // dev server) an unhandled rejection here would abort the rest of onload
+  // and leave WFH ring / chips at their default 0% state even though the
+  // user already completed all 5 breaks.
+  try{ await loadProductsFromJSON(); }catch(e){ console.warn('[gf] loadProductsFromJSON failed:',e); }
   const s=ld(SK,null);
   // Only run goHome() (which calls showScreen('home')) on the actual home
   // page. On other MPA pages (shop/garden/community/profile), calling
@@ -58,6 +62,11 @@ if(typeof document!=='undefined'){
         },120);
       }
     }catch(e){}
+    // Safety-paint the WFH "1 Hour for Yourself" widget on the home page so
+    // the ring %, chip status (DONE/SHARED), and chip .done highlights reflect
+    // saved state immediately — without waiting for window.onload (which is
+    // blocked by the async product-JSON fetch and may fail offline).
+    try{ if(document.getElementById('wfh-ring') && typeof renderWfh==='function') renderWfh(); }catch(e){}
   });
 }
 
@@ -246,7 +255,7 @@ var myPlants=[];
 const plantDefaults={Tomato:{emoji:'🍅',days:60,savings:120,reminders:['💧 Water every 2 days','☀️ 6hrs sunlight daily','🌿 Fertilize weekly']},Chilli:{emoji:'🌶️',days:45,savings:80,reminders:['💧 Water every 3 days','☀️ Full sunlight','✂️ Pinch tops for bushy growth']},Coriander:{emoji:'🌿',days:21,savings:40,reminders:['💧 Water daily','🌤️ Partial sunlight','✂️ Trim to prevent bolting']},Spinach:{emoji:'🥬',days:30,savings:60,reminders:['💧 Water every 2 days','🌤️ Partial shade ok','🥬 Harvest outer leaves first']},Brinjal:{emoji:'🍆',days:55,savings:100,reminders:['💧 Water every 2 days','☀️ Full sun needed','🪵 Support with stakes']},Capsicum:{emoji:'🫑',days:60,savings:90,reminders:['💧 Water regularly','☀️ Full sunlight','🌿 Pinch for bushiness']}};
 var selectedPlantData=null;
 function loadGarden(){myPlants=ld(GK,[]);}
-function saveGarden(){sv(GK,myPlants);}
+function saveGarden(){sv(GK,myPlants);try{ if(typeof refreshHomeBadges==='function') refreshHomeBadges(); }catch(e){}try{ if(typeof gfRefreshGardenPicks==='function') gfRefreshGardenPicks(); }catch(e){}}
 function renderGarden(){loadGarden();const list=document.getElementById('plants-list'),empty=document.getElementById('empty-garden'),banner=document.getElementById('reminders-banner');if(myPlants.length===0){list.innerHTML='';empty.style.display='flex';banner.style.display='none';updateGardenStats();return;}empty.style.display='none';const todayR=[];myPlants.forEach(p=>{const def=plantDefaults[p.type];if(def)def.reminders.forEach(r=>todayR.push({emoji:p.emoji,r,id:p.id}));});if(todayR.length>0){banner.style.display='block';let rHtml='';todayR.slice(0,4).forEach(r=>{rHtml+=`<span class="reminder-chip" onclick="this.classList.toggle('done');showToast(this.classList.contains('done')?'✅ Task done!':'Task unmarked')">${r.emoji} ${r.r}</span>`;});setEl('reminders-list','');document.getElementById('reminders-list').innerHTML=rHtml;}let html='';myPlants.forEach(p=>{const prog=Math.min(100,Math.round((p.daysPlanted/p.totalDays)*100));const left=Math.max(0,p.totalDays-p.daysPlanted);const sc=left<=5?'pill-harvest':left<=10?'pill-attention':'pill-growing';const st=left<=5?'🍅 Harvest Soon!':left<=10?'⚠️ Almost Ready':'🌱 Growing';html+=`<div class="plant-card-full"><div class="plant-card-top"><div class="plant-emoji-big">${p.emoji}</div><div class="plant-info"><div class="plant-name-big">${p.type}</div><div class="plant-meta">📍 ${p.location} · Day ${p.daysPlanted} of ${p.totalDays}</div></div><div class="plant-status-pill ${sc}">${st}</div></div><div class="progress-label"><span class="progress-text">Growth Progress</span><span class="progress-pct">${prog}% · ${left} days left</span></div><div class="progress-bar"><div class="progress-fill" style="width:${prog}%"></div></div><div class="plant-actions"><button class="plant-action-btn btn-water" onclick="logCare('💧 Watered')">💧 Water</button><button class="plant-action-btn btn-fertilize" onclick="logCare('🌿 Fertilized')">🌿 Fert</button><button class="plant-action-btn btn-sun" onclick="logCare('☀️ Sun logged')">☀️ Sun</button><button class="plant-action-btn btn-remove" onclick="harvestPlant(${p.id})" title="Harvest this plant" style="background:linear-gradient(135deg,#FFB347,#FF8A65);color:#fff">🌾 Harvest</button></div></div>`;});list.innerHTML=html;updateGardenStats();renderHomePlants();}
 function updateGardenStats(){const h=myPlants.filter(p=>(p.totalDays-p.daysPlanted)<=7).length;const s=myPlants.reduce((a,p)=>a+(plantDefaults[p.type]?.savings||0),0);setEl('stat-plants',myPlants.length);setEl('stat-harvest',h);setEl('stat-savings','₹'+s);setEl('monthly-savings-hdr',s||820);}
 function renderHomePlants(){loadGarden();const c=document.getElementById('home-plants-scroll');if(!c)return;let h=`<div class="home-plant-mini" style="border:2px dashed var(--border);box-shadow:none" onclick="switchTab('garden')"><div class="hpm-emoji">➕</div><div class="hpm-name" style="color:var(--muted)">Add Plant</div></div>`;myPlants.slice(0,4).forEach(p=>{const prog=Math.min(100,Math.round((p.daysPlanted/p.totalDays)*100));h+=`<div class="home-plant-mini" onclick="switchTab('garden')"><div class="hpm-emoji">${p.emoji}</div><div class="hpm-name">${p.type}</div><div class="hpm-bar"><div class="hpm-fill" style="width:${prog}%"></div></div><div class="hpm-days">${Math.max(0,p.totalDays-p.daysPlanted)}d left</div></div>`;});c.innerHTML=h;}
@@ -320,8 +329,8 @@ function renderWfh(){
   if(subEl){
     if(done===0)subEl.textContent='Take micro-breaks between meetings';
     else if(done<WFH_TASKS.length)subEl.textContent=done+' of '+WFH_TASKS.length+' breaks done · keep going!';
-    else if(sharedPid) subEl.innerHTML='✅ Completed &amp; shared · <b style="color:#43A047">View your post →</b>';
-    else subEl.textContent='✨ All 5 done! Tap to share your win →';
+    else if(sharedPid) subEl.innerHTML='🏅 <b>Badge earned &amp; shared</b> · <span style="opacity:.9">View your post →</span>';
+    else subEl.innerHTML='🏅 <b>Today\'s badge earned!</b> · Tap to share your win →';
   }
   // Visual state on the parent card + chip
   if(card){
@@ -329,8 +338,10 @@ function renderWfh(){
     card.classList.toggle('shared', !!sharedPid);
   }
   if(chip){
-    if(sharedPid){ chip.textContent='View ✓'; chip.style.background='#43A047'; chip.style.color='#fff'; }
-    else if(done===WFH_TASKS.length){ chip.textContent='Share 🚀'; chip.style.background='#FF6F61'; chip.style.color='#fff'; }
+    // Keep chip dimensions identical to the default "Go →" state — only swap
+    // text + colors so the card layout doesn't shift when status changes.
+    if(sharedPid){ chip.textContent='✓ Shared'; chip.style.background='#fff'; chip.style.color='#2E7D32'; }
+    else if(done===WFH_TASKS.length){ chip.textContent='✅ Done'; chip.style.background='#fff'; chip.style.color='#E65100'; }
     else { chip.textContent='Go →'; chip.style.background=''; chip.style.color=''; }
   }
   document.querySelectorAll('.wfh-break').forEach(function(el){
@@ -351,12 +362,235 @@ function renderWfh(){
     }catch(e){}
   }
 }
+
+/* ════════════════ DYNAMIC HOME ACTIVITY BADGES ════════════════
+   Single source of truth for the small corner pills on home quick-actions.
+   Drives Calendar (# of plants), Wellness (x/5 breaks today, ✓ when done),
+   AI Coach (💡 when plants exist), plus refreshes WFH ring / cart / streak.
+   Call after every user activity that changes state, and again on screen
+   show / tab visibilitychange so badges never go stale.                     */
+function setQaBadge(id, text, doneFlag){
+  var el=document.getElementById(id); if(!el) return;
+  if(text==null || text===''){ el.classList.remove('show','done'); el.textContent=''; return; }
+  el.textContent=String(text);
+  el.classList.add('show');
+  el.classList.toggle('done', !!doneFlag);
+}
+function refreshHomeBadges(){
+  // Wellness — reflect today's WFH 1-Hour-for-Yourself progress
+  try{
+    var w=(typeof loadWfh==='function')?loadWfh():{};
+    var tasks=(typeof WFH_TASKS!=='undefined'?WFH_TASKS:['hydrate','sunlight','plant','stretch','meal']);
+    var wDone=tasks.filter(function(t){return w[t];}).length;
+    if(wDone===0)                setQaBadge('qa-badge-wellness','',false);
+    else if(wDone<tasks.length)  setQaBadge('qa-badge-wellness', wDone+'/'+tasks.length, false);
+    else                         setQaBadge('qa-badge-wellness', '✓', true);
+  }catch(e){}
+  // Calendar — number of plants in user's garden (proxy for timeline items)
+  try{
+    var plants=[];
+    try{ plants=JSON.parse(localStorage.getItem('gf_s5_garden')||'[]'); }catch(e){ plants=[]; }
+    if(plants && plants.length>0) setQaBadge('qa-badge-calendar', plants.length, false);
+    else                          setQaBadge('qa-badge-calendar','',false);
+  }catch(e){}
+  // AI Coach — 💡 indicator when there's something to coach on
+  try{
+    var p2=[];
+    try{ p2=JSON.parse(localStorage.getItem('gf_s5_garden')||'[]'); }catch(e){}
+    if(p2 && p2.length>0) setQaBadge('qa-badge-aicoach','💡',false);
+    else                  setQaBadge('qa-badge-aicoach','',false);
+  }catch(e){}
+  // Cascade: keep WFH ring, cart, streak in sync too
+  try{ if(typeof renderWfh==='function') renderWfh(); }catch(e){}
+  try{ if(typeof updateCartUI==='function') updateCartUI(); }catch(e){}
+  try{ if(typeof updateStreak==='function') updateStreak(); }catch(e){}
+}
+if(typeof window!=='undefined'){
+  window.refreshHomeBadges=refreshHomeBadges;
+  // Auto-refresh when the tab regains focus / becomes visible (covers
+  // activity completed in another tab, or returning after midnight reset).
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState==='visible'){ try{ refreshHomeBadges(); }catch(e){} }
+  });
+  window.addEventListener('focus', function(){ try{ refreshHomeBadges(); }catch(e){} });
+  // Initial paint as soon as the DOM is parsed
+  document.addEventListener('DOMContentLoaded', function(){ try{ refreshHomeBadges(); }catch(e){} });
+}
+
+/* ════════════════ Smart Plant Picks — db/ formula engine ════════════════
+   Reads user's existing garden + current weather + season, then calls
+   window.GFPlants.recommend() (exposed by shared/gf-plants.js) to rank the
+   62-plant catalog by GrowScore. Renders the top N cards into the host.
+   Falls back to a friendly placeholder if catalog isn't loaded yet.       */
+function _gfBuildEnv(){
+  var env = { skill: 2, season: (window.GFPlants && window.GFPlants.currentSeason ? window.GFPlants.currentSeason() : 'kharif'), climate: 'tropical' };
+  try{
+    var wx = JSON.parse(localStorage.getItem('gf_weather_v1')||'null');
+    if(wx && wx.tempC != null) env.tempC = Math.round(wx.tempC);
+  }catch(e){}
+  if(env.tempC == null) env.tempC = 28;
+  env.sunHours = 6.5;          // Hyderabad average
+  env.waterPerDayMl = 350;     // typical home-garden allotment
+  return env;
+}
+function _gfReadGarden(){
+  try{
+    var raw = JSON.parse(localStorage.getItem('gf_s5_garden')||'[]');
+    if(!Array.isArray(raw)) return [];
+    // garden entries may be ids or {id,name} shapes — normalise
+    return raw.map(function(x){
+      if(!x) return null;
+      if(typeof x === 'string') return x;
+      return x.id || (x.name && window.GFPlants && window.GFPlants.getByName ? (function(){ var p=window.GFPlants.getByName(x.name); return p?p.id:null; })() : null);
+    }).filter(Boolean);
+  }catch(e){ return []; }
+}
+function _gfPickIcon(p){ return p.emoji || (p.category==='fruit'?'🍓':p.category==='herb'?'🌿':p.category==='leafy'?'🥬':'🌱'); }
+function _gfRenderPicksInto(listId, ctxId, items, env){
+  var host = document.getElementById(listId);
+  if(!host) return;
+  var ctx = ctxId ? document.getElementById(ctxId) : null;
+  if(ctx) ctx.textContent = ' · ' + env.season + ' · ' + env.tempC + '°C';
+  if(!items || !items.length){
+    var st = (window.GFPlants && window.GFPlants._state) || {};
+    var msg;
+    if(!st.loaded && st.lastError){
+      msg = '⚠️ Plant database failed to load.<br><span style="font-size:10px;opacity:0.8">'+st.lastError+'</span><br><span style="font-size:10px;opacity:0.8">If you opened this file directly (file://), serve it over http instead.</span>';
+    } else if(!st.loaded){
+      msg = 'Loading plant database…';
+    } else {
+      msg = 'No plants matched. Try refreshing.';
+    }
+    host.innerHTML = '<div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);text-align:center;color:var(--muted);font-size:12px;font-weight:700;line-height:1.5">'+msg+'</div>';
+    return;
+  }
+  host.innerHTML = items.map(function(r){
+    var p = r.plant;
+    var success = r.successPct;
+    var col = success>=70?'#43A047':success>=45?'#FB8C00':'#E53935';
+    return '<div style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);border-left:4px solid '+col+';display:flex;align-items:center;gap:10px">'
+      + '<div style="font-size:28px;line-height:1">'+_gfPickIcon(p)+'</div>'
+      + '<div style="flex:1;min-width:0">'
+        + '<div style="font-size:13px;font-weight:900;color:var(--text);display:flex;justify-content:space-between;gap:6px;align-items:center"><span>'+p.name+'</span><span style="font-size:11px;font-weight:900;color:'+col+'">'+success+'%</span></div>'
+        + '<div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">'+(p.daysToHarvest||'?')+'d · ~'+(r.yieldKg||0)+'kg · '+r.waterLitresPerWeek+'L/wk · '+(p.difficulty<=2?'easy':p.difficulty<=3?'medium':'advanced')+'</div>'
+        + (p.companions && p.companions.length ? '<div style="font-size:10px;color:var(--green-deep,#1B5E20);font-weight:700;margin-top:2px">🤝 pairs with: '+p.companions.slice(0,3).join(', ')+'</div>' : '')
+      + '</div>'
+    + '</div>';
+  }).join('');
+}
+function _gfRenderPicks(items, env){ _gfRenderPicksInto('ai-picks-list','ai-picks-context', items, env); }
+function _gfRunPicks(listId, ctxId, opts){
+  var host = document.getElementById(listId);
+  if(!host) return;
+  if(!window.GFPlants){
+    host.innerHTML = '<div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);text-align:center;color:var(--muted);font-size:12px;font-weight:700">Plant database not loaded.</div>';
+    return;
+  }
+  var run = function(){
+    try{
+      var env = _gfBuildEnv();
+      var garden = _gfReadGarden();
+      var picks = window.GFPlants.recommend(env, { existingGarden: garden, top: (opts&&opts.top)||5, climate: env.climate });
+      _gfRenderPicksInto(listId, ctxId, picks, env);
+    }catch(e){ console.warn('[gf] picks failed', e); }
+  };
+  if(window.GFPlants._state && window.GFPlants._state.loaded){ run(); }
+  else if(window.GFPlants.ready){ window.GFPlants.ready.then(run); }
+  else { run(); }
+}
+function gfRefreshAiCoach(force){ _gfRunPicks('ai-picks-list','ai-picks-context', { top:5 }); }
+function gfRefreshGardenPicks(force){ _gfRunPicks('garden-picks-list','garden-picks-context', { top:6 }); }
+if(typeof window!=='undefined'){
+  window.gfRefreshAiCoach = gfRefreshAiCoach;
+  window.GFRefreshAICoach = gfRefreshAiCoach;
+  window.gfRefreshGardenPicks = gfRefreshGardenPicks;
+  // Auto-paint on first DOM ready (covers landing directly on garden.html / aicoach screen)
+  document.addEventListener('DOMContentLoaded', function(){
+    try{ if(document.getElementById('garden-picks-list')) gfRefreshGardenPicks(); }catch(e){}
+    try{ if(document.getElementById('ai-picks-list')) gfRefreshAiCoach(); }catch(e){}
+  });
+}
+
+/* ════════════════ DYNAMIC WEATHER PILL (home header) ════════════════
+   Uses navigator.geolocation + Open-Meteo (free, keyless, CORS-enabled).
+   Falls back gracefully to a sane Hyderabad default if either permission
+   is denied or the network is offline. Cached for 30 minutes in
+   localStorage to avoid hammering the API on every page nav.            */
+var GF_WX_KEY='gf_weather_v1', GF_WX_TTL=30*60*1000;
+function _wxIcon(code, isDay){
+  // Open-Meteo WMO code → emoji
+  if(code===0) return isDay?'☀️':'🌙';
+  if(code>=1 && code<=2) return isDay?'🌤️':'☁️';
+  if(code===3) return '☁️';
+  if(code>=45 && code<=48) return '🌫️';
+  if(code>=51 && code<=67) return '🌦️';
+  if(code>=71 && code<=77) return '❄️';
+  if(code>=80 && code<=82) return '🌧️';
+  if(code>=95) return '⛈️';
+  return '🌡️';
+}
+function _renderWxPill(data){
+  var pill=document.getElementById('home-weather-pill');
+  if(!pill || !data) return;
+  pill.textContent=data.icon+' '+data.city+' · '+data.temp+'°C';
+}
+function _fetchWeather(lat, lon){
+  // Reverse-geocode (best-effort) + current weather in parallel
+  var geoUrl='https://geocoding-api.open-meteo.com/v1/reverse?latitude='+lat+'&longitude='+lon+'&language=en&format=json';
+  var wxUrl ='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current=temperature_2m,weather_code,is_day&timezone=auto';
+  return Promise.all([
+    fetch(geoUrl).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;}),
+    fetch(wxUrl ).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;})
+  ]).then(function(arr){
+    var g=arr[0], w=arr[1];
+    if(!w || !w.current) throw new Error('no weather');
+    var city=(g && g.results && g.results[0] && (g.results[0].name||g.results[0].admin1)) || 'Your area';
+    var temp=Math.round(w.current.temperature_2m);
+    var code=w.current.weather_code;
+    var isDay=w.current.is_day===1;
+    return { city:city, temp:temp, icon:_wxIcon(code,isDay), ts:Date.now() };
+  });
+}
+function loadWeather(force){
+  var pill=document.getElementById('home-weather-pill');
+  if(!pill) return;
+  // 1) Paint cached value immediately if fresh
+  try{
+    var cached=JSON.parse(localStorage.getItem(GF_WX_KEY)||'null');
+    if(cached && cached.ts && (Date.now()-cached.ts < GF_WX_TTL) && !force){
+      _renderWxPill(cached); return;
+    }
+    if(cached) _renderWxPill(cached); // stale but better than placeholder while refetching
+  }catch(e){}
+  // 2) Fetch fresh — needs geolocation
+  if(!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(function(pos){
+    _fetchWeather(pos.coords.latitude, pos.coords.longitude).then(function(data){
+      try{ localStorage.setItem(GF_WX_KEY, JSON.stringify(data)); }catch(e){}
+      _renderWxPill(data);
+    }).catch(function(err){ console.warn('[gf] weather fetch failed:', err); });
+  }, function(err){
+    // Permission denied or unavailable → leave whatever's already showing
+    console.warn('[gf] geolocation denied:', err && err.message);
+  }, { timeout:8000, maximumAge:15*60*1000, enableHighAccuracy:false });
+}
+if(typeof window!=='undefined'){
+  window.loadWeather=loadWeather;
+  document.addEventListener('DOMContentLoaded', function(){ try{ loadWeather(false); }catch(e){} });
+  // Tap the pill to force-refresh (useful when user travels or weather changes)
+  document.addEventListener('click', function(e){
+    var t=e.target;
+    if(t && t.id==='home-weather-pill'){ try{ loadWeather(true); }catch(e2){} }
+  });
+}
+
 function logWfhBreak(task,el){
   var s=loadWfh();
   if(s[task]){showToast('Already done — great job!');return;}
   s[task]=Date.now();
   saveWfh(s);
   renderWfh();
+  try{ refreshHomeBadges(); }catch(e){}
   showToast(WFH_LABELS[task]||'✓ Break logged');
   // also log to backend activity stream if bridge is loaded
   try{
@@ -630,7 +864,18 @@ function showScreen(name,opts){
   // cross-page navigation (?screen=calendar etc.) also paints content,
   // not just switchTab() in-page calls.
   try {
-    if(name==='garden') renderGarden();
+    if(name==='home'){
+      // Re-paint home widgets so WFH "1 Hour for Yourself" status, plants,
+      // greeting, and tips stay in sync when navigating back from another
+      // screen (e.g. after sharing the achievement, or completing a break
+      // on a different page).
+      try{ if(typeof renderHomePlants==='function') renderHomePlants(); }catch(e){}
+      try{ if(typeof renderHomeTips==='function') renderHomeTips(); }catch(e){}
+      try{ if(typeof renderWfh==='function') renderWfh(); }catch(e){}
+      try{ if(typeof updateGreeting==='function') updateGreeting(); }catch(e){}
+      try{ if(typeof refreshHomeBadges==='function') refreshHomeBadges(); }catch(e){}
+    }
+    else if(name==='garden'){ renderGarden(); try{ if(typeof gfRefreshGardenPicks==='function') gfRefreshGardenPicks(); }catch(e){} }
     else if(name==='calendar' && typeof renderPlantTimeline==='function') renderPlantTimeline();
     else if(name==='cart' && typeof renderCartItems==='function'){
       // Mirror goToCart()'s empty-state toggle so cart is never blank

@@ -148,10 +148,15 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:#d8e3d3;display
   .home-greeting{font-size:10px;}
 }
 .home-quick{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:14px 12px 0;}
-.home-qa{background:var(--white);border-radius:12px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform 0.15s;min-width:0;overflow:hidden;}
+.home-qa{background:var(--white);border-radius:12px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform 0.15s;min-width:0;overflow:visible;position:relative;}
 .home-qa:active{transform:scale(0.96);}
 .qa-icon{font-size:20px;line-height:1;}
 .qa-label{font-size:9.5px;font-weight:800;color:var(--text);text-align:center;line-height:1.15;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* Dynamic activity badge — pinned to top-right corner of any .home-qa tile.
+   Visibility is driven by JS (refreshHomeBadges) — hidden when no count. */
+.qa-badge{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--orange,#F4631E);color:#fff;font-size:9px;font-weight:900;display:none;align-items:center;justify-content:center;box-shadow:0 2px 5px rgba(0,0,0,.18);border:1.5px solid var(--white,#fff);line-height:1;letter-spacing:.2px;}
+.qa-badge.show{display:flex;}
+.qa-badge.done{background:#43A047;}
 .home-streak{margin:12px 14px 0;background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:12px;}
 .streak-fire{font-size:36px;}
 

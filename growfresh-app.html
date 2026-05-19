@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#1B5E20">
 <title>GrowFresh — Home</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared/gf.css?v=20260519e">
-<link rel="stylesheet" href="shared/gf-extras.css?v=20260519e">
+<link rel="stylesheet" href="shared/gf.css?v=20260519g">
+<link rel="stylesheet" href="shared/gf-extras.css?v=20260519g">
 </head>
 <body>
 <div class="phone">
@@ -96,7 +96,7 @@
         </div>
       </div>
       <div style="display:flex;gap:8px;align-items:stretch;margin-top:8px">
-        <div class="home-weather" style="margin-top:0;flex:1">☀️ Hyderabad · 31°C</div>
+        <div class="home-weather" id="home-weather-pill" style="margin-top:0;flex:1" title="Tap to refresh weather">☀️ Hyderabad · 31°C</div>
         <div onclick="switchTab('garden')" title="Your savings this month" style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:6px 12px;display:flex;align-items:center;gap:6px;color:white;cursor:pointer;backdrop-filter:blur(4px)">
           <div style="font-size:14px;line-height:1">💰</div>
           <div style="line-height:1.1">
@@ -139,10 +139,10 @@
     </div>
 
     <div class="home-quick">
-      <div class="home-qa" onclick="switchTab('calendar')"><div class="qa-icon">📅</div><div class="qa-label">Calendar</div></div>
+      <div class="home-qa" onclick="switchTab('calendar')"><div class="qa-icon">📅</div><div class="qa-label">Calendar</div><span class="qa-badge" id="qa-badge-calendar"></span></div>
       <div class="home-qa" onclick="switchTab('analyzer')"><div class="qa-icon">📸</div><div class="qa-label">Analyzer</div></div>
-      <div class="home-qa" onclick="switchTab('wellness')"><div class="qa-icon">💚</div><div class="qa-label">Wellness</div></div>
-      <div class="home-qa" onclick="switchTab('aicoach')"><div class="qa-icon">🤖</div><div class="qa-label">AI Coach</div></div>
+      <div class="home-qa" onclick="switchTab('wellness')"><div class="qa-icon">💚</div><div class="qa-label">Wellness</div><span class="qa-badge" id="qa-badge-wellness"></span></div>
+      <div class="home-qa" onclick="switchTab('aicoach')"><div class="qa-icon">🤖</div><div class="qa-label">AI Coach</div><span class="qa-badge" id="qa-badge-aicoach"></span></div>
       <div class="home-qa" onclick="switchTab('more')"><div class="qa-icon">⋯</div><div class="qa-label">More</div></div>
     </div>
 
@@ -506,6 +506,15 @@
       <div style="font-size:12px;opacity:0.95;margin-top:4px;font-weight:600">Personalized using garden, weather, health & food data</div>
     </div>
 
+    <!-- 🌱 Smart Plant Picks — powered by db/ patent formula engine -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase">🌱 Smart Plant Picks <span id="ai-picks-context" style="font-weight:700;text-transform:none;letter-spacing:0;color:var(--muted);font-size:10px"></span></div>
+      <button id="ai-picks-refresh" onclick="window.GFRefreshAICoach && window.GFRefreshAICoach(true)" style="background:transparent;border:1px solid var(--border, #ddd);border-radius:8px;padding:4px 8px;font-size:10px;font-weight:800;color:var(--muted);cursor:pointer">↻ Refresh</button>
+    </div>
+    <div id="ai-picks-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+      <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);text-align:center;color:var(--muted);font-size:12px;font-weight:700">Loading plant recommendations…</div>
+    </div>
+
     <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">💡 Today's Recommendations</div>
     <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);margin-bottom:10px;border-left:4px solid var(--green)">
       <div style="font-size:13px;font-weight:900;color:var(--text)">🥗 Nutrition</div>
@@ -865,6 +874,6 @@
 <!-- Implements the M(i,j) compatibility matrix from the Mathematical Ecology -->
 <!-- Blueprint. When user taps a product image, we show a popup with         -->
 <!-- ecologically-compatible plants that thrive together (self-sustaining).  -->
-<script src="shared/gf-app.js?v=20260519e"></script>
+<script src="shared/gf-plants.js?v=20260519i"></script><script src="shared/gf-app.js?v=20260519i"></script>
 </body>
 </html>

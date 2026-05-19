@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GrowFresh Plant Document",
+  "description": "Canonical record for a single edible plant in the GrowFresh home-garden catalog.",
+  "type": "object",
+  "required": [
+    "id","name","category","emoji","family","difficulty",
+    "daysToGerminate","daysToHarvest",
+    "sunHoursMin","tempMinC","tempOptimalC","tempMaxC",
+    "waterNeed","mlPerPlantPerDay","spacingCm"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id":              { "type": "string", "pattern": "^[a-z][a-z0-9-]+$" },
+    "name":            { "type": "string" },
+    "aliases":         { "type": "array", "items": { "type": "string" } },
+    "category":        { "type": "string", "enum": ["vegetable","leafy","herb","fruit","root","legume"] },
+    "emoji":           { "type": "string" },
+    "family":          { "type": "string" },
+    "difficulty":      { "type": "integer", "minimum": 1, "maximum": 5 },
+
+    "daysToGerminate":   { "type": "number", "minimum": 1 },
+    "daysToHarvest":     { "type": "number", "minimum": 1 },
+    "harvestWindowDays": { "type": "number", "minimum": 1 },
+
+    "sunHoursMin":     { "type": "number", "minimum": 0, "maximum": 16 },
+    "sunHoursOptimal": { "type": "number", "minimum": 0, "maximum": 16 },
+    "tempMinC":        { "type": "number" },
+    "tempOptimalC":    { "type": "number" },
+    "tempMaxC":        { "type": "number" },
+    "humidityPctRange":{ "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+
+    "waterNeed":         { "type": "string", "enum": ["low","medium","high"] },
+    "mlPerPlantPerDay":  { "type": "number", "minimum": 0 },
+    "soilPHRange":       { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+    "soilType":          { "type": "array", "items": { "type": "string" } },
+
+    "spacingCm":       { "type": "number", "minimum": 1 },
+    "depthCm":         { "type": "number", "minimum": 0 },
+    "containerSizeL":  { "type": "number", "minimum": 0 },
+
+    "kcal":     { "type": "number" },
+    "proteinG": { "type": "number" },
+    "fiberG":   { "type": "number" },
+    "vitCmg":   { "type": "number" },
+    "ironMg":   { "type": "number" },
+
+    "seasons":      { "type": "array", "items": { "type": "string", "enum": ["kharif","rabi","zaid","year-round"] } },
+    "climateZones": { "type": "array", "items": { "type": "string", "enum": ["tropical","subtropical","temperate","arid","humid"] } },
+    "indiaRegions": { "type": "array", "items": { "type": "string", "enum": ["north","south","east","west","central","north-east","all"] } },
+
+    "yieldKgPerPlant": { "type": "number", "minimum": 0 },
+
+    "commonPests":    { "type": "array", "items": { "type": "string" } },
+    "commonDiseases": { "type": "array", "items": { "type": "string" } },
+    "companions":     { "type": "array", "items": { "type": "string" } },
+    "antagonists":    { "type": "array", "items": { "type": "string" } }
+  }
+}
