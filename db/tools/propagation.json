@@ -1,0 +1,6 @@
+[
+  {"id": 218, "cat": "tools", "subcat": "propagation", "name": "Seedling Heat Mat (10×20\")", "desc": "Gentle bottom heat (10 °C above ambient) · doubles germination speed in winter", "how": "Place under tray. Unplug once sprouted.", "price": 999, "old": 1290, "region": "All India", "tags": ["winter", "propagation", "advanced"], "emoji": "♨️"},
+  {"id": 219, "cat": "tools", "subcat": "propagation", "name": "Mini Greenhouse Cover (4-Tier with Rack)", "desc": "Portable PVC frame + clear cover · balcony-friendly nursery for winter & seedlings", "how": "Vent on warm days. Anchor in wind.", "price": 1499, "old": 1950, "region": "All India", "tags": ["nursery", "winter", "balcony"], "emoji": "🏠"},
+  {"id": 220, "cat": "tools", "subcat": "propagation", "name": "Rooting Hormone Powder 25 g", "desc": "IBA-based powder for cuttings · roots roses, hibiscus, money plant in 2 weeks", "how": "Dip cutting tip, plant in coco-peat.", "price": 199, "old": 260, "region": "All India", "tags": ["propagation", "cuttings"], "emoji": "💪"},
+  {"id": 221, "cat": "tools", "subcat": "propagation", "name": "Grafting Tape Roll (Self-Sealing, 30 m)", "desc": "Stretchy film that fuses around graft unions · degrades naturally", "how": "Wrap tightly, overlap 50%.", "price": 149, "old": 195, "region": "All India", "tags": ["grafting", "advanced"], "emoji": "🪢"}
+]

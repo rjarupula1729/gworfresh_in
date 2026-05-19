@@ -17,3 +17,14 @@ repos:
       - id: detect-private-key
       - id: mixed-line-ending
         args: ['--fix=lf']
+
+  # Local hook: auto-rebuild shared/gf-db-bundle.js whenever any db/*.json
+  # (or the build script itself) is staged, then re-stage the bundle.
+  - repo: local
+    hooks:
+      - id: build-db-bundle
+        name: build shared/gf-db-bundle.js from db/*.json
+        language: system
+        entry: bash -c 'node scripts/build-db-bundle.js && git add shared/gf-db-bundle.js'
+        files: '^(db/.*\.json|scripts/build-db-bundle\.js)$'
+        pass_filenames: false

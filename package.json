@@ -4,6 +4,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "scripts": {
+    "db:build": "node scripts/build-db-bundle.js",
+    "db:watch": "node scripts/db-watch-bundle.js",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",

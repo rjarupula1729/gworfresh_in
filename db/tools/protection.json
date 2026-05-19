@@ -1,0 +1,6 @@
+[
+  {"id": 210, "cat": "tools", "subcat": "protection", "name": "Shade Net 50% (3×3 m)", "desc": "UV-stabilised green net · cuts summer heat by 8 °C · protects leafy greens", "how": "Stretch over frame or tie to walls. Remove in monsoon.", "price": 449, "old": 580, "region": "All India", "tags": ["summer", "heat-protect", "leafy"], "emoji": "🌞"},
+  {"id": 211, "cat": "tools", "subcat": "protection", "name": "Insect/Bird Net Fine Mesh (3×3 m)", "desc": "40-mesh net keeps out fruit flies, birds, squirrels · light & breathable", "how": "Cover before flowering. Lift for pollination if needed.", "price": 399, "old": 520, "region": "All India", "tags": ["pest", "bird-protect"], "emoji": "🕸️"},
+  {"id": 212, "cat": "tools", "subcat": "protection", "name": "Jute Mulch Sheet (5×3 ft, 3 sheets)", "desc": "Biodegradable jute mulch · holds moisture, blocks weeds, decomposes into compost", "how": "Lay around base. Slit for plant stems.", "price": 349, "old": 450, "region": "All India", "tags": ["organic", "mulch", "weed-block"], "emoji": "🟫"},
+  {"id": 213, "cat": "tools", "subcat": "protection", "name": "Frost Cover / Plant Blanket (2×3 m)", "desc": "Breathable fleece cover for North Indian winter · 4 °C frost protection", "how": "Drape loosely. Remove on sunny days.", "price": 299, "old": 390, "region": "North India", "tags": ["winter", "frost"], "emoji": "❄️"}
+]

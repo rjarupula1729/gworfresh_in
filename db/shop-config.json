@@ -1,0 +1,59 @@
+{
+  "categories": [
+    {"key": "all",               "label": "All",                "emoji": "🌾"},
+    {"key": "seeds",             "label": "Seeds",              "emoji": "🌱"},
+    {"key": "saplings",          "label": "Saplings",           "emoji": "🌿"},
+    {"key": "minerals,compost",  "label": "Minerals & Compost", "emoji": "🧪"},
+    {"key": "tools",             "label": "Tools",              "emoji": "🛠️"}
+  ],
+  "subcatsByCat": {
+    "tools": [
+      {"key": "all",          "label": "All Tools",   "emoji": "🧰"},
+      {"key": "hand-tools",   "label": "Hand Tools",  "emoji": "🪒"},
+      {"key": "irrigation",   "label": "Irrigation",  "emoji": "💧"},
+      {"key": "containers",   "label": "Containers",  "emoji": "🛍️"},
+      {"key": "support",      "label": "Support",     "emoji": "🎍"},
+      {"key": "protection",   "label": "Protection",  "emoji": "☂️"},
+      {"key": "diagnostics",  "label": "Diagnostics", "emoji": "📟"},
+      {"key": "propagation",  "label": "Propagation", "emoji": "🌱"},
+      {"key": "pest-control", "label": "Pest-Control","emoji": "🪤"},
+      {"key": "safety-gear",  "label": "Safety",      "emoji": "🧤"}
+    ]
+  },
+  "regions": [
+    {"value": "all",           "label": "All regions"},
+    {"value": "Hyderabad",     "label": "Hyderabad"},
+    {"value": "Bangalore",     "label": "Bangalore"},
+    {"value": "Chennai",       "label": "Chennai"},
+    {"value": "Mumbai",        "label": "Mumbai"},
+    {"value": "Delhi",         "label": "Delhi"},
+    {"value": "Kolkata",       "label": "Kolkata"},
+    {"value": "Pune",          "label": "Pune"},
+    {"value": "Ahmedabad",     "label": "Ahmedabad"},
+    {"value": "South India",   "label": "South India"},
+    {"value": "North India",   "label": "North India"},
+    {"value": "Coastal India", "label": "Coastal India"},
+    {"value": "Hill Stations", "label": "Hill Stations"},
+    {"value": "All India",     "label": "All India · Universal"}
+  ],
+  "badges": {
+    "seeds":    "SEEDS",
+    "saplings": "SAPLING",
+    "minerals": "MINERAL",
+    "compost":  "COMPOST",
+    "tools":    "TOOL"
+  },
+  "cardGradients": {
+    "seeds":    "linear-gradient(135deg,#E8F5E9,#C8E6C9)",
+    "saplings": "linear-gradient(135deg,#E0F2F1,#A5D6A7)",
+    "minerals": "linear-gradient(135deg,#E3F2FD,#BBDEFB)",
+    "compost":  "linear-gradient(135deg,#EFEBE9,#D7CCC8)",
+    "tools":    "linear-gradient(135deg,#FFF3E0,#FFE0B2)",
+    "default":  "linear-gradient(135deg,#F1F8E9,#DCEDC8)"
+  },
+  "livingCats": ["seeds", "saplings"],
+  "freeDeliveryAbove": 499,
+  "deliveryFee": 49,
+  "deliveryEta": "2–4 hrs",
+  "deliveryCity": "Hyderabad"
+}

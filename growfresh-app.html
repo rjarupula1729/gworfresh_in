@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#1B5E20">
 <title>GrowFresh — Home</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared/gf.css?v=20260519u">
-<link rel="stylesheet" href="shared/gf-extras.css?v=20260519u">
+<link rel="stylesheet" href="shared/gf.css?v=20260519ai">
+<link rel="stylesheet" href="shared/gf-extras.css?v=20260519ai">
 </head>
 <body>
 <div class="phone">
@@ -533,12 +533,21 @@
       <div style="font-size:12px;color:var(--muted);font-weight:600;margin-top:4px;line-height:1.5">Great gardening session today (45 min)! Add a 15-min evening walk for an extra wellness bonus.</div>
     </div>
 
-    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">🧠 How AI Helps You</div>
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">🧠 How AI Helps You <span style="font-weight:700;text-transform:none;letter-spacing:0;color:var(--green-deep,#1B5E20)">— tap any tile to see live sample</span></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
-      <div style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);text-align:center"><div style="font-size:28px">📊</div><div style="font-size:12px;font-weight:900;margin-top:6px">Data Collection</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Garden · Food · Habits</div></div>
-      <div style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);text-align:center"><div style="font-size:28px">🧠</div><div style="font-size:12px;font-weight:900;margin-top:6px">AI Analysis</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Patterns & goals</div></div>
-      <div style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);text-align:center"><div style="font-size:28px">✅</div><div style="font-size:12px;font-weight:900;margin-top:6px">Recommendations</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">What to do today</div></div>
-      <div style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);text-align:center"><div style="font-size:28px">🔔</div><div style="font-size:12px;font-weight:900;margin-top:6px">Smart Alerts</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Right time, right tip</div></div>
+      <div onclick="window.showAiInfo&&window.showAiInfo('collect')" style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);text-align:center;cursor:pointer;transition:transform .15s" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''" onmouseleave="this.style.transform=''"><div style="font-size:28px">📊</div><div style="font-size:12px;font-weight:900;margin-top:6px">Data Collection</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Garden · Food · Habits</div><div style="font-size:9px;color:var(--green-deep,#1B5E20);font-weight:900;margin-top:4px">▶ TAP TO VIEW</div></div>
+      <div onclick="window.showAiInfo&&window.showAiInfo('analyze')" style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);text-align:center;cursor:pointer;transition:transform .15s" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''" onmouseleave="this.style.transform=''"><div style="font-size:28px">🧠</div><div style="font-size:12px;font-weight:900;margin-top:6px">AI Analysis</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Patterns & goals</div><div style="font-size:9px;color:var(--green-deep,#1B5E20);font-weight:900;margin-top:4px">▶ SEE SCORING</div></div>
+      <div onclick="window.showAiInfo&&window.showAiInfo('recommend')" style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);text-align:center;cursor:pointer;transition:transform .15s" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''" onmouseleave="this.style.transform=''"><div style="font-size:28px">✅</div><div style="font-size:12px;font-weight:900;margin-top:6px">Recommendations</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">What to do today</div><div style="font-size:9px;color:var(--green-deep,#1B5E20);font-weight:900;margin-top:4px">▶ TOP 5 PICKS</div></div>
+      <div onclick="window.showAiInfo&&window.showAiInfo('alerts')" style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);text-align:center;cursor:pointer;transition:transform .15s" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''" onmouseleave="this.style.transform=''"><div style="font-size:28px">🔔</div><div style="font-size:12px;font-weight:900;margin-top:6px">Smart Alerts</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Right time, right tip</div><div style="font-size:9px;color:var(--green-deep,#1B5E20);font-weight:900;margin-top:4px">▶ THIS WEEK</div></div>
+    </div>
+
+    <div onclick="window.showAiInfo&&window.showAiInfo('soil')" style="background:linear-gradient(135deg,#8D6E63,#5D4037);color:#fff;border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);margin-bottom:16px;cursor:pointer;display:flex;align-items:center;gap:12px" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform=''" onmouseleave="this.style.transform=''">
+      <div style="font-size:34px">🌍</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:900">Soil Coach <span style="background:rgba(255,255,255,0.2);font-size:9px;padding:2px 6px;border-radius:6px;margin-left:4px;font-weight:900">NEW</span></div>
+        <div style="font-size:11px;opacity:0.9;font-weight:700;margin-top:2px">Identify your soil · Pick the right compost · Diagnose weeds → soil health</div>
+        <div style="font-size:9px;opacity:0.85;font-weight:900;margin-top:5px;letter-spacing:0.5px">▶ ORGANIC-ONLY KNOWLEDGE BASE</div>
+      </div>
     </div>
 
     <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">📈 Your Progress (AI tracked)</div>
@@ -715,6 +724,16 @@
   </div>
 </div>
 
+<!-- AI COACH "HOW AI HELPS YOU" INFO MODAL -->
+<div class="modal-overlay" id="ai-info-modal" onclick="if(event.target===this)window.hideAiInfo&&window.hideAiInfo()">
+  <div class="modal-sheet" style="display:flex;flex-direction:column">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="ai-info-title">🧠 AI Insight</div>
+    <div id="ai-info-body" style="overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;flex:1;min-height:0;font-size:12px;color:var(--text);line-height:1.55"></div>
+    <button class="modal-cancel" onclick="window.hideAiInfo&&window.hideAiInfo()" style="margin-top:8px">Close</button>
+  </div>
+</div>
+
 <!-- COMPANION PLANTS MODAL -->
 <div class="modal-overlay" id="companions-modal" onclick="if(event.target===this)hideCompanions()">
   <div class="modal-sheet" style="display:flex;flex-direction:column">
@@ -874,6 +893,6 @@
 <!-- Implements the M(i,j) compatibility matrix from the Mathematical Ecology -->
 <!-- Blueprint. When user taps a product image, we show a popup with         -->
 <!-- ecologically-compatible plants that thrive together (self-sustaining).  -->
-<script src="shared/gf-plants.js?v=20260519u"></script><script src="shared/gf-app.js?v=20260519u"></script>
+<script src="shared/gf-db-bundle.js?v=20260519ai"></script><script src="shared/gf-plants.js?v=20260519ai"></script><script src="shared/gf-app.js?v=20260519ai"></script>
 </body>
 </html>

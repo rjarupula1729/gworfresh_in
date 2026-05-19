@@ -52,6 +52,34 @@
     if(seasons.indexOf('year-round')>=0) return 1;
     return seasons.indexOf(current)>=0 ? 1 : SEASON_PENALTY;
   }
+  /* Soil fit: 1.0 when user has not picked a soil. When picked, we compare
+     the plant's soilType tags against the soil's tags + the soil's
+     goodFor / weakFor lists. Range [0.55, 1.15]. */
+  function soilFit(p, userSoil){
+    if(!userSoil) return 1;
+    var weak = (userSoil.weakFor||[]).map(String);
+    var good = (userSoil.goodFor||[]).map(String);
+    if(p.id && good.indexOf(p.id)>=0) return 1.15;
+    if(p.category && good.indexOf(p.category)>=0) return 1.10;
+    if(p.id && weak.indexOf(p.id)>=0) return 0.55;
+    if(p.category && weak.indexOf(p.category)>=0) return 0.70;
+    var soilTags = (userSoil.tags||[]).map(function(t){return String(t).toLowerCase();});
+    var plantTags = (p.soilType||[]).map(function(t){return String(t).toLowerCase();});
+    if(!plantTags.length || !soilTags.length) return 1;
+    var hits = 0;
+    plantTags.forEach(function(t){ if(soilTags.indexOf(t)>=0) hits++; });
+    if(hits>=2) return 1.10;
+    if(hits===1) return 1.0;
+    // pH compatibility (if plant declares it)
+    if(p.soilPHRange && userSoil.phRange){
+      var pMid=(p.soilPHRange[0]+p.soilPHRange[1])/2, sMid=(userSoil.phRange[0]+userSoil.phRange[1])/2;
+      var phDelta=Math.abs(pMid-sMid);
+      if(phDelta<=0.5) return 0.95;
+      if(phDelta<=1.0) return 0.85;
+      return 0.70;
+    }
+    return 0.85;
+  }
   function growthScore(p, env, ctx){
     env=env||{}; ctx=ctx||{};
     var fSun  = sunFit(env.sunHours != null ? env.sunHours : (p.sunHoursOptimal||p.sunHoursMin||6), p.sunHoursOptimal||p.sunHoursMin||6);
@@ -60,9 +88,10 @@
     var fSkl  = skillFit(p.difficulty, env.skill!=null?env.skill:3);
     var bComp = companionBoost(p.id, ctx.gardenIds, ctx.companionMatrix);
     var sSeas = seasonFactor(p.seasons, env.season);
-    var s = fSun*fTemp*fWtr*fSkl*bComp*sSeas;
+    var fSoil = soilFit(p, ctx.userSoil);
+    var s = fSun*fTemp*fWtr*fSkl*bComp*sSeas*fSoil;
     return { score: Math.max(0, Math.min(1.3, s)),
-             breakdown:{fSun:fSun,fTemp:fTemp,fWater:fWtr,fSkill:fSkl,bComp:bComp,sSeason:sSeas} };
+             breakdown:{fSun:fSun,fTemp:fTemp,fWater:fWtr,fSkill:fSkl,bComp:bComp,sSeason:sSeas,fSoil:fSoil} };
   }
   function yieldEstimate(p, s){
     var base = p && p.yieldKgPerPlant!=null ? p.yieldKgPerPlant : 0;
@@ -81,9 +110,9 @@
 
   /* ---------------- catalog loading ---------------- */
   var BASE = 'db/';   // relative to current page
-  var CACHE_KEY = 'gf_plants_cache_v2';   // bump when schema changes
+  var CACHE_KEY = 'gf_plants_cache_v5';   // bumped v4→v5 when soils DB added
   var CACHE_MS  = 24*60*60*1000;
-  var state = { plants: [], byId: {}, byName: {}, companions: {}, loaded: false, lastError: null };
+  var state = { plants: [], byId: {}, byName: {}, companions: {}, soils: [], composts: [], minerals: [], weeds: [], loaded: false, lastError: null };
 
   function _index(plants){
     state.plants = plants;
@@ -107,16 +136,21 @@
     }catch(_){ return null; }
   }
   function _saveCache(plants, companions){
-    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ ts:Date.now(), plants:plants, companions:companions })); }catch(_){}
+    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ ts:Date.now(), plants:plants, companions:companions, soils:state.soils, composts:state.composts, minerals:state.minerals, weeds:state.weeds })); }catch(_){}
   }
 
   async function load(force){
     if(state.loaded && !force) return state;
     if(!force){
       var c = _fromCache();
-      if(c && c.plants && c.plants.length){ _index(c.plants); state.companions = c.companions||{}; return state; }
+      if(c && c.plants && c.plants.length){
+        _index(c.plants);
+        state.companions = c.companions||{};
+        state.soils = c.soils||[]; state.composts = c.composts||[]; state.minerals = c.minerals||[]; state.weeds = c.weeds||[];
+        return state;
+      }
     }
-    var files = ['plants/vegetables.json','plants/leafy.json','plants/herbs.json','plants/fruits.json'];
+    var files = ['plants/vegetables.json','plants/leafy.json','plants/herbs.json','plants/fruits.json','plants/flowers.json','plants/spices.json'];
     try{
       var results = await Promise.all(files.map(function(f){
         return fetch(BASE + f, { cache:'force-cache' }).then(function(r){
@@ -125,6 +159,19 @@
         });
       }));
       var comp = await fetch(BASE + 'companions.json', { cache:'force-cache' }).then(function(r){ return r.ok ? r.json() : {}; }).catch(function(){ return {}; });
+      // Soils / composts / minerals / weeds — non-fatal if any one fails.
+      var soilFiles = [
+        ['soils/india-soils.json','soils'],
+        ['soils/compost-recipes.json','composts'],
+        ['soils/mineral-amendments.json','minerals'],
+        ['soils/weed-indicators.json','weeds']
+      ];
+      await Promise.all(soilFiles.map(function(pair){
+        return fetch(BASE + pair[0], { cache:'force-cache' })
+          .then(function(r){ return r.ok ? r.json() : []; })
+          .then(function(j){ state[pair[1]] = Array.isArray(j) ? j : []; })
+          .catch(function(){ state[pair[1]] = []; });
+      }));
       var all = [].concat.apply([], results);
       if(!all.length) throw new Error('catalog empty after fetch');
       _index(all);
@@ -174,7 +221,7 @@
       pool = filterPlants(attempts[i]);
       if(pool.length) break;
     }
-    var ctx = { gardenIds: opts.existingGarden || [], companionMatrix: state.companions };
+    var ctx = { gardenIds: opts.existingGarden || [], companionMatrix: state.companions, userSoil: opts.userSoil || _resolveUserSoil() };
     var ranked = pool.map(function(p){
       var g = growthScore(p, env, ctx);
       return {
@@ -220,6 +267,33 @@
   }
 
   /* ---------------- public API ---------------- */
+  function _resolveUserSoil(){
+    try{
+      var id = localStorage.getItem('gf_user_soil') || null;
+      if(!id || !state.soils.length) return null;
+      for(var i=0;i<state.soils.length;i++){ if(state.soils[i].id===id) return state.soils[i]; }
+    }catch(e){}
+    return null;
+  }
+  function diagnoseWeed(weedId){
+    if(!weedId) return null;
+    var w = null;
+    for(var i=0;i<state.weeds.length;i++){ if(state.weeds[i].id===weedId){ w=state.weeds[i]; break; } }
+    if(!w) return null;
+    var composts = (w.recommendComposts||[]).map(function(id){ return state.composts.find(function(c){return c.id===id;}); }).filter(Boolean);
+    var minerals = (w.recommendMinerals||[]).map(function(id){ return state.minerals.find(function(m){return m.id===id;}); }).filter(Boolean);
+    return { weed:w, composts:composts, minerals:minerals };
+  }
+  function suggestForSoil(soilId, env, opts){
+    opts = opts || {};
+    var soil = null;
+    for(var i=0;i<state.soils.length;i++){ if(state.soils[i].id===soilId){ soil=state.soils[i]; break; } }
+    if(!soil) return null;
+    var picks = recommend(env || {}, { top: opts.top||5, existingGarden: opts.existingGarden||[], userSoil: soil });
+    var composts = state.composts.filter(function(c){ return (c.goodForSoils||[]).indexOf(soilId)>=0 || (c.goodForSoils||[]).indexOf('all')>=0; }).slice(0,4);
+    var minerals = state.minerals.filter(function(m){ return (m.goodForSoils||[]).indexOf(soilId)>=0; }).slice(0,4);
+    return { soil:soil, picks:picks, composts:composts, minerals:minerals };
+  }
   window.GFPlants = {
     load: load,
     recommend: recommend,
@@ -228,6 +302,15 @@
     getById: function(id){ return state.byId[id]||null; },
     getByName: function(n){ return n ? (state.byName[String(n).toLowerCase()]||null) : null; },
     all: function(){ return state.plants.slice(); },
+    soils: function(){ return state.soils.slice(); },
+    composts: function(){ return state.composts.slice(); },
+    minerals: function(){ return state.minerals.slice(); },
+    weeds: function(){ return state.weeds.slice(); },
+    getSoil: function(id){ for(var i=0;i<state.soils.length;i++){ if(state.soils[i].id===id) return state.soils[i]; } return null; },
+    diagnoseWeed: diagnoseWeed,
+    suggestForSoil: suggestForSoil,
+    setUserSoil: function(id){ try{ if(id) localStorage.setItem('gf_user_soil', id); else localStorage.removeItem('gf_user_soil'); }catch(e){} },
+    getUserSoil: function(){ return _resolveUserSoil(); },
     _state: state
   };
   window.GFPlants.ready = load().catch(function(e){ console.warn('[GFPlants] load failed', e); });

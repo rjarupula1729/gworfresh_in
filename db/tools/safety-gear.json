@@ -1,0 +1,7 @@
+[
+  {"id": 170, "cat": "tools", "subcat": "safety-gear", "name": "Garden Gloves", "desc": "Nitrile-coated grip · breathable knit back · for general weeding & potting", "how": "Air-dry. Hand wash if soiled.", "price": 199, "old": 250, "region": "All India", "tags": ["safety", "essential"], "emoji": "🧤"},
+  {"id": 226, "cat": "tools", "subcat": "safety-gear", "name": "Wide-Brim Sun Hat", "desc": "UPF 50+ breathable hat · protects neck & face during summer harvests", "how": "Hand wash. Air dry.", "price": 299, "old": 390, "region": "All India", "tags": ["safety", "summer"], "emoji": "🧢"},
+  {"id": 227, "cat": "tools", "subcat": "safety-gear", "name": "Knee Pads (Pair, Foam Gel)", "desc": "Padded knee protection for weeding, transplanting, low-bed work", "how": "Strap above knee. Wipe clean.", "price": 249, "old": 320, "region": "All India", "tags": ["safety", "comfort"], "emoji": "🦵"},
+  {"id": 228, "cat": "tools", "subcat": "safety-gear", "name": "Garden Apron (8 Tool Pockets)", "desc": "Waxed-canvas apron with khurpi-loop, secateurs slot, seed pockets", "how": "Spot clean. Re-wax yearly.", "price": 399, "old": 520, "region": "All India", "tags": ["safety", "organize"], "emoji": "👘"},
+  {"id": 229, "cat": "tools", "subcat": "safety-gear", "name": "Arm-Sleeve Protectors (Pair)", "desc": "UV + thorn protection for arms · cool quick-dry fabric · for rose & citrus pruning", "how": "Machine wash cold.", "price": 179, "old": 235, "region": "All India", "tags": ["safety", "summer", "thorn"], "emoji": "💪"}
+]

@@ -1,0 +1,8 @@
+{
+  "tropical":    {"e":"🌴","n":"Tropical Humid",      "s":"Long growing seasons · high humidity · dense layering thrives.",     "t":["Humid","Layered","Spice systems"]},
+  "semiarid":    {"e":"🌾","n":"Semi-Arid",           "s":"Hot summers · moderate rain · drought-tolerant + drip works best.",   "t":["Drought-tolerant","Drip","Mulch-heavy"]},
+  "desert":      {"e":"🏜️","n":"Desert / Dry Heat",   "s":"Very low rainfall · extreme heat · xeriscape + windbreaks.",          "t":["Xeriscape","Wind-break","Wide spacing"]},
+  "hill":        {"e":"🏔️","n":"Temperate Hill",      "s":"Cool nights · short summers · berry shrubs & stone fruits.",          "t":["Cool nights","Berry shrubs"]},
+  "rainforest":  {"e":"☔","n":"High Rainfall",        "s":"Heavy monsoon · fungal-rich soils · bamboo + dense canopy.",          "t":["Monsoon","Bamboo","Dense canopy"]},
+  "urbanhybrid": {"e":"🏙️","n":"Urban Hybrid",        "s":"Heat island · terrace + balcony · Miyawaki pockets + edible.",        "t":["Heat-island","Terrace","Vertical"]}
+}

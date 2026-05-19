@@ -8,8 +8,10 @@ const vegetables = require('./vegetables.json');
 const leafy      = require('./leafy.json');
 const herbs      = require('./herbs.json');
 const fruits     = require('./fruits.json');
+const flowers    = require('./flowers.json');
+const spices     = require('./spices.json');
 
-const ALL = [].concat(vegetables, leafy, herbs, fruits);
+const ALL = [].concat(vegetables, leafy, herbs, fruits, flowers, spices);
 
 // Build O(1) lookup map by id and by lowercased name/alias
 const byId = Object.create(null);
@@ -58,6 +60,8 @@ module.exports = {
   leafy: leafy,
   herbs: herbs,
   fruits: fruits,
+  flowers: flowers,
+  spices: spices,
   getById: getById,
   getByName: getByName,
   filterPlants: filterPlants,

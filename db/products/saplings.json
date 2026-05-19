@@ -1,0 +1,1085 @@
+[
+  {
+    "id": 7,
+    "cat": "saplings",
+    "name": "Curry Leaf Sapling",
+    "desc": "Essential for South Indian cuisine",
+    "how": "Sunny. 2x/wk water.",
+    "price": 149,
+    "old": 185,
+    "region": "Hyderabad",
+    "tags": [
+      "kitchen",
+      "perennial"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 8,
+    "cat": "saplings",
+    "name": "Tulsi Sapling",
+    "desc": "Holy basil",
+    "how": "Full sun.",
+    "price": 99,
+    "old": 125,
+    "region": "Hyderabad",
+    "tags": [
+      "sacred",
+      "medicinal"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 9,
+    "cat": "saplings",
+    "name": "Sweet Lime (Mosambi)",
+    "desc": "Heat-tolerant citrus",
+    "how": "Deep pot. Full sun.",
+    "price": 349,
+    "old": 435,
+    "region": "Hyderabad",
+    "tags": [
+      "fruit",
+      "citrus"
+    ],
+    "emoji": "🍋"
+  },
+  {
+    "id": 10,
+    "cat": "saplings",
+    "name": "Custard Apple (Sitaphal)",
+    "desc": "Drought-tolerant tree",
+    "how": "24-36 mo to fruit.",
+    "price": 299,
+    "old": 375,
+    "region": "Hyderabad",
+    "tags": [
+      "fruit"
+    ],
+    "emoji": "🍏"
+  },
+  {
+    "id": 11,
+    "cat": "saplings",
+    "name": "Henna (Mehendi) Sapling",
+    "desc": "Hot-climate hedge plant",
+    "how": "Prune for leaves.",
+    "price": 89,
+    "old": 110,
+    "region": "Hyderabad",
+    "tags": [
+      "medicinal"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 12,
+    "cat": "saplings",
+    "name": "Aloe Vera",
+    "desc": "Medicinal succulent",
+    "how": "Minimal water.",
+    "price": 79,
+    "old": 100,
+    "region": "Hyderabad",
+    "tags": [
+      "medicinal",
+      "easy"
+    ],
+    "emoji": "🌵"
+  },
+  {
+    "id": 19,
+    "cat": "saplings",
+    "name": "Strawberry Sapling",
+    "desc": "Camarosa variety",
+    "how": "Hanging basket. Cool nights.",
+    "price": 199,
+    "old": 250,
+    "region": "Bangalore",
+    "tags": [
+      "fruit",
+      "premium"
+    ],
+    "emoji": "🍓"
+  },
+  {
+    "id": 20,
+    "cat": "saplings",
+    "name": "Rosemary Sapling",
+    "desc": "Mediterranean herb",
+    "how": "Sunny, drained soil.",
+    "price": 159,
+    "old": 200,
+    "region": "Bangalore",
+    "tags": [
+      "herb"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 21,
+    "cat": "saplings",
+    "name": "Thyme Sapling",
+    "desc": "Aromatic culinary herb",
+    "how": "Avoid wet feet.",
+    "price": 149,
+    "old": 185,
+    "region": "Bangalore",
+    "tags": [
+      "herb"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 22,
+    "cat": "saplings",
+    "name": "Stevia Sapling",
+    "desc": "Natural sweetener leaves",
+    "how": "Pinch tops.",
+    "price": 129,
+    "old": 160,
+    "region": "Bangalore",
+    "tags": [
+      "sugar-free"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 23,
+    "cat": "saplings",
+    "name": "Avocado Sapling (Hass)",
+    "desc": "Grafted, fruits in 3 yrs",
+    "how": "Large pot.",
+    "price": 599,
+    "old": 750,
+    "region": "Bangalore",
+    "tags": [
+      "fruit",
+      "premium"
+    ],
+    "emoji": "🥑"
+  },
+  {
+    "id": 24,
+    "cat": "saplings",
+    "name": "Geranium (Scented)",
+    "desc": "Pink rose-scented variety",
+    "how": "Bright indirect light.",
+    "price": 119,
+    "old": 150,
+    "region": "Bangalore",
+    "tags": [
+      "flower",
+      "fragrant"
+    ],
+    "emoji": "🌸"
+  },
+  {
+    "id": 31,
+    "cat": "saplings",
+    "name": "Banana Sapling (G9)",
+    "desc": "Dwarf high-yield",
+    "how": "12 months. Rich soil.",
+    "price": 249,
+    "old": 310,
+    "region": "Chennai",
+    "tags": [
+      "fruit",
+      "tropical"
+    ],
+    "emoji": "🍌"
+  },
+  {
+    "id": 32,
+    "cat": "saplings",
+    "name": "Drumstick (Moringa)",
+    "desc": "Superfood",
+    "how": "Hot climate.",
+    "price": 129,
+    "old": 160,
+    "region": "Chennai",
+    "tags": [
+      "superfood"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 33,
+    "cat": "saplings",
+    "name": "Papaya Sapling (Red Lady)",
+    "desc": "Bisexual, fruits in 8 mo",
+    "how": "Full sun.",
+    "price": 99,
+    "old": 125,
+    "region": "Chennai",
+    "tags": [
+      "fruit",
+      "quick"
+    ],
+    "emoji": "🍈"
+  },
+  {
+    "id": 34,
+    "cat": "saplings",
+    "name": "Hibiscus (Red)",
+    "desc": "Ornamental + medicinal",
+    "how": "Daily water in summer.",
+    "price": 99,
+    "old": 125,
+    "region": "Chennai",
+    "tags": [
+      "flower",
+      "medicinal"
+    ],
+    "emoji": "🌺"
+  },
+  {
+    "id": 35,
+    "cat": "saplings",
+    "name": "Plumeria (Frangipani)",
+    "desc": "Fragrant flowers",
+    "how": "Tolerates salt air.",
+    "price": 199,
+    "old": 250,
+    "region": "Chennai",
+    "tags": [
+      "flower",
+      "coastal"
+    ],
+    "emoji": "🌸"
+  },
+  {
+    "id": 36,
+    "cat": "saplings",
+    "name": "Bougainvillea",
+    "desc": "Vibrant climbing shrub",
+    "how": "Full sun. Less water.",
+    "price": 149,
+    "old": 185,
+    "region": "Chennai",
+    "tags": [
+      "flower",
+      "hardy"
+    ],
+    "emoji": "🌺"
+  },
+  {
+    "id": 43,
+    "cat": "saplings",
+    "name": "Coconut Palm (Dwarf)",
+    "desc": "Yields in 4 yrs",
+    "how": "Sandy soil.",
+    "price": 599,
+    "old": 750,
+    "region": "Mumbai",
+    "tags": [
+      "fruit",
+      "tropical"
+    ],
+    "emoji": "🥥"
+  },
+  {
+    "id": 44,
+    "cat": "saplings",
+    "name": "Mango (Alphonso)",
+    "desc": "Grafted",
+    "how": "Large pot. Full sun.",
+    "price": 449,
+    "old": 560,
+    "region": "Mumbai",
+    "tags": [
+      "fruit",
+      "premium"
+    ],
+    "emoji": "🥭"
+  },
+  {
+    "id": 45,
+    "cat": "saplings",
+    "name": "Cashew Sapling",
+    "desc": "Coastal nut tree",
+    "how": "Sandy loam.",
+    "price": 299,
+    "old": 375,
+    "region": "Mumbai",
+    "tags": [
+      "nut",
+      "coastal"
+    ],
+    "emoji": "🌰"
+  },
+  {
+    "id": 46,
+    "cat": "saplings",
+    "name": "Jackfruit (Dwarf)",
+    "desc": "Dwarf variety, fruits in 3 yrs",
+    "how": "Wide pot.",
+    "price": 399,
+    "old": 500,
+    "region": "Mumbai",
+    "tags": [
+      "fruit",
+      "tropical"
+    ],
+    "emoji": "🌴"
+  },
+  {
+    "id": 47,
+    "cat": "saplings",
+    "name": "Karipatta (Sweet Curry)",
+    "desc": "Aromatic kitchen leaf",
+    "how": "Sunny.",
+    "price": 99,
+    "old": 125,
+    "region": "Mumbai",
+    "tags": [
+      "kitchen"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 48,
+    "cat": "saplings",
+    "name": "Money Plant (Pothos)",
+    "desc": "Indoor air-purifier",
+    "how": "Low light OK.",
+    "price": 79,
+    "old": 100,
+    "region": "Mumbai",
+    "tags": [
+      "indoor",
+      "easy"
+    ],
+    "emoji": "🪴"
+  },
+  {
+    "id": 56,
+    "cat": "saplings",
+    "name": "Pomegranate (Bhagwa)",
+    "desc": "Hardy variety",
+    "how": "Tolerates extremes.",
+    "price": 349,
+    "old": 435,
+    "region": "Delhi",
+    "tags": [
+      "fruit",
+      "hardy"
+    ],
+    "emoji": "🍎"
+  },
+  {
+    "id": 57,
+    "cat": "saplings",
+    "name": "Guava (L-49)",
+    "desc": "Sweet white-flesh",
+    "how": "Full sun.",
+    "price": 299,
+    "old": 375,
+    "region": "Delhi",
+    "tags": [
+      "fruit"
+    ],
+    "emoji": "🍐"
+  },
+  {
+    "id": 58,
+    "cat": "saplings",
+    "name": "Mulberry Sapling",
+    "desc": "Fast-growing fruit tree",
+    "how": "Hardy.",
+    "price": 199,
+    "old": 250,
+    "region": "Delhi",
+    "tags": [
+      "fruit"
+    ],
+    "emoji": "🫐"
+  },
+  {
+    "id": 59,
+    "cat": "saplings",
+    "name": "Rose (Desi)",
+    "desc": "Fragrant pink variety",
+    "how": "Prune yearly.",
+    "price": 149,
+    "old": 185,
+    "region": "Delhi",
+    "tags": [
+      "flower"
+    ],
+    "emoji": "🌹"
+  },
+  {
+    "id": 60,
+    "cat": "saplings",
+    "name": "Chrysanthemum (Guldaudi)",
+    "desc": "Winter bloomer",
+    "how": "Pinch for bushy growth.",
+    "price": 99,
+    "old": 125,
+    "region": "Delhi",
+    "tags": [
+      "flower",
+      "winter"
+    ],
+    "emoji": "🌼"
+  },
+  {
+    "id": 68,
+    "cat": "saplings",
+    "name": "Jasmine (Mogra)",
+    "desc": "Fragrant evening bloomer",
+    "how": "Sunny. Daily water.",
+    "price": 179,
+    "old": 225,
+    "region": "Kolkata",
+    "tags": [
+      "flower",
+      "fragrant"
+    ],
+    "emoji": "🌼"
+  },
+  {
+    "id": 69,
+    "cat": "saplings",
+    "name": "Litchi Sapling",
+    "desc": "Cool-loving fruit",
+    "how": "Humid winters.",
+    "price": 449,
+    "old": 560,
+    "region": "Kolkata",
+    "tags": [
+      "fruit",
+      "premium"
+    ],
+    "emoji": "🍒"
+  },
+  {
+    "id": 70,
+    "cat": "saplings",
+    "name": "Sapota (Chikoo)",
+    "desc": "Sweet brown fruit",
+    "how": "Slow grower.",
+    "price": 349,
+    "old": 435,
+    "region": "Kolkata",
+    "tags": [
+      "fruit"
+    ],
+    "emoji": "🥭"
+  },
+  {
+    "id": 71,
+    "cat": "saplings",
+    "name": "Tagar (Wax Flower)",
+    "desc": "Bengali pooja flower",
+    "how": "Partial shade.",
+    "price": 119,
+    "old": 150,
+    "region": "Kolkata",
+    "tags": [
+      "flower",
+      "sacred"
+    ],
+    "emoji": "🌸"
+  },
+  {
+    "id": 72,
+    "cat": "saplings",
+    "name": "Shiuli (Night Jasmine)",
+    "desc": "Bengali sacred flower",
+    "how": "Drops at dawn.",
+    "price": 159,
+    "old": 200,
+    "region": "Kolkata",
+    "tags": [
+      "flower",
+      "sacred"
+    ],
+    "emoji": "🌼"
+  },
+  {
+    "id": 79,
+    "cat": "saplings",
+    "name": "Mint (Pudina)",
+    "desc": "Spreads fast",
+    "how": "Partial shade.",
+    "price": 79,
+    "old": 100,
+    "region": "Pune",
+    "tags": [
+      "herb"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 80,
+    "cat": "saplings",
+    "name": "Lemon (Kagzi)",
+    "desc": "Juicy variety",
+    "how": "Deep pot.",
+    "price": 299,
+    "old": 375,
+    "region": "Pune",
+    "tags": [
+      "fruit",
+      "citrus"
+    ],
+    "emoji": "🍋"
+  },
+  {
+    "id": 81,
+    "cat": "saplings",
+    "name": "Fig (Anjeer)",
+    "desc": "Pune classic",
+    "how": "Tolerates drought.",
+    "price": 349,
+    "old": 435,
+    "region": "Pune",
+    "tags": [
+      "fruit"
+    ],
+    "emoji": "🍑"
+  },
+  {
+    "id": 82,
+    "cat": "saplings",
+    "name": "Grapes (Thompson)",
+    "desc": "Seedless variety",
+    "how": "Trellis.",
+    "price": 399,
+    "old": 500,
+    "region": "Pune",
+    "tags": [
+      "fruit",
+      "premium"
+    ],
+    "emoji": "🍇"
+  },
+  {
+    "id": 83,
+    "cat": "saplings",
+    "name": "Marigold (Genda)",
+    "desc": "Pooja staple",
+    "how": "Sunny.",
+    "price": 49,
+    "old": 60,
+    "region": "Pune",
+    "tags": [
+      "flower",
+      "sacred"
+    ],
+    "emoji": "🌼"
+  },
+  {
+    "id": 84,
+    "cat": "saplings",
+    "name": "Chilli (Bhavnagri)",
+    "desc": "Mild large chilli",
+    "how": "Stake support.",
+    "price": 89,
+    "old": 110,
+    "region": "Pune",
+    "tags": [
+      "kitchen"
+    ],
+    "emoji": "🌶️"
+  },
+  {
+    "id": 91,
+    "cat": "saplings",
+    "name": "Ber (Indian Jujube)",
+    "desc": "Drought-tolerant fruit",
+    "how": "Minimal water.",
+    "price": 199,
+    "old": 250,
+    "region": "Ahmedabad",
+    "tags": [
+      "fruit",
+      "hardy"
+    ],
+    "emoji": "🍒"
+  },
+  {
+    "id": 92,
+    "cat": "saplings",
+    "name": "Indian Date (Khajur)",
+    "desc": "Desert palm",
+    "how": "Sandy soil.",
+    "price": 599,
+    "old": 750,
+    "region": "Ahmedabad",
+    "tags": [
+      "fruit",
+      "desert"
+    ],
+    "emoji": "🌴"
+  },
+  {
+    "id": 93,
+    "cat": "saplings",
+    "name": "Pomegranate (Sindhuri)",
+    "desc": "Hot-climate variety",
+    "how": "Full sun.",
+    "price": 329,
+    "old": 410,
+    "region": "Ahmedabad",
+    "tags": [
+      "fruit"
+    ],
+    "emoji": "🍎"
+  },
+  {
+    "id": 94,
+    "cat": "saplings",
+    "name": "Neem Tree",
+    "desc": "Medicinal shade tree",
+    "how": "Drought-tolerant.",
+    "price": 149,
+    "old": 185,
+    "region": "Ahmedabad",
+    "tags": [
+      "medicinal"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 95,
+    "cat": "saplings",
+    "name": "Bougainvillea (Magenta)",
+    "desc": "Desert-loving climber",
+    "how": "Less water = more flowers.",
+    "price": 149,
+    "old": 185,
+    "region": "Ahmedabad",
+    "tags": [
+      "flower",
+      "hardy"
+    ],
+    "emoji": "🌺"
+  },
+  {
+    "id": 96,
+    "cat": "saplings",
+    "name": "Gulmohar Sapling",
+    "desc": "Flame tree",
+    "how": "Full sun.",
+    "price": 199,
+    "old": 250,
+    "region": "Ahmedabad",
+    "tags": [
+      "flower",
+      "tree"
+    ],
+    "emoji": "🌳"
+  },
+  {
+    "id": 103,
+    "cat": "saplings",
+    "name": "Curry Leaf (Gamthi)",
+    "desc": "Premium aromatic variety",
+    "how": "Sunny.",
+    "price": 169,
+    "old": 210,
+    "region": "South India",
+    "tags": [
+      "kitchen"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 104,
+    "cat": "saplings",
+    "name": "Sapota (Cricket Ball)",
+    "desc": "Large fruit variety",
+    "how": "Slow grower.",
+    "price": 379,
+    "old": 475,
+    "region": "South India",
+    "tags": [
+      "fruit"
+    ],
+    "emoji": "🥭"
+  },
+  {
+    "id": 105,
+    "cat": "saplings",
+    "name": "Jasmine (Madurai Malli)",
+    "desc": "Famous garland variety",
+    "how": "Full sun.",
+    "price": 199,
+    "old": 250,
+    "region": "South India",
+    "tags": [
+      "flower",
+      "fragrant"
+    ],
+    "emoji": "🌼"
+  },
+  {
+    "id": 106,
+    "cat": "saplings",
+    "name": "Areca Palm",
+    "desc": "Indoor air-purifier",
+    "how": "Bright indirect light.",
+    "price": 249,
+    "old": 310,
+    "region": "South India",
+    "tags": [
+      "indoor"
+    ],
+    "emoji": "🌴"
+  },
+  {
+    "id": 107,
+    "cat": "saplings",
+    "name": "Champaka (Sampangi)",
+    "desc": "Sacred fragrant tree",
+    "how": "Sunny.",
+    "price": 299,
+    "old": 375,
+    "region": "South India",
+    "tags": [
+      "flower",
+      "sacred"
+    ],
+    "emoji": "��"
+  },
+  {
+    "id": 108,
+    "cat": "saplings",
+    "name": "Kovakkai (Ivy Gourd)",
+    "desc": "5 cuttings",
+    "how": "Trellis.",
+    "price": 99,
+    "old": 125,
+    "region": "South India",
+    "tags": [
+      "perennial"
+    ],
+    "emoji": "🥒"
+  },
+  {
+    "id": 115,
+    "cat": "saplings",
+    "name": "Apple (Anna - Low Chill)",
+    "desc": "Plains-friendly apple",
+    "how": "Cool nights.",
+    "price": 599,
+    "old": 750,
+    "region": "North India",
+    "tags": [
+      "fruit",
+      "premium"
+    ],
+    "emoji": "🍎"
+  },
+  {
+    "id": 116,
+    "cat": "saplings",
+    "name": "Apricot (Khurmani)",
+    "desc": "Hardy stone fruit",
+    "how": "Cold winter req.",
+    "price": 499,
+    "old": 625,
+    "region": "North India",
+    "tags": [
+      "fruit"
+    ],
+    "emoji": "🍑"
+  },
+  {
+    "id": 117,
+    "cat": "saplings",
+    "name": "Kinnow (Citrus)",
+    "desc": "Punjab winter mandarin",
+    "how": "Full sun.",
+    "price": 299,
+    "old": 375,
+    "region": "North India",
+    "tags": [
+      "fruit",
+      "citrus"
+    ],
+    "emoji": "🍊"
+  },
+  {
+    "id": 118,
+    "cat": "saplings",
+    "name": "Rose (Edward)",
+    "desc": "Fragrant pink",
+    "how": "Prune Jan.",
+    "price": 169,
+    "old": 210,
+    "region": "North India",
+    "tags": [
+      "flower"
+    ],
+    "emoji": "🌹"
+  },
+  {
+    "id": 119,
+    "cat": "saplings",
+    "name": "Marigold (African Tall)",
+    "desc": "Bright orange",
+    "how": "Sunny.",
+    "price": 49,
+    "old": 60,
+    "region": "North India",
+    "tags": [
+      "flower"
+    ],
+    "emoji": "🌼"
+  },
+  {
+    "id": 120,
+    "cat": "saplings",
+    "name": "Walnut Sapling",
+    "desc": "Hill-loving nut tree",
+    "how": "Cold winter req.",
+    "price": 699,
+    "old": 875,
+    "region": "North India",
+    "tags": [
+      "nut",
+      "premium"
+    ],
+    "emoji": "��"
+  },
+  {
+    "id": 127,
+    "cat": "saplings",
+    "name": "Coconut (Hybrid Dwarf)",
+    "desc": "Salt-tolerant",
+    "how": "Sandy soil.",
+    "price": 599,
+    "old": 750,
+    "region": "Coastal India",
+    "tags": [
+      "fruit",
+      "tropical"
+    ],
+    "emoji": "🥥"
+  },
+  {
+    "id": 128,
+    "cat": "saplings",
+    "name": "Cashew (Vengurla)",
+    "desc": "Coastal nut",
+    "how": "Sandy loam.",
+    "price": 299,
+    "old": 375,
+    "region": "Coastal India",
+    "tags": [
+      "nut"
+    ],
+    "emoji": "🌰"
+  },
+  {
+    "id": 129,
+    "cat": "saplings",
+    "name": "Areca Nut Palm",
+    "desc": "Tall ornamental",
+    "how": "Humid.",
+    "price": 249,
+    "old": 310,
+    "region": "Coastal India",
+    "tags": [
+      "palm"
+    ],
+    "emoji": "🌴"
+  },
+  {
+    "id": 130,
+    "cat": "saplings",
+    "name": "Pineapple Sucker",
+    "desc": "Sweet variety",
+    "how": "18 mo to fruit.",
+    "price": 99,
+    "old": 125,
+    "region": "Coastal India",
+    "tags": [
+      "fruit",
+      "tropical"
+    ],
+    "emoji": "🍎"
+  },
+  {
+    "id": 131,
+    "cat": "saplings",
+    "name": "Hibiscus (Tropical Mix)",
+    "desc": "Salt-tolerant flowers",
+    "how": "Coastal hardy.",
+    "price": 119,
+    "old": 150,
+    "region": "Coastal India",
+    "tags": [
+      "flower",
+      "coastal"
+    ],
+    "emoji": "🌺"
+  },
+  {
+    "id": 132,
+    "cat": "saplings",
+    "name": "Plumeria (White-Yellow)",
+    "desc": "Beach-loving fragrance",
+    "how": "Sandy soil.",
+    "price": 199,
+    "old": 250,
+    "region": "Coastal India",
+    "tags": [
+      "flower",
+      "coastal"
+    ],
+    "emoji": "🌸"
+  },
+  {
+    "id": 139,
+    "cat": "saplings",
+    "name": "Strawberry (Sweet Charlie)",
+    "desc": "Premium hill variety",
+    "how": "Cool nights essential.",
+    "price": 229,
+    "old": 285,
+    "region": "Hill Stations",
+    "tags": [
+      "fruit",
+      "premium"
+    ],
+    "emoji": "🍓"
+  },
+  {
+    "id": 140,
+    "cat": "saplings",
+    "name": "Blueberry (Misty)",
+    "desc": "Acid-soil berry",
+    "how": "pH 4.5-5.5.",
+    "price": 599,
+    "old": 750,
+    "region": "Hill Stations",
+    "tags": [
+      "fruit",
+      "premium"
+    ],
+    "emoji": "🍒"
+  },
+  {
+    "id": 141,
+    "cat": "saplings",
+    "name": "Raspberry Sapling",
+    "desc": "Cold-loving berry",
+    "how": "Trellis.",
+    "price": 449,
+    "old": 560,
+    "region": "Hill Stations",
+    "tags": [
+      "fruit",
+      "premium"
+    ],
+    "emoji": "🍒"
+  },
+  {
+    "id": 142,
+    "cat": "saplings",
+    "name": "Pear (Patharnakh)",
+    "desc": "Hardy hill pear",
+    "how": "Cold winters.",
+    "price": 499,
+    "old": 625,
+    "region": "Hill Stations",
+    "tags": [
+      "fruit"
+    ],
+    "emoji": "🫛"
+  },
+  {
+    "id": 143,
+    "cat": "saplings",
+    "name": "Lavender Sapling",
+    "desc": "Aromatic hill herb",
+    "how": "Drained soil.",
+    "price": 199,
+    "old": 250,
+    "region": "Hill Stations",
+    "tags": [
+      "herb",
+      "fragrant"
+    ],
+    "emoji": "🪻"
+  },
+  {
+    "id": 144,
+    "cat": "saplings",
+    "name": "Geranium (Pelargonium)",
+    "desc": "Hill-station classic",
+    "how": "Cool nights.",
+    "price": 149,
+    "old": 185,
+    "region": "Hill Stations",
+    "tags": [
+      "flower"
+    ],
+    "emoji": "🌸"
+  },
+  {
+    "id": 149,
+    "cat": "saplings",
+    "name": "Aloe Vera (Indoor)",
+    "desc": "Medicinal succulent",
+    "how": "Bright light.",
+    "price": 79,
+    "old": 100,
+    "region": "All India",
+    "tags": [
+      "medicinal",
+      "indoor"
+    ],
+    "emoji": "🌵"
+  },
+  {
+    "id": 150,
+    "cat": "saplings",
+    "name": "Snake Plant",
+    "desc": "Air-purifying indoor",
+    "how": "Low light OK.",
+    "price": 199,
+    "old": 250,
+    "region": "All India",
+    "tags": [
+      "indoor",
+      "easy"
+    ],
+    "emoji": "🪴"
+  },
+  {
+    "id": 151,
+    "cat": "saplings",
+    "name": "Money Plant",
+    "desc": "Lucky vine",
+    "how": "Indirect light.",
+    "price": 79,
+    "old": 100,
+    "region": "All India",
+    "tags": [
+      "indoor",
+      "easy"
+    ],
+    "emoji": "🪴"
+  },
+  {
+    "id": 152,
+    "cat": "saplings",
+    "name": "Tulsi (Rama)",
+    "desc": "Sacred basil",
+    "how": "Full sun.",
+    "price": 99,
+    "old": 125,
+    "region": "All India",
+    "tags": [
+      "sacred",
+      "medicinal"
+    ],
+    "emoji": "🌿"
+  }
+]

@@ -14,7 +14,7 @@
     "id":              { "type": "string", "pattern": "^[a-z][a-z0-9-]+$" },
     "name":            { "type": "string" },
     "aliases":         { "type": "array", "items": { "type": "string" } },
-    "category":        { "type": "string", "enum": ["vegetable","leafy","herb","fruit","root","legume"] },
+    "category":        { "type": "string", "enum": ["vegetable","leafy","herb","fruit","root","legume","flower","spice"] },
     "emoji":           { "type": "string" },
     "family":          { "type": "string" },
     "difficulty":      { "type": "integer", "minimum": 1, "maximum": 5 },

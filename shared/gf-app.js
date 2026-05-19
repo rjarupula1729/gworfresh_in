@@ -501,6 +501,450 @@ function _gfRunPicks(listId, ctxId, opts){
 }
 function gfRefreshAiCoach(force){ _gfRunPicks('ai-picks-list','ai-picks-context', { top:5 }); }
 function gfRefreshGardenPicks(force){ _gfRunPicks('garden-picks-list','garden-picks-context', { top:6 }); }
+
+/* ════════════════ "How AI Helps You" — live sample popups ════════════════
+   Turns the 4 explainer tiles on AI Coach into interactive demos that
+   show real data: catalog stats, scoring breakdown, top picks, and
+   weekly task schedule derived from the user's own garden.              */
+function _gfAiInfoTile(label, value, hint){
+  return '<div style="background:var(--bg);border-radius:10px;padding:10px;text-align:center">'
+    + '<div style="font-size:20px;font-weight:900;color:var(--green-deep,#1B5E20);line-height:1">'+value+'</div>'
+    + '<div style="font-size:10px;font-weight:900;color:var(--text);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px">'+label+'</div>'
+    + (hint?'<div style="font-size:9px;color:var(--muted);font-weight:600;margin-top:2px">'+hint+'</div>':'')
+  + '</div>';
+}
+function _gfAiInfoSection(title, html){
+  return '<div style="font-size:10px;font-weight:900;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin:14px 0 6px">'+title+'</div>'+html;
+}
+function _gfAiBuildCollect(){
+  var catalog = (window.GFPlants && window.GFPlants.all) ? window.GFPlants.all() : [];
+  var byCat = {};
+  catalog.forEach(function(p){ byCat[p.category]=(byCat[p.category]||0)+1; });
+  var garden = _gfReadGarden();
+  var env = _gfBuildEnv();
+  var lsKeys = 0; try{ lsKeys = Object.keys(localStorage).filter(function(k){return k.indexOf('gf_')===0;}).length; }catch(e){}
+  var family = 0; try{ var f=JSON.parse(localStorage.getItem('gf_family_members')||'[]'); family=Array.isArray(f)?f.length:0; }catch(e){}
+  var foodLog = 0; try{ var fl=JSON.parse(localStorage.getItem('gf_food_log')||'[]'); foodLog=Array.isArray(fl)?fl.length:0; }catch(e){}
+  var html = '<div style="color:var(--muted);font-size:11px;margin-bottom:10px">The AI Coach quietly observes these signals — nothing leaves your phone.</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+      + _gfAiInfoTile('Plant Catalog', catalog.length, 'curated for India')
+      + _gfAiInfoTile('Your Garden', garden.length, 'plants tracked')
+      + _gfAiInfoTile('Family', family, 'members on profile')
+      + _gfAiInfoTile('Food Log', foodLog, 'meals recorded')
+    + '</div>'
+    + _gfAiInfoSection('Catalog Breakdown', '<div style="display:flex;flex-wrap:wrap;gap:6px">'
+        + Object.keys(byCat).sort().map(function(k){
+            return '<span style="background:var(--bg);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:800;color:var(--text)">'+k+' · '+byCat[k]+'</span>';
+          }).join('')
+      + '</div>')
+    + _gfAiInfoSection('Live Environment', '<div style="background:var(--bg);border-radius:10px;padding:10px;font-size:11px;font-weight:700;color:var(--text);line-height:1.7">'
+        + '🌡️ Temp <b>'+env.tempC+'°C</b> · ☀️ Sun <b>'+env.sunHours+'h</b><br>'
+        + '💧 Water budget <b>'+env.waterPerDayMl+' ml/day</b><br>'
+        + '📅 Season <b>'+env.season+'</b> · 🌍 Climate <b>'+env.climate+'</b><br>'
+        + '🗝️ Local signals stored: <b>'+lsKeys+'</b> keys'
+      + '</div>')
+    + _gfAiInfoSection('Why it matters', '<div style="background:#FFF8E1;border-radius:10px;padding:10px;font-size:11px;font-weight:600;color:var(--text);line-height:1.6">More signals = smarter picks. Add plants to your garden + log meals to unlock personalised companion + nutrition suggestions.</div>');
+  return { title:'📊 Data Collection — Live', html:html };
+}
+function _gfAiBuildAnalyze(){
+  var env = _gfBuildEnv();
+  var garden = _gfReadGarden();
+  var top = [];
+  try{ top = window.GFPlants.recommend(env, { existingGarden: garden, top: 1, climate: env.climate }) || []; }catch(e){}
+  // Fallback: if recommend() returned empty (e.g. all season filters relaxed to nothing), just pick the first cataloged plant so the demo still shows the math.
+  if(!top.length){
+    try{
+      var all = window.GFPlants.all ? window.GFPlants.all() : [];
+      if(all.length){
+        // synthesize a minimal "ranked" entry using growthScore via recommend on a single-plant filter
+        var sample = window.GFPlants.recommend({}, { top: 1 }) || [];
+        if(sample.length) top = sample;
+      }
+    }catch(e){}
+  }
+  var html;
+  if(!top.length){
+    var st = (window.GFPlants && window.GFPlants._state) || {};
+    var why = st.lastError ? ('<br><span style="font-size:10px;opacity:0.8">'+st.lastError+'</span><br><span style="font-size:10px;opacity:0.8">Tip: serve the site over http(s), not file://</span>') : '';
+    html = '<div style="color:var(--muted);font-size:12px">Catalog could not load.'+why+'</div>';
+  } else {
+    var r = top[0]; var p = r.plant; var b = r.breakdown || {};
+    var row = function(label, val, weight, desc){
+      var pct = Math.round((val||0)*100);
+      return '<div style="margin-bottom:8px">'
+        + '<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:800"><span>'+label+'</span><span style="color:var(--green-deep,#1B5E20)">'+pct+'% × '+weight+'</span></div>'
+        + '<div style="background:var(--bg);height:6px;border-radius:3px;overflow:hidden;margin-top:3px"><div style="width:'+pct+'%;height:100%;background:linear-gradient(90deg,var(--green-light,#66BB6A),var(--green,#43A047))"></div></div>'
+        + '<div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">'+desc+'</div>'
+      + '</div>';
+    };
+    html = '<div style="background:var(--bg);border-radius:10px;padding:10px;margin-bottom:10px;display:flex;align-items:center;gap:10px">'
+        + '<div style="font-size:32px">'+_gfPickIcon(p)+'</div>'
+        + '<div style="flex:1"><div style="font-size:14px;font-weight:900">'+p.name+'</div>'
+          + '<div style="font-size:11px;color:var(--muted);font-weight:700">Top pick · GrowScore <b style="color:var(--green-deep,#1B5E20)">'+(r.score||0).toFixed(2)+'</b></div></div>'
+      + '</div>'
+      + _gfAiInfoSection('Scoring formula — GrowScore(p)', '<div style="background:#FFF8E1;border-radius:8px;padding:8px;font-size:11px;font-weight:700;color:var(--text);font-family:monospace;line-height:1.5">= fSun · fTemp · fWater · fSkill<br>· bComp · sSeason · <b>fSoil</b></div>')
+      + _gfAiInfoSection('Breakdown for ' + p.name, ''
+        + row('☀️ Sun fit (fSun)', b.fSun, 0.25, 'Your '+env.sunHours+'h vs plant need')
+        + row('🌡️ Temp fit (fTemp)', b.fTemp, 0.20, 'Current '+env.tempC+'°C vs ideal range')
+        + row('💧 Water fit (fWater)', b.fWater, 0.15, 'Budget '+env.waterPerDayMl+' ml/day')
+        + row('🎯 Skill fit (fSkill)', b.fSkill, 0.15, 'Difficulty vs your level '+env.skill)
+        + row('🤝 Companion bonus (bComp)', b.bComp, 0.15, 'Pairs with '+garden.length+' garden plant(s)')
+        + row('📅 Season fit (sSeason)', b.sSeason, 0.10, 'Best in '+env.season)
+        + (b.fSoil!=null ? row('🪨 Soil fit (fSoil)', Math.min(1,b.fSoil), 1.00, (window.GFPlants&&window.GFPlants.getUserSoil&&window.GFPlants.getUserSoil()?'Soil: '+window.GFPlants.getUserSoil().name+' (×'+b.fSoil.toFixed(2)+')':'Open 🌍 Soil Coach to set your soil')) : ''))
+      + _gfAiInfoSection('Predicted outcome', '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">'
+          + _gfAiInfoTile('Yield', (r.yieldKg||0)+' kg', 'per plant')
+          + _gfAiInfoTile('Water', r.waterLitresPerWeek+' L', 'per week')
+          + _gfAiInfoTile('Success', r.successPct+'%', 'in your env')
+        + '</div>');
+  }
+  return { title:'🧠 AI Analysis — Live Scoring', html:html };
+}
+function _gfAiBuildRecommend(){
+  var env = _gfBuildEnv();
+  var garden = _gfReadGarden();
+  var picks = [];
+  try{ picks = window.GFPlants.recommend(env, { existingGarden: garden, top: 5, climate: env.climate }) || []; }catch(e){}
+  // Fallback: drop the climate filter (some new plants don't tag climate) so we still surface something.
+  if(!picks.length){
+    try{ picks = window.GFPlants.recommend(env, { existingGarden: garden, top: 5 }) || []; }catch(e){}
+  }
+  if(!picks.length){
+    try{ picks = window.GFPlants.recommend({}, { top: 5 }) || []; }catch(e){}
+  }
+  var html = '<div style="color:var(--muted);font-size:11px;margin-bottom:10px">Ranked for <b>'+env.season+' · '+env.tempC+'°C · '+env.sunHours+'h sun</b>. Tap "+ Add" to plant it.</div>';
+  if(!picks.length){
+    var st = (window.GFPlants && window.GFPlants._state) || {};
+    var why = st.lastError ? ('<br><span style="font-size:10px;opacity:0.8">'+st.lastError+'</span>') : '';
+    html += '<div style="background:var(--bg);border-radius:10px;padding:14px;text-align:center;color:var(--muted);font-size:12px;font-weight:700">Catalog could not load.'+why+'</div>';
+  } else {
+    html += picks.map(function(r,i){
+      var p = r.plant; var s = r.successPct;
+      var col = s>=70?'#43A047':s>=45?'#FB8C00':'#E53935';
+      var addBtn = '<button onclick="window.gfQuickAddPlant&&window.gfQuickAddPlant(\''+(p.id||'').replace(/\x27/g,"")+'\',\''+(p.name||'').replace(/\x27/g,"")+'\')" style="background:var(--green,#43A047);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:10px;font-weight:900;cursor:pointer;font-family:inherit">+ Add</button>';
+      return '<div style="background:var(--white);border:1px solid var(--bg);border-radius:10px;padding:10px;margin-bottom:8px;display:flex;align-items:center;gap:10px;border-left:4px solid '+col+'">'
+        + '<div style="font-size:22px">'+_gfPickIcon(p)+'</div>'
+        + '<div style="flex:1;min-width:0">'
+          + '<div style="font-size:12px;font-weight:900">#'+(i+1)+' '+p.name+' <span style="color:'+col+'">· '+s+'%</span></div>'
+          + '<div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">'+(p.daysToHarvest||'?')+'d · ~'+(r.yieldKg||0)+'kg · '+r.waterLitresPerWeek+'L/wk</div>'
+        + '</div>'
+        + addBtn
+      + '</div>';
+    }).join('');
+  }
+  return { title:'💡 Recommendations — Top 5 for You', html:html };
+}
+function _gfAiBuildAlerts(){
+  var garden = _gfReadGarden();
+  var catalog = (window.GFPlants && window.GFPlants.all) ? window.GFPlants.all() : [];
+  var byId = {}; catalog.forEach(function(p){ byId[p.id]=p; });
+  var today = new Date();
+  var dayName = function(offset){ var d=new Date(today); d.setDate(d.getDate()+offset); return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]; };
+  var alerts = [];
+  if(!garden.length){
+    alerts.push({ when:'Today', icon:'🌱', text:'Add your first plant in My Garden — alerts unlock automatically.' });
+  } else {
+    garden.slice(0,6).forEach(function(id, i){
+      var p = byId[id]; if(!p) return;
+      var ml = p.mlPerPlantPerDay || 200;
+      alerts.push({ when: dayName(i%7)+(i<7?' (today)':' next wk'), icon:'💧', text:'Water <b>'+p.name+'</b> · ~'+ml+' ml ('+(p.sun||'partial sun')+')' });
+      if(p.daysToHarvest){
+        alerts.push({ when:'Day '+p.daysToHarvest, icon:'🍅', text:'Harvest window opens for <b>'+p.name+'</b>' });
+      }
+      if(p.companions && p.companions.length){
+        alerts.push({ when:'Tip', icon:'🤝', text:'<b>'+p.name+'</b> pairs well with '+p.companions.slice(0,2).join(', ')+' — consider planting nearby.' });
+      }
+    });
+    alerts.push({ when:'Sun', icon:'🧪', text:'Weekly fertiliser check — add compost tea if leaves look pale.' });
+  }
+  var html = '<div style="color:var(--muted);font-size:11px;margin-bottom:10px">Smart alerts adapt to <b>'+garden.length+' plant(s)</b> in your garden + local weather.</div>'
+    + alerts.slice(0,10).map(function(a){
+      return '<div style="background:var(--white);border:1px solid var(--bg);border-radius:10px;padding:10px;margin-bottom:7px;display:flex;gap:10px;align-items:flex-start;border-left:3px solid var(--green,#43A047)">'
+        + '<div style="font-size:20px;line-height:1">'+a.icon+'</div>'
+        + '<div style="flex:1;min-width:0">'
+          + '<div style="font-size:10px;font-weight:900;color:var(--green-deep,#1B5E20);text-transform:uppercase;letter-spacing:0.5px">'+a.when+'</div>'
+          + '<div style="font-size:12px;font-weight:700;color:var(--text);margin-top:2px">'+a.text+'</div>'
+        + '</div>'
+      + '</div>';
+    }).join('')
+    + '<div style="background:#FFF8E1;border-radius:10px;padding:10px;font-size:11px;font-weight:600;color:var(--text);margin-top:6px;line-height:1.5">🔔 In production these would arrive as native push notifications at sunrise (water tasks) and weekends (planning tasks).</div>';
+  return { title:'🔔 Smart Alerts — This Week', html:html };
+}
+
+/* ════════════════ 🌍 SOIL COACH — Indian soils, compost, minerals, weed bioindicators (ORGANIC ONLY) ════════════════ */
+function _gfEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function _gfSoilChip(text, color){
+  color = color || 'var(--bg)';
+  return '<span style="background:'+color+';border-radius:999px;padding:3px 9px;font-size:10px;font-weight:800;color:var(--text);display:inline-block;margin:2px 3px 2px 0">'+_gfEsc(text)+'</span>';
+}
+function _gfRenderSoilPicker(activeId){
+  var soils = (window.GFPlants && window.GFPlants.soils) ? window.GFPlants.soils() : [];
+  if(!soils.length) return '<div style="color:var(--muted);font-size:11px">Soil DB loading…</div>';
+  return '<div style="display:flex;flex-wrap:wrap;gap:6px">' + soils.map(function(s){
+    var on = s.id===activeId;
+    var bg = on ? 'var(--green,#43A047)' : 'var(--bg)';
+    var col = on ? '#fff' : 'var(--text)';
+    return '<button onclick="window.gfSetSoil&&window.gfSetSoil(\''+s.id+'\')" style="background:'+bg+';color:'+col+';border:none;border-radius:999px;padding:6px 11px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit">'+_gfEsc(s.name)+'</button>';
+  }).join('') + '</div>';
+}
+function _gfRenderWeedPicker(){
+  var weeds = (window.GFPlants && window.GFPlants.weeds) ? window.GFPlants.weeds() : [];
+  if(!weeds.length) return '<div style="color:var(--muted);font-size:11px">Weed DB loading…</div>';
+  return '<div style="display:flex;flex-wrap:wrap;gap:6px">' + weeds.map(function(w){
+    return '<button onclick="window.gfDiagnoseWeed&&window.gfDiagnoseWeed(\''+w.id+'\')" style="background:var(--bg);border:1px solid #ddd;border-radius:999px;padding:6px 11px;font-size:11px;font-weight:800;cursor:pointer;color:var(--text);font-family:inherit">'+(w.emoji||'🌱')+' '+_gfEsc(w.name)+'</button>';
+  }).join('') + '</div>';
+}
+function _gfAiBuildSoil(){
+  var soils    = (window.GFPlants && window.GFPlants.soils)    ? window.GFPlants.soils()    : [];
+  var composts = (window.GFPlants && window.GFPlants.composts) ? window.GFPlants.composts() : [];
+  var minerals = (window.GFPlants && window.GFPlants.minerals) ? window.GFPlants.minerals() : [];
+  var weeds    = (window.GFPlants && window.GFPlants.weeds)    ? window.GFPlants.weeds()    : [];
+  var current  = (window.GFPlants && window.GFPlants.getUserSoil) ? window.GFPlants.getUserSoil() : null;
+  var html = '<div style="color:var(--muted);font-size:11px;line-height:1.6;margin-bottom:10px">Tap your soil type — picks, composts, and mineral suggestions update instantly. Everything below is <b>organic-only</b>: ZBNF, traditional Indian, and natural-mineral inputs.</div>';
+  html += '<div style="font-size:10px;font-weight:900;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin:6px 0 6px">1️⃣ Pick your soil ('+soils.length+' Indian soil types)</div>';
+  html += '<div id="gf-soil-picker">' + _gfRenderSoilPicker(current && current.id) + '</div>';
+  html += '<div id="gf-soil-detail" style="margin-top:14px">';
+  if(current){
+    html += _gfRenderSoilDetail(current, composts, minerals);
+  } else {
+    html += '<div style="background:#FFF8E1;border-radius:10px;padding:12px;font-size:12px;font-weight:700;color:var(--text);line-height:1.6">👆 Pick your soil above. The AI will then re-weight every recommendation using a new <b>fSoil</b> factor in the matrix.</div>';
+  }
+  html += '</div>';
+  html += '<div style="font-size:10px;font-weight:900;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin:18px 0 6px">2️⃣ Weed bioindicator quick-check ('+weeds.length+' weeds)</div>';
+  html += '<div style="font-size:11px;color:var(--text);margin-bottom:6px">Tap a weed you see growing — get a soil diagnosis + organic fix.</div>';
+  html += '<div id="gf-weed-picker">' + _gfRenderWeedPicker() + '</div>';
+  html += '<div id="gf-weed-detail" style="margin-top:10px"></div>';
+  html += '<div style="font-size:10px;font-weight:900;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin:18px 0 6px">3️⃣ Organic knowledge base</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">'
+    + _gfAiInfoTile('Soils', soils.length, 'Indian varieties')
+    + _gfAiInfoTile('Composts', composts.length, 'ZBNF + traditional')
+    + _gfAiInfoTile('Minerals', minerals.length, 'rock + cake + ash')
+  + '</div>';
+  // 4️⃣ Shop the Combos — ready-made bundles for busy gardeners
+  html += '<div style="font-size:10px;font-weight:900;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin:18px 0 6px">4️⃣ ⚡ Shop the Combos — for busy gardeners</div>';
+  html += '<div style="font-size:11px;color:var(--text);margin-bottom:8px;line-height:1.5">No time for 7-day fermentation? These ready-made bundles give you the same ZBNF-grade nutrition in <b>2 minutes</b>.</div>';
+  html += _gfRenderSoilCombos();
+  html += '<div style="background:#E8F5E9;border-left:3px solid var(--green,#43A047);border-radius:8px;padding:10px;font-size:11px;color:var(--text);margin-top:12px;line-height:1.6">🧪 <b>Matrix update:</b> GrowScore now multiplies by <code>fSoil</code> ∈ [0.55, 1.15] when you set your soil. Plants matching your soil tags + good-for list get boosted; mismatches are penalised — see the AI Analysis tile for the live breakdown.</div>';
+  return { title:'🌍 Soil Coach — Organic-Only', html:html };
+}
+function _gfRenderSoilCombos(){
+  var comboIds = [181, 182, 183, 184];
+  var prods = (window.GF_PRODUCTS||[]).filter(function(p){ return comboIds.indexOf(p.id)>=0; });
+  if(!prods.length) return '<div style="color:var(--muted);font-size:11px">Combos loading…</div>';
+  return prods.map(function(p){
+    return '<div style="background:var(--white);border:1px solid var(--bg);border-left:4px solid #FB8C00;border-radius:10px;padding:10px;margin-bottom:7px;display:flex;align-items:center;gap:10px">'
+      + '<div style="font-size:28px">'+_gfEsc(p.emoji||'🎁')+'</div>'
+      + '<div style="flex:1;min-width:0">'
+        + '<div style="font-size:12px;font-weight:900;color:var(--text)">'+_gfEsc(p.name)+'</div>'
+        + '<div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">₹'+p.price+(p.unit?' · '+_gfEsc(p.unit):'')+'</div>'
+      + '</div>'
+      + '<button onclick="window.gfAddProductFromSoil&&window.gfAddProductFromSoil('+p.id+')" style="background:var(--green,#43A047);color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:900;cursor:pointer;font-family:inherit;white-space:nowrap">🛒 Add</button>'
+    + '</div>';
+  }).join('');
+}
+function _gfRenderSoilDetail(s, composts, minerals){
+  var matchedComposts = composts.filter(function(c){ var g=c.goodForSoils||[]; return g.indexOf(s.id)>=0 || g.indexOf('all')>=0; }).slice(0,5);
+  var matchedMinerals = minerals.filter(function(m){ var g=m.goodForSoils||[]; return g.indexOf(s.id)>=0; }).slice(0,5);
+  // Top plant picks for this soil
+  var picks = [];
+  try{
+    var env = _gfBuildEnv(); var garden = _gfReadGarden();
+    if(window.GFPlants && window.GFPlants.suggestForSoil){
+      var sg = window.GFPlants.suggestForSoil(s.id, env, { top:5, existingGarden: garden });
+      if(sg && sg.picks) picks = sg.picks;
+    }
+  }catch(e){}
+  var html = '<div style="background:var(--white);border-radius:12px;padding:12px;box-shadow:var(--shadow-sm);border-left:4px solid #8D6E63">'
+    + '<div style="font-size:14px;font-weight:900;color:var(--text)">🪨 '+_gfEsc(s.name)+'</div>'
+    + '<div style="font-size:11px;color:var(--muted);font-weight:700;margin-top:2px">'+_gfEsc((s.aliases||[]).join(' · '))+'</div>'
+    + '<div style="font-size:11px;font-weight:700;color:var(--text);margin-top:8px;line-height:1.6">'
+      + '🗺️ <b>States:</b> '+_gfEsc((s.states||[]).join(', '))+'<br>'
+      + '🎨 '+_gfEsc(s.color)+' · 🪣 '+_gfEsc(s.texture)+'<br>'
+      + '⚗️ pH <b>'+(s.phRange?s.phRange.join('–'):'?')+'</b> · 💧 drainage <b>'+_gfEsc(s.drainage)+'</b> · 🌾 fertility <b>'+_gfEsc(s.fertility)+'</b><br>'
+      + '🧪 Organic C: <b>'+(s.organicCarbonPct?s.organicCarbonPct.join('–')+'%':'?')+'</b>'
+    + '</div>'
+    + '<div style="font-size:11px;color:var(--text);margin-top:8px;line-height:1.5"><b>📋 Nutrient profile:</b> '+_gfEsc(s.nutrientNotes||'—')+'</div>'
+    + '<div style="margin-top:8px">' + (s.tags||[]).map(function(t){return _gfSoilChip(t,'#EFEBE9');}).join('') + '</div>'
+  + '</div>';
+  if(picks.length){
+    html += '<div style="font-size:10px;font-weight:900;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin:14px 0 6px">🌱 Best plants for '+_gfEsc(s.name)+' (live re-ranked)</div>';
+    html += picks.map(function(r){
+      var p = r.plant; var sp = r.successPct; var col = sp>=70?'#43A047':sp>=45?'#FB8C00':'#E53935';
+      var soilBoost = r.breakdown && r.breakdown.fSoil ? r.breakdown.fSoil.toFixed(2) : '1.00';
+      return '<div style="background:var(--white);border:1px solid var(--bg);border-radius:10px;padding:10px;margin-bottom:7px;display:flex;align-items:center;gap:10px;border-left:4px solid '+col+'">'
+        + '<div style="font-size:22px">'+_gfPickIcon(p)+'</div>'
+        + '<div style="flex:1;min-width:0">'
+          + '<div style="font-size:12px;font-weight:900">'+_gfEsc(p.name)+' <span style="color:'+col+'">· '+sp+'%</span></div>'
+          + '<div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">'+(p.daysToHarvest||'?')+'d · '+(r.yieldKg||0)+'kg · fSoil ×'+soilBoost+'</div>'
+        + '</div>'
+      + '</div>';
+    }).join('');
+  }
+  if(matchedComposts.length){
+    html += '<div style="font-size:10px;font-weight:900;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin:14px 0 6px">🧪 Recommended organic composts</div>';
+    html += '<div style="font-size:10px;color:var(--muted);margin-bottom:6px">Each card shows the <b>traditional DIY recipe</b> + a ⚡ <b>2-min busy-mode</b> using a ready-made product you can add to cart.</div>';
+    html += matchedComposts.map(function(c){
+      var bm = c.busyMode || null;
+      var busyBlock = '';
+      if(bm){
+        var stepsHtml = (bm.steps||[]).map(function(s){return '<li style="margin-top:2px">'+_gfEsc(s)+'</li>';}).join('');
+        var prodId = bm.shopProductId;
+        var addBtn = prodId ? '<button onclick="window.gfAddProductFromSoil&&window.gfAddProductFromSoil('+prodId+')" style="background:var(--green,#43A047);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:11px;font-weight:900;cursor:pointer;font-family:inherit;margin-top:6px">🛒 Add to Cart</button>' : '';
+        busyBlock = '<div style="background:#FFF3E0;border-left:3px solid #FB8C00;border-radius:8px;padding:8px;margin-top:6px">'
+          + '<div style="font-size:11px;font-weight:900;color:#E65100">⚡ Busy-mode · '+(bm.timeMins||2)+' min · <b>'+_gfEsc(bm.shopName||'Ready-made')+'</b></div>'
+          + '<ol style="margin:4px 0 0 18px;padding:0;font-size:11px;color:var(--text);font-weight:700">'+stepsHtml+'</ol>'
+          + addBtn
+        + '</div>';
+      }
+      return '<div style="background:#F1F8E9;border-radius:10px;padding:10px;margin-bottom:7px">'
+        + '<div style="font-size:12px;font-weight:900;color:var(--text)">🌿 '+_gfEsc(c.name)+' <span style="color:var(--muted);font-weight:700;font-size:10px">· '+_gfEsc(c.tradition)+'</span></div>'
+        + '<div style="font-size:11px;color:var(--text);margin-top:3px;line-height:1.5"><b>Type:</b> '+_gfEsc(c.type)+(c.applyMlPerL?' · '+c.applyMlPerL+' ml/L water':'')+(c.applyKgPerSqm?' · '+c.applyKgPerSqm+' kg/m²':'')+' · every '+(c.frequencyDays||'?')+'d</div>'
+        + '<div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:3px">Benefits: '+_gfEsc((c.benefits||[]).join(' · '))+'</div>'
+        + (c.prepDays?'<div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:3px">⏳ Traditional prep: '+c.prepDays+' days</div>':'')
+        + busyBlock
+      + '</div>';
+    }).join('');
+  }
+  if(matchedMinerals.length){
+    html += '<div style="font-size:10px;font-weight:900;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin:14px 0 6px">⛏️ Recommended organic minerals</div>';
+    html += matchedMinerals.map(function(m){
+      var npk = m.npkPct ? 'N '+m.npkPct.N+' · P '+m.npkPct.P+' · K '+m.npkPct.K : '';
+      return '<div style="background:#EFEBE9;border-radius:10px;padding:10px;margin-bottom:7px">'
+        + '<div style="font-size:12px;font-weight:900;color:var(--text)">🪨 '+_gfEsc(m.name)+'</div>'
+        + '<div style="font-size:11px;color:var(--text);margin-top:3px;line-height:1.5"><b>NPK %:</b> '+npk+' · <b>pH effect:</b> '+_gfEsc(m.phEffect)+'</div>'
+        + '<div style="font-size:11px;color:var(--text);margin-top:3px"><b>Role:</b> '+_gfEsc(m.role)+'</div>'
+        + '<div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:3px">Apply '+(m.applyGramsPerSqm?m.applyGramsPerSqm+' g/m²':m.applyMlPerL?m.applyMlPerL+' ml/L':'?')+' every '+(m.frequencyDays||'?')+'d</div>'
+      + '</div>';
+    }).join('');
+  }
+  if(s.organicBoost && s.organicBoost.length){
+    html += '<div style="background:#FFF3E0;border-left:3px solid #FB8C00;border-radius:8px;padding:10px;font-size:11px;color:var(--text);margin-top:10px;line-height:1.6">💡 <b>Quick boost for '+_gfEsc(s.name)+':</b> '+(s.organicBoost.map(_gfEsc).join(' · '))+'</div>';
+  }
+  return html;
+}
+function gfSetSoil(soilId){
+  if(window.GFPlants && window.GFPlants.setUserSoil) window.GFPlants.setUserSoil(soilId);
+  // Refresh the detail pane without closing the modal
+  var picker = document.getElementById('gf-soil-picker');
+  var detail = document.getElementById('gf-soil-detail');
+  var soil = window.GFPlants && window.GFPlants.getSoil ? window.GFPlants.getSoil(soilId) : null;
+  if(picker) picker.innerHTML = _gfRenderSoilPicker(soilId);
+  if(detail && soil){
+    var composts = window.GFPlants.composts(); var minerals = window.GFPlants.minerals();
+    detail.innerHTML = _gfRenderSoilDetail(soil, composts, minerals);
+  }
+  // Also refresh the Smart Picks panel since fSoil is now active
+  try{ if(typeof gfRefreshAiCoach==='function') gfRefreshAiCoach(); }catch(e){}
+  try{ if(typeof gfRefreshGardenPicks==='function') gfRefreshGardenPicks(); }catch(e){}
+}
+function gfDiagnoseWeed(weedId){
+  var detail = document.getElementById('gf-weed-detail');
+  if(!detail || !window.GFPlants || !window.GFPlants.diagnoseWeed) return;
+  var d = window.GFPlants.diagnoseWeed(weedId);
+  if(!d){ detail.innerHTML = '<div style="color:var(--muted);font-size:11px">No diagnosis available.</div>'; return; }
+  var w = d.weed;
+  var html = '<div style="background:var(--white);border-radius:12px;padding:12px;box-shadow:var(--shadow-sm);border-left:4px solid #FB8C00">'
+    + '<div style="font-size:14px;font-weight:900">'+(w.emoji||'🌱')+' '+_gfEsc(w.name)+' <span style="font-size:10px;color:var(--muted);font-weight:700">· <i>'+_gfEsc(w.scientific||'')+'</i></span></div>'
+    + '<div style="font-size:11px;color:var(--text);margin-top:6px;line-height:1.6"><b>🩺 Indicates:</b> '+(w.indicators||[]).map(function(t){return _gfSoilChip(t,'#FFE0B2');}).join('')+'</div>'
+    + '<div style="font-size:11px;color:var(--text);margin-top:6px"><b>⚗️ pH hint:</b> '+_gfEsc(w.phHint)+' · <b>🌾 Fertility:</b> '+_gfEsc(w.fertilityHint)+'</div>'
+    + '<div style="font-size:11px;color:var(--text);margin-top:8px"><b>🛠️ What to do:</b><ul style="margin:4px 0 0 18px;padding:0;font-weight:600">'+(w.actions||[]).map(function(a){return '<li style="margin-top:3px">'+_gfEsc(a)+'</li>';}).join('')+'</ul></div>'
+  + '</div>';
+  if(d.composts && d.composts.length){
+    html += '<div style="margin-top:8px;background:#F1F8E9;border-radius:10px;padding:10px"><div style="font-size:11px;font-weight:900;color:var(--green-deep,#1B5E20);margin-bottom:5px">🧪 Apply these composts:</div>'
+      + d.composts.map(function(c){ return _gfSoilChip(c.name,'#C5E1A5'); }).join('') + '</div>';
+  }
+  if(d.minerals && d.minerals.length){
+    html += '<div style="margin-top:8px;background:#EFEBE9;border-radius:10px;padding:10px"><div style="font-size:11px;font-weight:900;color:#5D4037;margin-bottom:5px">⛏️ Apply these minerals:</div>'
+      + d.minerals.map(function(m){ return _gfSoilChip(m.name,'#D7CCC8'); }).join('') + '</div>';
+  }
+  detail.innerHTML = html;
+}
+if(typeof window!=='undefined'){
+  window.gfSetSoil = gfSetSoil;
+  window.gfDiagnoseWeed = gfDiagnoseWeed;
+}
+
+/* ════════════════ Cross-page "Add to Cart" from Soil Coach ════════════════
+   If we're on shop.html (or any page that has `addItem` + `products` loaded),
+   add directly. Otherwise stash IDs in localStorage and bounce to shop.html
+   which picks them up on load.                                              */
+function gfAddProductFromSoil(productId){
+  if(!productId) return;
+  // Same-page fast-path
+  if(typeof addItem==='function' && window.products && window.products[productId]){
+    try{ addItem(productId); if(typeof showToast==='function') showToast('✅ Added to cart'); return; }catch(e){}
+  }
+  // Cross-page: stash + navigate
+  try{
+    var raw = localStorage.getItem('gf_pending_cart_add');
+    var pending = raw ? JSON.parse(raw) : [];
+    if(!Array.isArray(pending)) pending = [];
+    if(pending.indexOf(productId)<0) pending.push(productId);
+    localStorage.setItem('gf_pending_cart_add', JSON.stringify(pending));
+  }catch(e){}
+  if(typeof showToast==='function') showToast('🛒 Opening shop…');
+  setTimeout(function(){ window.location.href = 'shop.html#minerals,compost'; }, 300);
+}
+/* On any page-load, if there are pending IDs and addItem is now available,
+   drain them into the cart.                                                  */
+function _gfDrainPendingCart(){
+  try{
+    var raw = localStorage.getItem('gf_pending_cart_add');
+    if(!raw) return;
+    var pending = JSON.parse(raw); if(!Array.isArray(pending) || !pending.length) return;
+    if(typeof addItem!=='function' || !window.products) return;
+    var added = 0;
+    pending.forEach(function(id){ if(window.products[id]){ try{ addItem(id); added++; }catch(e){} } });
+    localStorage.removeItem('gf_pending_cart_add');
+    if(added && typeof showToast==='function') showToast('✅ '+added+' item'+(added>1?'s':'')+' added from Soil Coach');
+  }catch(e){}
+}
+if(typeof window!=='undefined'){
+  window.gfAddProductFromSoil = gfAddProductFromSoil;
+  // Try draining once products list is hydrated. Retry a few times because
+  // products is populated asynchronously after GF_PRODUCTS render.
+  var _drainTries = 0;
+  var _drainTimer = setInterval(function(){
+    _drainTries++;
+    if(window.products && Object.keys(window.products).length>0){
+      _gfDrainPendingCart();
+      clearInterval(_drainTimer);
+    } else if(_drainTries>20){ clearInterval(_drainTimer); }
+  }, 300);
+}
+
+function showAiInfo(kind){
+  var modal = document.getElementById('ai-info-modal');
+  var titleEl = document.getElementById('ai-info-title');
+  var bodyEl = document.getElementById('ai-info-body');
+  if(!modal || !bodyEl) return;
+  var build = function(){
+    var data;
+    if(kind==='collect')         data = _gfAiBuildCollect();
+    else if(kind==='analyze')    data = _gfAiBuildAnalyze();
+    else if(kind==='recommend')  data = _gfAiBuildRecommend();
+    else if(kind==='alerts')     data = _gfAiBuildAlerts();
+    else if(kind==='soil')       data = _gfAiBuildSoil();
+    else                         data = { title:'🧠 AI Insight', html:'<div style="color:var(--muted)">Unknown panel.</div>' };
+    if(titleEl) titleEl.textContent = data.title;
+    bodyEl.innerHTML = data.html;
+    try{ if(typeof _gfRetranslate==='function') _gfRetranslate(); }catch(e){}
+  };
+  // Show modal immediately with a loading state so the user gets feedback,
+  // then wait for the catalog (whether cached or fetching) before building.
+  if(titleEl) titleEl.textContent = '🧠 Loading…';
+  bodyEl.innerHTML = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:12px;font-weight:700">Loading plant database…</div>';
+  modal.classList.add('show');
+  var ready = (window.GFPlants && window.GFPlants.ready) || Promise.resolve();
+  Promise.resolve(ready).then(function(){
+    // Tiny delay so DOM updates flush even on cached load.
+    setTimeout(build, 10);
+  }).catch(function(){ setTimeout(build, 10); });
+}
+function hideAiInfo(){ var m=document.getElementById('ai-info-modal'); if(m) m.classList.remove('show'); }
+if(typeof window!=='undefined'){
+  window.showAiInfo = showAiInfo;
+  window.hideAiInfo = hideAiInfo;
+}
 if(typeof window!=='undefined'){
   window.gfRefreshAiCoach = gfRefreshAiCoach;
   window.GFRefreshAICoach = gfRefreshAiCoach;
@@ -970,22 +1414,154 @@ function switchTab(tab,cat){
   }
 }
 function filterCat(pill,cat){
-  document.querySelectorAll('#screen-shop .cat-pill').forEach(p=>p.classList.remove('active'));
+  // Only clear active state on the main category strip (not the sub-strip),
+  // so clicking a tools sub-pill doesn't deactivate the parent Tools pill.
+  document.querySelectorAll('#screen-shop .cat-strip:not(#tools-substrip) .cat-pill').forEach(p=>p.classList.remove('active'));
   if(pill&&pill.classList)pill.classList.add('active');
-  // `cat` may be a single key ("seeds") or a comma-joined group
-  // ("minerals,compost") so we can collapse related categories into a
-  // single pill while keeping per-card badges distinct (e.g. MINERALS
-  // vs COMPOST). Split once and test membership.
-  var cats=String(cat||'all').split(',').map(function(s){return s.trim();});
+  // `cat` may be a single key ("seeds"), a comma-joined group
+  // ("minerals,compost"), or a sub-cat selector ("tools:hand-tools").
+  // The sub-cat form filters within Tools by data-subcat.
+  var rawCats=String(cat||'all').split(',').map(function(s){return s.trim();});
+  var subcatFilter=null;
+  var cats=rawCats.map(function(c){
+    var p=c.indexOf(':');
+    if(p>=0){ subcatFilter=c.slice(p+1); return c.slice(0,p); }
+    return c;
+  });
   var all=cats.indexOf('all')!==-1;
   document.querySelectorAll('.product-card').forEach(function(c){
-    c.style.display=(all||cats.indexOf(c.dataset.cat)!==-1)?'flex':'none';
+    var match=all||cats.indexOf(c.dataset.cat)!==-1;
+    if(match && subcatFilter && subcatFilter!=='all'){
+      match = (c.dataset.subcat===subcatFilter);
+    }
+    c.style.display=match?'flex':'none';
   });
+  // Show/hide the Tools sub-pill strip
+  try{ _gfRenderToolsSubStrip(cats.indexOf('tools')!==-1, subcatFilter); }catch(e){}
+}
+
+/* Tools sub-category strip — appears only when Tools pill is active.
+   Mirrors the .cat-strip styling. Pills filter tools by data-subcat.
+   Sub-categories are loaded from db/shop-config.json (with inline fallback). */
+function _gfRenderToolsSubStrip(show, activeSub){
+  var strip=document.getElementById('tools-substrip');
+  var hostStrip=document.querySelector('#screen-shop .cat-strip');
+  if(!hostStrip) return;
+  if(!strip){
+    strip=document.createElement('div');
+    strip.id='tools-substrip';
+    strip.className='cat-strip';
+    strip.style.cssText='margin-top:6px;display:none;overflow-x:auto;-webkit-overflow-scrolling:touch';
+    hostStrip.parentNode.insertBefore(strip, hostStrip.nextSibling);
+  }
+  if(!show){ strip.style.display='none'; return; }
+  var cfg=(window.GF_SHOP_CONFIG && window.GF_SHOP_CONFIG.subcatsByCat && window.GF_SHOP_CONFIG.subcatsByCat.tools) || [
+    {key:'all',          label:'All Tools',   emoji:'🧰'},
+    {key:'hand-tools',   label:'Hand Tools',  emoji:'🪒'},
+    {key:'irrigation',   label:'Irrigation',  emoji:'💧'},
+    {key:'containers',   label:'Containers',  emoji:'🛍️'},
+    {key:'support',      label:'Support',     emoji:'🎍'},
+    {key:'protection',   label:'Protection',  emoji:'☂️'},
+    {key:'diagnostics',  label:'Diagnostics', emoji:'📟'},
+    {key:'propagation',  label:'Propagation', emoji:'🌱'},
+    {key:'pest-control', label:'Pest-Control',emoji:'🪤'},
+    {key:'safety-gear',  label:'Safety',      emoji:'🧤'}
+  ];
+  var active=activeSub||'all';
+  strip.innerHTML=cfg.map(function(s){
+    var cls='cat-pill'+(s.key===active?' active':'');
+    var arg=s.key==='all'?'tools':'tools:'+s.key;
+    var lbl=(s.emoji?s.emoji+' ':'')+s.label;
+    return '<div class="'+cls+'" onclick="filterCat(this,\''+arg+'\')" style="font-size:11px;padding:4px 9px">'+lbl+'</div>';
+  }).join('');
+  strip.style.display='flex';
+}
+
+/* Rebuild the main cat-strip + region select from db/shop-config.json so the
+   HTML stays minimal and editors don't have to touch markup to add a category
+   or region. Safe to call multiple times — idempotent. */
+function _gfRenderShopChrome(){
+  var cfg = window.GF_SHOP_CONFIG; if (!cfg) return;
+  var strip = document.querySelector('#screen-shop .cat-strip:not(#tools-substrip)');
+  if (strip && Array.isArray(cfg.categories) && cfg.categories.length){
+    // Preserve current active key (default to first)
+    var activeKey = (strip.querySelector('.cat-pill.active')||{}).getAttribute && strip.querySelector('.cat-pill.active').getAttribute('data-cat-key');
+    if (!activeKey){
+      var firstActive = strip.querySelector('.cat-pill.active');
+      if (firstActive){
+        var m = (firstActive.getAttribute('onclick')||'').match(/filterCat\(this,'([^']+)'\)/);
+        activeKey = m ? m[1] : cfg.categories[0].key;
+      } else activeKey = cfg.categories[0].key;
+    }
+    strip.innerHTML = cfg.categories.map(function(c){
+      var lbl = (c.emoji?c.emoji+' ':'') + c.label;
+      var cls = 'cat-pill' + (c.key===activeKey?' active':'');
+      return '<div class="'+cls+'" data-cat-key="'+c.key+'" onclick="filterCat(this,\''+c.key+'\')">'+lbl+'</div>';
+    }).join('');
+  }
+  var sel = document.getElementById('shop-region');
+  if (sel && Array.isArray(cfg.regions) && cfg.regions.length){
+    var cur = sel.value || 'all';
+    sel.innerHTML = cfg.regions.map(function(r){
+      return '<option value="'+r.value+'"'+(r.value===cur?' selected':'')+'>'+r.label+'</option>';
+    }).join('');
+  }
+  // Delivery banner (cart screen)
+  var del = document.querySelector('.delivery-note');
+  if (del && cfg.freeDeliveryAbove != null){
+    del.textContent = '🚚 Free delivery above ₹'+cfg.freeDeliveryAbove+' · '+(cfg.deliveryEta||'')+' · '+(cfg.deliveryCity||'');
+  }
+}
+
+/* Fetch db/shop-config.json once and cache. Resolves with the config object. */
+function _gfLoadShopConfig(){
+  if (window.GF_SHOP_CONFIG) return Promise.resolve(window.GF_SHOP_CONFIG);
+  var base = (function(){
+    var s = document.currentScript || document.querySelector('script[src*="gf-app.js"]');
+    if (s && s.src) return s.src.replace(/\/shared\/gf-app\.js.*$/, '/db/');
+    return 'db/';
+  })();
+  // Use cached copy synchronously while the network request runs.
+  try{
+    var cached = localStorage.getItem('gf_shop_config_v1');
+    if (cached){
+      var c = JSON.parse(cached);
+      if (c && typeof c==='object') window.GF_SHOP_CONFIG = c;
+    }
+  }catch(e){}
+  return fetch(base + 'shop-config.json', { cache:'force-cache' })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){
+      if (j && typeof j==='object'){
+        window.GF_SHOP_CONFIG = j;
+        try{ localStorage.setItem('gf_shop_config_v1', JSON.stringify(j)); }catch(e){}
+      }
+      return window.GF_SHOP_CONFIG;
+    })
+    .catch(function(){ return window.GF_SHOP_CONFIG || null; });
+}
+if (typeof window!=='undefined'){
+  window._gfLoadShopConfig = _gfLoadShopConfig;
+  window._gfRenderShopChrome = _gfRenderShopChrome;
 }
 // Deep-link from anywhere into a specific product card on the Shop page.
 // Switches to Shop, applies the category filter, then scrolls to and pulses
 // the matching card (matched by exact product-name text).
+// MPA-aware: if Shop lives on another page, hands the product name to the
+// URL (?product=) so shop.html can resolve it after render.
 function gotoProduct(name,cat){
+  var hostHasShop = !!document.getElementById('screen-shop');
+  if (!hostHasShop){
+    // Cross-page hop: encode product in URL; shop.html will pulse it on load.
+    var file = (typeof fileForScreen==='function' ? fileForScreen('shop') : 'shop.html') || 'shop.html';
+    var from = (typeof currentPageKey==='function' ? currentPageKey() : 'home');
+    var qs = '?screen=shop'
+           + (cat ? ('&cat=' + encodeURIComponent(cat)) : '')
+           + '&product=' + encodeURIComponent(name)
+           + '&from=' + encodeURIComponent(from);
+    location.href = file + qs;
+    return;
+  }
   switchTab('shop',cat||'all');
   setTimeout(()=>{
     const cards=document.querySelectorAll('#screen-shop .product-card');
@@ -1676,23 +2252,35 @@ function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;',
   var _shopCat = 'all';
   // Parse the active pill key (may be a single cat like "seeds" or a
   // comma-joined group like "minerals,compost") into a Set for fast lookup.
-  function _shopCatSet(){
-    return String(_shopCat||'all').split(',').map(function(s){return s.trim();});
+  // Also strips any "cat:subcat" form, capturing the subcat separately.
+  function _shopCatParse(){
+    var raw = String(_shopCat||'all').split(',').map(function(s){return s.trim();});
+    var subcat = null;
+    var cats = raw.map(function(c){
+      var p = c.indexOf(':');
+      if (p >= 0){ subcat = c.slice(p+1); return c.slice(0,p); }
+      return c;
+    });
+    return { cats: cats, subcat: subcat };
   }
   window.onShopSearch = function(q){
     q = String(q||'').trim().toLowerCase();
     var grid = document.getElementById('product-grid');
     var cards = grid ? grid.querySelectorAll('.product-card') : [];
     var shown = 0;
-    var cats = _shopCatSet();
+    var parsed = _shopCatParse();
+    var cats = parsed.cats;
+    var subcat = parsed.subcat;
     var allCats = cats.indexOf('all') !== -1;
     cards.forEach(function(card){
       var cat  = card.dataset.cat || '';
+      var sub  = card.dataset.subcat || '';
       var nEl  = card.querySelector('.product-name');
       var dEl  = card.querySelector('.product-desc');
       var name = (nEl && nEl.textContent || '').toLowerCase();
       var desc = (dEl && dEl.textContent || '').toLowerCase();
       var matchCat = allCats || cats.indexOf(cat) !== -1;
+      if (matchCat && subcat && subcat !== 'all') matchCat = (sub === subcat);
       var matchQ   = (!q || name.indexOf(q) !== -1 || desc.indexOf(q) !== -1);
       var show = matchCat && matchQ;
       card.style.display = show ? 'flex' : 'none';
@@ -1721,20 +2309,32 @@ function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;',
     var sugg = document.getElementById('home-sugg');
     if (!sugg) return;
     if (!q){ sugg.classList.remove('show'); sugg.innerHTML = ''; return; }
-    // Products
-    var cards = Array.prototype.slice.call(document.querySelectorAll('#screen-shop .product-card'));
-    var prod = cards.map(function(card){
-      var nEl = card.querySelector('.product-name');
-      var dEl = card.querySelector('.product-desc');
-      var iEl = card.querySelector('.product-img');
-      var emoji = (iEl ? (iEl.textContent || '').trim().replace(/[A-Z0-9·\s]/g,'').slice(0,2) : '') || '🪴';
-      return {
-        name: nEl ? nEl.textContent : '',
-        desc: dEl ? dEl.textContent : '',
-        cat:  card.dataset.cat || '',
-        emoji: emoji,
-      };
-    }).filter(function(p){
+    // Products — read from the in-memory catalog (window.GF_PRODUCTS) so the
+    // search works on every MPA page, not just shop.html where the DOM cards
+    // exist. Falls back to scraping the shop grid if the catalog isn't loaded.
+    var catalog = (window.GF_PRODUCTS && window.GF_PRODUCTS.length)
+      ? window.GF_PRODUCTS.map(function(p){
+          return {
+            name:  p.name  || '',
+            desc:  p.desc  || '',
+            cat:   p.cat   || '',
+            emoji: p.emoji || '🪴',
+            id:    p.id
+          };
+        })
+      : Array.prototype.slice.call(document.querySelectorAll('#screen-shop .product-card')).map(function(card){
+          var nEl = card.querySelector('.product-name');
+          var dEl = card.querySelector('.product-desc');
+          var iEl = card.querySelector('.product-img');
+          var emoji = (iEl ? (iEl.textContent || '').trim().replace(/[A-Z0-9·\s]/g,'').slice(0,2) : '') || '🪴';
+          return {
+            name: nEl ? nEl.textContent : '',
+            desc: dEl ? dEl.textContent : '',
+            cat:  card.dataset.cat || '',
+            emoji: emoji
+          };
+        });
+    var prod = catalog.filter(function(p){
       // Match against name, description and category so users can find
       // products by typing the category word (e.g. "minerals", "compost",
       // "tools") on the Home search even when those words don't appear
@@ -3353,33 +3953,45 @@ function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;',
 })();
 
 /* ── block 13 ─────────────────────────────────────────── */
-window.GF_PRODUCTS = [{"id": 1, "cat": "seeds", "name": "Tomato Seeds (Desi)", "desc": "High-yield desi variety, 50 seeds", "how": "Sow 1cm. Daily water. 70-80d.", "price": 49, "old": 60, "region": "Hyderabad", "tags": ["popular", "beginner"], "emoji": "🍅"}, {"id": 2, "cat": "seeds", "name": "Chilli Seeds (Guntur)", "desc": "Spicy Guntur variety, 30 seeds", "how": "Full sun. 90d.", "price": 39, "old": 50, "region": "Hyderabad", "tags": ["spicy", "heat-tolerant"], "emoji": "🌶️"}, {"id": 3, "cat": "seeds", "name": "Brinjal Seeds (Bhagyamati)", "desc": "Long purple variety, 30 seeds", "how": "75d.", "price": 35, "old": 45, "region": "Hyderabad", "tags": ["indian"], "emoji": "🍆"}, {"id": 4, "cat": "seeds", "name": "Ridge Gourd (Beerakaya)", "desc": "15 seeds, climbing vine", "how": "Trellis. 65d.", "price": 29, "old": 35, "region": "Hyderabad", "tags": ["vine"], "emoji": "🥒"}, {"id": 5, "cat": "seeds", "name": "Cluster Bean (Goru Chikkudu)", "desc": "Drought-resistant, 25 seeds", "how": "60d.", "price": 29, "old": 35, "region": "Hyderabad", "tags": ["drought"], "emoji": "🫘"}, {"id": 6, "cat": "seeds", "name": "Snake Gourd (Potlakaya)", "desc": "10 seeds, summer specialty", "how": "Vertical support. 80d.", "price": 35, "old": 45, "region": "Hyderabad", "tags": ["summer"], "emoji": "🥒"}, {"id": 7, "cat": "saplings", "name": "Curry Leaf Sapling", "desc": "Essential for South Indian cuisine", "how": "Sunny. 2x/wk water.", "price": 149, "old": 185, "region": "Hyderabad", "tags": ["kitchen", "perennial"], "emoji": "🌿"}, {"id": 8, "cat": "saplings", "name": "Tulsi Sapling", "desc": "Holy basil", "how": "Full sun.", "price": 99, "old": 125, "region": "Hyderabad", "tags": ["sacred", "medicinal"], "emoji": "🌿"}, {"id": 9, "cat": "saplings", "name": "Sweet Lime (Mosambi)", "desc": "Heat-tolerant citrus", "how": "Deep pot. Full sun.", "price": 349, "old": 435, "region": "Hyderabad", "tags": ["fruit", "citrus"], "emoji": "🍋"}, {"id": 10, "cat": "saplings", "name": "Custard Apple (Sitaphal)", "desc": "Drought-tolerant tree", "how": "24-36 mo to fruit.", "price": 299, "old": 375, "region": "Hyderabad", "tags": ["fruit"], "emoji": "🍏"}, {"id": 11, "cat": "saplings", "name": "Henna (Mehendi) Sapling", "desc": "Hot-climate hedge plant", "how": "Prune for leaves.", "price": 89, "old": 110, "region": "Hyderabad", "tags": ["medicinal"], "emoji": "🌿"}, {"id": 12, "cat": "saplings", "name": "Aloe Vera", "desc": "Medicinal succulent", "how": "Minimal water.", "price": 79, "old": 100, "region": "Hyderabad", "tags": ["medicinal", "easy"], "emoji": "🌵"}, {"id": 13, "cat": "seeds", "name": "Lettuce Mix Seeds", "desc": "Romaine + iceberg, 100 seeds", "how": "Cool. Partial shade. 45d.", "price": 59, "old": 75, "region": "Bangalore", "tags": ["salad", "quick"], "emoji": "🥬"}, {"id": 14, "cat": "seeds", "name": "Bell Pepper Seeds (Capsicum)", "desc": "Tri-color mix, 25 seeds", "how": "Indoor start. 90d.", "price": 69, "old": 85, "region": "Bangalore", "tags": ["gourmet"], "emoji": "🫑"}, {"id": 15, "cat": "seeds", "name": "Broccoli Seeds", "desc": "Calabrese, 30 seeds", "how": "Cool weather. 70d.", "price": 79, "old": 100, "region": "Bangalore", "tags": ["nutrition"], "emoji": "🥦"}, {"id": 16, "cat": "seeds", "name": "Cherry Tomato Mix", "desc": "Red+yellow, 40 seeds", "how": "Cage support. 70d.", "price": 89, "old": 110, "region": "Bangalore", "tags": ["gourmet"], "emoji": "🍅"}, {"id": 17, "cat": "seeds", "name": "Spring Onion (Bunching)", "desc": "100 seeds", "how": "Continuous harvest.", "price": 25, "old": 30, "region": "Bangalore", "tags": ["quick"], "emoji": "🧅"}, {"id": 18, "cat": "seeds", "name": "Coriander (Slow-Bolt)", "desc": "50g pack", "how": "Sow biweekly.", "price": 25, "old": 30, "region": "Bangalore", "tags": ["herb", "quick"], "emoji": "🌿"}, {"id": 19, "cat": "saplings", "name": "Strawberry Sapling", "desc": "Camarosa variety", "how": "Hanging basket. Cool nights.", "price": 199, "old": 250, "region": "Bangalore", "tags": ["fruit", "premium"], "emoji": "🍓"}, {"id": 20, "cat": "saplings", "name": "Rosemary Sapling", "desc": "Mediterranean herb", "how": "Sunny, drained soil.", "price": 159, "old": 200, "region": "Bangalore", "tags": ["herb"], "emoji": "🌿"}, {"id": 21, "cat": "saplings", "name": "Thyme Sapling", "desc": "Aromatic culinary herb", "how": "Avoid wet feet.", "price": 149, "old": 185, "region": "Bangalore", "tags": ["herb"], "emoji": "🌿"}, {"id": 22, "cat": "saplings", "name": "Stevia Sapling", "desc": "Natural sweetener leaves", "how": "Pinch tops.", "price": 129, "old": 160, "region": "Bangalore", "tags": ["sugar-free"], "emoji": "🌿"}, {"id": 23, "cat": "saplings", "name": "Avocado Sapling (Hass)", "desc": "Grafted, fruits in 3 yrs", "how": "Large pot.", "price": 599, "old": 750, "region": "Bangalore", "tags": ["fruit", "premium"], "emoji": "🥑"}, {"id": 24, "cat": "saplings", "name": "Geranium (Scented)", "desc": "Pink rose-scented variety", "how": "Bright indirect light.", "price": 119, "old": 150, "region": "Bangalore", "tags": ["flower", "fragrant"], "emoji": "🌸"}, {"id": 25, "cat": "seeds", "name": "Okra Seeds (Bhindi)", "desc": "Heat tolerant, 40 seeds", "how": "Sow after rains. 50d.", "price": 35, "old": 45, "region": "Chennai", "tags": ["summer", "humid"], "emoji": "🌶️"}, {"id": 26, "cat": "seeds", "name": "Cluster Beans (Gawar)", "desc": "30 seeds", "how": "Trellis.", "price": 39, "old": 50, "region": "Chennai", "tags": ["drought"], "emoji": "🫘"}, {"id": 27, "cat": "seeds", "name": "Amaranth (Mulai Keerai)", "desc": "Red leafy, 100 seeds", "how": "30d.", "price": 25, "old": 30, "region": "Chennai", "tags": ["leafy", "iron"], "emoji": "🌿"}, {"id": 28, "cat": "seeds", "name": "Long Beans (Karamani)", "desc": "Tamil staple, 25 seeds", "how": "Trellis. 60d.", "price": 35, "old": 45, "region": "Chennai", "tags": ["vine"], "emoji": "🫛"}, {"id": 29, "cat": "seeds", "name": "Snake Gourd Seeds", "desc": "10 seeds", "how": "Vertical. 80d.", "price": 35, "old": 45, "region": "Chennai", "tags": ["vine"], "emoji": "🥒"}, {"id": 30, "cat": "seeds", "name": "Watermelon (Sugar Baby)", "desc": "Compact variety, 15 seeds", "how": "Sandy soil. 80d.", "price": 49, "old": 60, "region": "Chennai", "tags": ["fruit", "summer"], "emoji": "🍉"}, {"id": 31, "cat": "saplings", "name": "Banana Sapling (G9)", "desc": "Dwarf high-yield", "how": "12 months. Rich soil.", "price": 249, "old": 310, "region": "Chennai", "tags": ["fruit", "tropical"], "emoji": "🍌"}, {"id": 32, "cat": "saplings", "name": "Drumstick (Moringa)", "desc": "Superfood", "how": "Hot climate.", "price": 129, "old": 160, "region": "Chennai", "tags": ["superfood"], "emoji": "🌿"}, {"id": 33, "cat": "saplings", "name": "Papaya Sapling (Red Lady)", "desc": "Bisexual, fruits in 8 mo", "how": "Full sun.", "price": 99, "old": 125, "region": "Chennai", "tags": ["fruit", "quick"], "emoji": "🍈"}, {"id": 34, "cat": "saplings", "name": "Hibiscus (Red)", "desc": "Ornamental + medicinal", "how": "Daily water in summer.", "price": 99, "old": 125, "region": "Chennai", "tags": ["flower", "medicinal"], "emoji": "🌺"}, {"id": 35, "cat": "saplings", "name": "Plumeria (Frangipani)", "desc": "Fragrant flowers", "how": "Tolerates salt air.", "price": 199, "old": 250, "region": "Chennai", "tags": ["flower", "coastal"], "emoji": "🌸"}, {"id": 36, "cat": "saplings", "name": "Bougainvillea", "desc": "Vibrant climbing shrub", "how": "Full sun. Less water.", "price": 149, "old": 185, "region": "Chennai", "tags": ["flower", "hardy"], "emoji": "🌺"}, {"id": 37, "cat": "seeds", "name": "Bottle Gourd (Lauki)", "desc": "15 seeds", "how": "Monsoon. Trellis.", "price": 29, "old": 35, "region": "Mumbai", "tags": ["vine", "monsoon"], "emoji": "🥒"}, {"id": 38, "cat": "seeds", "name": "Bitter Gourd (Karela)", "desc": "20 seeds", "how": "Soak 24h.", "price": 35, "old": 45, "region": "Mumbai", "tags": ["medicinal", "diabetic"], "emoji": "🥒"}, {"id": 39, "cat": "seeds", "name": "Ridge Gourd (Turai)", "desc": "15 seeds", "how": "Monsoon perfect.", "price": 29, "old": 35, "region": "Mumbai", "tags": ["vine"], "emoji": "🥒"}, {"id": 40, "cat": "seeds", "name": "Indian Spinach (Pui Saag)", "desc": "Climbing variety, 40 seeds", "how": "Trellis.", "price": 35, "old": 45, "region": "Mumbai", "tags": ["leafy", "vine"], "emoji": "🥬"}, {"id": 41, "cat": "seeds", "name": "Cucumber (Marketmore)", "desc": "30 seeds", "how": "Trellis. 55d.", "price": 39, "old": 50, "region": "Mumbai", "tags": ["quick"], "emoji": "🥒"}, {"id": 42, "cat": "seeds", "name": "Pumpkin (Kashi Harit)", "desc": "15 seeds", "how": "Spreading vine.", "price": 39, "old": 50, "region": "Mumbai", "tags": ["vine"], "emoji": "🎃"}, {"id": 43, "cat": "saplings", "name": "Coconut Palm (Dwarf)", "desc": "Yields in 4 yrs", "how": "Sandy soil.", "price": 599, "old": 750, "region": "Mumbai", "tags": ["fruit", "tropical"], "emoji": "🥥"}, {"id": 44, "cat": "saplings", "name": "Mango (Alphonso)", "desc": "Grafted", "how": "Large pot. Full sun.", "price": 449, "old": 560, "region": "Mumbai", "tags": ["fruit", "premium"], "emoji": "🥭"}, {"id": 45, "cat": "saplings", "name": "Cashew Sapling", "desc": "Coastal nut tree", "how": "Sandy loam.", "price": 299, "old": 375, "region": "Mumbai", "tags": ["nut", "coastal"], "emoji": "🌰"}, {"id": 46, "cat": "saplings", "name": "Jackfruit (Dwarf)", "desc": "Dwarf variety, fruits in 3 yrs", "how": "Wide pot.", "price": 399, "old": 500, "region": "Mumbai", "tags": ["fruit", "tropical"], "emoji": "🌴"}, {"id": 47, "cat": "saplings", "name": "Karipatta (Sweet Curry)", "desc": "Aromatic kitchen leaf", "how": "Sunny.", "price": 99, "old": 125, "region": "Mumbai", "tags": ["kitchen"], "emoji": "🌿"}, {"id": 48, "cat": "saplings", "name": "Money Plant (Pothos)", "desc": "Indoor air-purifier", "how": "Low light OK.", "price": 79, "old": 100, "region": "Mumbai", "tags": ["indoor", "easy"], "emoji": "🪴"}, {"id": 49, "cat": "seeds", "name": "Mustard Greens (Sarson)", "desc": "100 seeds", "how": "Cool season. 45d.", "price": 25, "old": 30, "region": "Delhi", "tags": ["winter", "leafy"], "emoji": "🥬"}, {"id": 50, "cat": "seeds", "name": "Carrot (Pusa Rudhira)", "desc": "Red Indian, 200 seeds", "how": "Loose soil.", "price": 39, "old": 50, "region": "Delhi", "tags": ["root", "winter"], "emoji": "🥕"}, {"id": 51, "cat": "seeds", "name": "Radish (Pusa Himani)", "desc": "White winter radish, 100 seeds", "how": "40d.", "price": 25, "old": 30, "region": "Delhi", "tags": ["root", "winter"], "emoji": "🥬"}, {"id": 52, "cat": "seeds", "name": "Cauliflower (Snowball)", "desc": "30 seeds", "how": "Cool nights. 90d.", "price": 49, "old": 60, "region": "Delhi", "tags": ["winter"], "emoji": "🥦"}, {"id": 53, "cat": "seeds", "name": "Cabbage (Golden Acre)", "desc": "30 seeds", "how": "Winter. 80d.", "price": 45, "old": 55, "region": "Delhi", "tags": ["winter"], "emoji": "🥬"}, {"id": 54, "cat": "seeds", "name": "Peas (Arkel)", "desc": "Sweet shelling pea, 50 seeds", "how": "Winter sow. 70d.", "price": 35, "old": 45, "region": "Delhi", "tags": ["winter", "legume"], "emoji": "🫛"}, {"id": 55, "cat": "seeds", "name": "Garlic Bulbils", "desc": "5 large bulbs", "how": "Plant Oct-Nov.", "price": 79, "old": 100, "region": "Delhi", "tags": ["kitchen", "winter"], "emoji": "🧄"}, {"id": 56, "cat": "saplings", "name": "Pomegranate (Bhagwa)", "desc": "Hardy variety", "how": "Tolerates extremes.", "price": 349, "old": 435, "region": "Delhi", "tags": ["fruit", "hardy"], "emoji": "🍎"}, {"id": 57, "cat": "saplings", "name": "Guava (L-49)", "desc": "Sweet white-flesh", "how": "Full sun.", "price": 299, "old": 375, "region": "Delhi", "tags": ["fruit"], "emoji": "🍐"}, {"id": 58, "cat": "saplings", "name": "Mulberry Sapling", "desc": "Fast-growing fruit tree", "how": "Hardy.", "price": 199, "old": 250, "region": "Delhi", "tags": ["fruit"], "emoji": "🫐"}, {"id": 59, "cat": "saplings", "name": "Rose (Desi)", "desc": "Fragrant pink variety", "how": "Prune yearly.", "price": 149, "old": 185, "region": "Delhi", "tags": ["flower"], "emoji": "🌹"}, {"id": 60, "cat": "saplings", "name": "Chrysanthemum (Guldaudi)", "desc": "Winter bloomer", "how": "Pinch for bushy growth.", "price": 99, "old": 125, "region": "Delhi", "tags": ["flower", "winter"], "emoji": "🌼"}, {"id": 61, "cat": "seeds", "name": "Pointed Gourd (Parwal)", "desc": "Bengali staple, 15 seeds", "how": "Trellis.", "price": 49, "old": 60, "region": "Kolkata", "tags": ["bengali"], "emoji": "🌱"}, {"id": 62, "cat": "seeds", "name": "Spinach (Palak Bharti)", "desc": "Bolt-resistant, 100 seeds", "how": "30d.", "price": 29, "old": 35, "region": "Kolkata", "tags": ["leafy", "iron"], "emoji": "🥬"}, {"id": 63, "cat": "seeds", "name": "Brinjal (Long Purple)", "desc": "Bengali variety, 30 seeds", "how": "80d.", "price": 35, "old": 45, "region": "Kolkata", "tags": ["bengali"], "emoji": "🍆"}, {"id": 64, "cat": "seeds", "name": "Pumpkin (Kashiphal)", "desc": "15 seeds", "how": "Vine.", "price": 35, "old": 45, "region": "Kolkata", "tags": ["bengali"], "emoji": "🎃"}, {"id": 65, "cat": "seeds", "name": "Coriander (Bengali Type)", "desc": "50g", "how": "30d.", "price": 25, "old": 30, "region": "Kolkata", "tags": ["herb"], "emoji": "🌿"}, {"id": 66, "cat": "seeds", "name": "Lal Saag (Red Amaranth)", "desc": "Bengali leafy, 80 seeds", "how": "25d.", "price": 25, "old": 30, "region": "Kolkata", "tags": ["leafy"], "emoji": "🌿"}, {"id": 67, "cat": "seeds", "name": "Snake Gourd (Chichinga)", "desc": "10 seeds", "how": "Vertical.", "price": 35, "old": 45, "region": "Kolkata", "tags": ["vine"], "emoji": "🥒"}, {"id": 68, "cat": "saplings", "name": "Jasmine (Mogra)", "desc": "Fragrant evening bloomer", "how": "Sunny. Daily water.", "price": 179, "old": 225, "region": "Kolkata", "tags": ["flower", "fragrant"], "emoji": "🌼"}, {"id": 69, "cat": "saplings", "name": "Litchi Sapling", "desc": "Cool-loving fruit", "how": "Humid winters.", "price": 449, "old": 560, "region": "Kolkata", "tags": ["fruit", "premium"], "emoji": "🍒"}, {"id": 70, "cat": "saplings", "name": "Sapota (Chikoo)", "desc": "Sweet brown fruit", "how": "Slow grower.", "price": 349, "old": 435, "region": "Kolkata", "tags": ["fruit"], "emoji": "🥭"}, {"id": 71, "cat": "saplings", "name": "Tagar (Wax Flower)", "desc": "Bengali pooja flower", "how": "Partial shade.", "price": 119, "old": 150, "region": "Kolkata", "tags": ["flower", "sacred"], "emoji": "🌸"}, {"id": 72, "cat": "saplings", "name": "Shiuli (Night Jasmine)", "desc": "Bengali sacred flower", "how": "Drops at dawn.", "price": 159, "old": 200, "region": "Kolkata", "tags": ["flower", "sacred"], "emoji": "🌼"}, {"id": 73, "cat": "seeds", "name": "Coriander (Pune Local)", "desc": "Slow-bolt, 50g", "how": "30d.", "price": 25, "old": 30, "region": "Pune", "tags": ["herb", "quick"], "emoji": "🌿"}, {"id": 74, "cat": "seeds", "name": "Tomato (Pusa Ruby)", "desc": "Hardy, 50 seeds", "how": "70d.", "price": 45, "old": 55, "region": "Pune", "tags": ["popular"], "emoji": "🍅"}, {"id": 75, "cat": "seeds", "name": "Onion (Nashik Red)", "desc": "Maharashtra red onion, 100 seeds", "how": "Sow Oct.", "price": 49, "old": 60, "region": "Pune", "tags": ["kitchen"], "emoji": "🧅"}, {"id": 76, "cat": "seeds", "name": "French Bean (Bush)", "desc": "40 seeds", "how": "55d.", "price": 39, "old": 50, "region": "Pune", "tags": ["legume", "quick"], "emoji": "🫛"}, {"id": 77, "cat": "seeds", "name": "Beetroot (Detroit)", "desc": "100 seeds", "how": "Loose soil. 60d.", "price": 35, "old": 45, "region": "Pune", "tags": ["root"], "emoji": "🥕"}, {"id": 78, "cat": "seeds", "name": "Methi (Fenugreek)", "desc": "100g", "how": "25d.", "price": 15, "old": 25, "region": "Pune", "tags": ["quick", "iron"], "emoji": "🌿"}, {"id": 79, "cat": "saplings", "name": "Mint (Pudina)", "desc": "Spreads fast", "how": "Partial shade.", "price": 79, "old": 100, "region": "Pune", "tags": ["herb"], "emoji": "🌿"}, {"id": 80, "cat": "saplings", "name": "Lemon (Kagzi)", "desc": "Juicy variety", "how": "Deep pot.", "price": 299, "old": 375, "region": "Pune", "tags": ["fruit", "citrus"], "emoji": "🍋"}, {"id": 81, "cat": "saplings", "name": "Fig (Anjeer)", "desc": "Pune classic", "how": "Tolerates drought.", "price": 349, "old": 435, "region": "Pune", "tags": ["fruit"], "emoji": "🍑"}, {"id": 82, "cat": "saplings", "name": "Grapes (Thompson)", "desc": "Seedless variety", "how": "Trellis.", "price": 399, "old": 500, "region": "Pune", "tags": ["fruit", "premium"], "emoji": "🍇"}, {"id": 83, "cat": "saplings", "name": "Marigold (Genda)", "desc": "Pooja staple", "how": "Sunny.", "price": 49, "old": 60, "region": "Pune", "tags": ["flower", "sacred"], "emoji": "🌼"}, {"id": 84, "cat": "saplings", "name": "Chilli (Bhavnagri)", "desc": "Mild large chilli", "how": "Stake support.", "price": 89, "old": 110, "region": "Pune", "tags": ["kitchen"], "emoji": "🌶️"}, {"id": 85, "cat": "seeds", "name": "Cumin Seeds (Jeera)", "desc": "Gujarat classic, 50g", "how": "Cool sow. 110d.", "price": 79, "old": 100, "region": "Ahmedabad", "tags": ["spice", "winter"], "emoji": "🌾"}, {"id": 86, "cat": "seeds", "name": "Tindora (Ivy Gourd)", "desc": "15 cuttings", "how": "Trellis.", "price": 89, "old": 110, "region": "Ahmedabad", "tags": ["vine", "perennial"], "emoji": "🥒"}, {"id": 87, "cat": "seeds", "name": "Dudhi (Bottle Gourd)", "desc": "15 seeds", "how": "Vine.", "price": 29, "old": 35, "region": "Ahmedabad", "tags": ["vine"], "emoji": "🥒"}, {"id": 88, "cat": "seeds", "name": "Cluster Bean (Guar)", "desc": "Drought champ, 30 seeds", "how": "Direct sow.", "price": 35, "old": 45, "region": "Ahmedabad", "tags": ["drought"], "emoji": "🫘"}, {"id": 89, "cat": "seeds", "name": "Black Eyed Pea (Chowli)", "desc": "40 seeds", "how": "Trellis.", "price": 39, "old": 50, "region": "Ahmedabad", "tags": ["legume"], "emoji": "🫛"}, {"id": 90, "cat": "seeds", "name": "Sesame (Til)", "desc": "Oilseed, 100g", "how": "Hot dry climate.", "price": 49, "old": 60, "region": "Ahmedabad", "tags": ["oilseed"], "emoji": "🌾"}, {"id": 91, "cat": "saplings", "name": "Ber (Indian Jujube)", "desc": "Drought-tolerant fruit", "how": "Minimal water.", "price": 199, "old": 250, "region": "Ahmedabad", "tags": ["fruit", "hardy"], "emoji": "🍒"}, {"id": 92, "cat": "saplings", "name": "Indian Date (Khajur)", "desc": "Desert palm", "how": "Sandy soil.", "price": 599, "old": 750, "region": "Ahmedabad", "tags": ["fruit", "desert"], "emoji": "🌴"}, {"id": 93, "cat": "saplings", "name": "Pomegranate (Sindhuri)", "desc": "Hot-climate variety", "how": "Full sun.", "price": 329, "old": 410, "region": "Ahmedabad", "tags": ["fruit"], "emoji": "🍎"}, {"id": 94, "cat": "saplings", "name": "Neem Tree", "desc": "Medicinal shade tree", "how": "Drought-tolerant.", "price": 149, "old": 185, "region": "Ahmedabad", "tags": ["medicinal"], "emoji": "🌿"}, {"id": 95, "cat": "saplings", "name": "Bougainvillea (Magenta)", "desc": "Desert-loving climber", "how": "Less water = more flowers.", "price": 149, "old": 185, "region": "Ahmedabad", "tags": ["flower", "hardy"], "emoji": "🌺"}, {"id": 96, "cat": "saplings", "name": "Gulmohar Sapling", "desc": "Flame tree", "how": "Full sun.", "price": 199, "old": 250, "region": "Ahmedabad", "tags": ["flower", "tree"], "emoji": "🌳"}, {"id": 97, "cat": "seeds", "name": "Ashgourd (Boodida Gummadi)", "desc": "Festival staple, 10 seeds", "how": "Vine.", "price": 39, "old": 50, "region": "South India", "tags": ["festival", "vine"], "emoji": "🎃"}, {"id": 98, "cat": "seeds", "name": "Snake Gourd Mix", "desc": "12 seeds", "how": "Vertical support.", "price": 35, "old": 45, "region": "South India", "tags": ["vine"], "emoji": "🥒"}, {"id": 99, "cat": "seeds", "name": "Field Bean (Avarekai)", "desc": "Karnataka winter bean, 30 seeds", "how": "Cool weather.", "price": 49, "old": 60, "region": "South India", "tags": ["legume", "winter"], "emoji": "🫘"}, {"id": 100, "cat": "seeds", "name": "Horsegram (Kollu)", "desc": "Protein legume, 100g", "how": "Drought-tolerant.", "price": 39, "old": 50, "region": "South India", "tags": ["legume", "protein"], "emoji": "🌾"}, {"id": 101, "cat": "seeds", "name": "Ragi (Finger Millet)", "desc": "Calcium-rich grain, 100g", "how": "Direct sow.", "price": 29, "old": 35, "region": "South India", "tags": ["grain", "calcium"], "emoji": "🌾"}, {"id": 102, "cat": "seeds", "name": "Yard Long Bean", "desc": "20 seeds", "how": "Trellis.", "price": 35, "old": 45, "region": "South India", "tags": ["vine"], "emoji": "🫛"}, {"id": 103, "cat": "saplings", "name": "Curry Leaf (Gamthi)", "desc": "Premium aromatic variety", "how": "Sunny.", "price": 169, "old": 210, "region": "South India", "tags": ["kitchen"], "emoji": "🌿"}, {"id": 104, "cat": "saplings", "name": "Sapota (Cricket Ball)", "desc": "Large fruit variety", "how": "Slow grower.", "price": 379, "old": 475, "region": "South India", "tags": ["fruit"], "emoji": "🥭"}, {"id": 105, "cat": "saplings", "name": "Jasmine (Madurai Malli)", "desc": "Famous garland variety", "how": "Full sun.", "price": 199, "old": 250, "region": "South India", "tags": ["flower", "fragrant"], "emoji": "🌼"}, {"id": 106, "cat": "saplings", "name": "Areca Palm", "desc": "Indoor air-purifier", "how": "Bright indirect light.", "price": 249, "old": 310, "region": "South India", "tags": ["indoor"], "emoji": "🌴"}, {"id": 107, "cat": "saplings", "name": "Champaka (Sampangi)", "desc": "Sacred fragrant tree", "how": "Sunny.", "price": 299, "old": 375, "region": "South India", "tags": ["flower", "sacred"], "emoji": "��"}, {"id": 108, "cat": "saplings", "name": "Kovakkai (Ivy Gourd)", "desc": "5 cuttings", "how": "Trellis.", "price": 99, "old": 125, "region": "South India", "tags": ["perennial"], "emoji": "🥒"}, {"id": 109, "cat": "seeds", "name": "Bathua (Lambsquarters)", "desc": "Punjab winter green, 100 seeds", "how": "Direct sow.", "price": 25, "old": 30, "region": "North India", "tags": ["winter", "leafy"], "emoji": "🥬"}, {"id": 110, "cat": "seeds", "name": "Sarson (Yellow Mustard)", "desc": "100 seeds", "how": "Cool season.", "price": 25, "old": 30, "region": "North India", "tags": ["winter", "leafy"], "emoji": "🥬"}, {"id": 111, "cat": "seeds", "name": "Methi Champa", "desc": "Punjab leafy fenugreek, 100g", "how": "25d.", "price": 25, "old": 30, "region": "North India", "tags": ["leafy"], "emoji": "🌿"}, {"id": 112, "cat": "seeds", "name": "Chana (Black Chickpea)", "desc": "100 seeds", "how": "Winter crop.", "price": 35, "old": 45, "region": "North India", "tags": ["legume", "winter"], "emoji": "🫛"}, {"id": 113, "cat": "seeds", "name": "Turnip (Shalgam)", "desc": "100 seeds", "how": "Loose soil.", "price": 29, "old": 35, "region": "North India", "tags": ["root", "winter"], "emoji": "🥬"}, {"id": 114, "cat": "seeds", "name": "Radish (Mooli Long White)", "desc": "100 seeds", "how": "45d.", "price": 25, "old": 30, "region": "North India", "tags": ["root", "winter"], "emoji": "🥬"}, {"id": 115, "cat": "saplings", "name": "Apple (Anna - Low Chill)", "desc": "Plains-friendly apple", "how": "Cool nights.", "price": 599, "old": 750, "region": "North India", "tags": ["fruit", "premium"], "emoji": "🍎"}, {"id": 116, "cat": "saplings", "name": "Apricot (Khurmani)", "desc": "Hardy stone fruit", "how": "Cold winter req.", "price": 499, "old": 625, "region": "North India", "tags": ["fruit"], "emoji": "🍑"}, {"id": 117, "cat": "saplings", "name": "Kinnow (Citrus)", "desc": "Punjab winter mandarin", "how": "Full sun.", "price": 299, "old": 375, "region": "North India", "tags": ["fruit", "citrus"], "emoji": "🍊"}, {"id": 118, "cat": "saplings", "name": "Rose (Edward)", "desc": "Fragrant pink", "how": "Prune Jan.", "price": 169, "old": 210, "region": "North India", "tags": ["flower"], "emoji": "🌹"}, {"id": 119, "cat": "saplings", "name": "Marigold (African Tall)", "desc": "Bright orange", "how": "Sunny.", "price": 49, "old": 60, "region": "North India", "tags": ["flower"], "emoji": "🌼"}, {"id": 120, "cat": "saplings", "name": "Walnut Sapling", "desc": "Hill-loving nut tree", "how": "Cold winter req.", "price": 699, "old": 875, "region": "North India", "tags": ["nut", "premium"], "emoji": "��"}, {"id": 121, "cat": "seeds", "name": "Watermelon (Sugar Baby)", "desc": "15 seeds", "how": "Sandy soil.", "price": 49, "old": 60, "region": "Coastal India", "tags": ["fruit", "summer"], "emoji": "🍉"}, {"id": 122, "cat": "seeds", "name": "Muskmelon (Hara Madhu)", "desc": "20 seeds", "how": "Vine.", "price": 49, "old": 60, "region": "Coastal India", "tags": ["fruit"], "emoji": "🌱"}, {"id": 123, "cat": "seeds", "name": "Sweet Potato Vine", "desc": "5 cuttings", "how": "Sandy soil.", "price": 79, "old": 100, "region": "Coastal India", "tags": ["root", "tuber"], "emoji": "🍠"}, {"id": 124, "cat": "seeds", "name": "Bhendi (Pusa Sawani)", "desc": "40 seeds", "how": "50d.", "price": 35, "old": 45, "region": "Coastal India", "tags": ["summer"], "emoji": "🌶️"}, {"id": 125, "cat": "seeds", "name": "Long Beans (Coastal)", "desc": "30 seeds", "how": "Trellis.", "price": 35, "old": 45, "region": "Coastal India", "tags": ["vine"], "emoji": "🫛"}, {"id": 126, "cat": "seeds", "name": "Pumpkin (Disco)", "desc": "Round green, 15 seeds", "how": "Vine.", "price": 39, "old": 50, "region": "Coastal India", "tags": ["vine"], "emoji": "🎃"}, {"id": 127, "cat": "saplings", "name": "Coconut (Hybrid Dwarf)", "desc": "Salt-tolerant", "how": "Sandy soil.", "price": 599, "old": 750, "region": "Coastal India", "tags": ["fruit", "tropical"], "emoji": "🥥"}, {"id": 128, "cat": "saplings", "name": "Cashew (Vengurla)", "desc": "Coastal nut", "how": "Sandy loam.", "price": 299, "old": 375, "region": "Coastal India", "tags": ["nut"], "emoji": "🌰"}, {"id": 129, "cat": "saplings", "name": "Areca Nut Palm", "desc": "Tall ornamental", "how": "Humid.", "price": 249, "old": 310, "region": "Coastal India", "tags": ["palm"], "emoji": "🌴"}, {"id": 130, "cat": "saplings", "name": "Pineapple Sucker", "desc": "Sweet variety", "how": "18 mo to fruit.", "price": 99, "old": 125, "region": "Coastal India", "tags": ["fruit", "tropical"], "emoji": "🍎"}, {"id": 131, "cat": "saplings", "name": "Hibiscus (Tropical Mix)", "desc": "Salt-tolerant flowers", "how": "Coastal hardy.", "price": 119, "old": 150, "region": "Coastal India", "tags": ["flower", "coastal"], "emoji": "🌺"}, {"id": 132, "cat": "saplings", "name": "Plumeria (White-Yellow)", "desc": "Beach-loving fragrance", "how": "Sandy soil.", "price": 199, "old": 250, "region": "Coastal India", "tags": ["flower", "coastal"], "emoji": "🌸"}, {"id": 133, "cat": "seeds", "name": "Pea (Sugar Snap)", "desc": "Cool-climate sweet pea, 50 seeds", "how": "70d.", "price": 49, "old": 60, "region": "Hill Stations", "tags": ["cool", "legume"], "emoji": "🫛"}, {"id": 134, "cat": "seeds", "name": "Carrot (Nantes Half Long)", "desc": "European variety, 200 seeds", "how": "Cool soil.", "price": 49, "old": 60, "region": "Hill Stations", "tags": ["root", "cool"], "emoji": "🥕"}, {"id": 135, "cat": "seeds", "name": "Beetroot (Crimson Globe)", "desc": "100 seeds", "how": "Cool weather.", "price": 39, "old": 50, "region": "Hill Stations", "tags": ["root"], "emoji": "🥕"}, {"id": 136, "cat": "seeds", "name": "Lettuce (Butterhead)", "desc": "100 seeds", "how": "Partial shade.", "price": 59, "old": 75, "region": "Hill Stations", "tags": ["salad"], "emoji": "🥬"}, {"id": 137, "cat": "seeds", "name": "Kale (Red Russian)", "desc": "Superfood leaves, 50 seeds", "how": "Cool nights.", "price": 79, "old": 100, "region": "Hill Stations", "tags": ["superfood", "leafy"], "emoji": "🥬"}, {"id": 138, "cat": "seeds", "name": "Brussels Sprouts", "desc": "30 seeds", "how": "90d. Cool climate.", "price": 89, "old": 110, "region": "Hill Stations", "tags": ["gourmet", "cool"], "emoji": "🥬"}, {"id": 139, "cat": "saplings", "name": "Strawberry (Sweet Charlie)", "desc": "Premium hill variety", "how": "Cool nights essential.", "price": 229, "old": 285, "region": "Hill Stations", "tags": ["fruit", "premium"], "emoji": "🍓"}, {"id": 140, "cat": "saplings", "name": "Blueberry (Misty)", "desc": "Acid-soil berry", "how": "pH 4.5-5.5.", "price": 599, "old": 750, "region": "Hill Stations", "tags": ["fruit", "premium"], "emoji": "🍒"}, {"id": 141, "cat": "saplings", "name": "Raspberry Sapling", "desc": "Cold-loving berry", "how": "Trellis.", "price": 449, "old": 560, "region": "Hill Stations", "tags": ["fruit", "premium"], "emoji": "🍒"}, {"id": 142, "cat": "saplings", "name": "Pear (Patharnakh)", "desc": "Hardy hill pear", "how": "Cold winters.", "price": 499, "old": 625, "region": "Hill Stations", "tags": ["fruit"], "emoji": "🫛"}, {"id": 143, "cat": "saplings", "name": "Lavender Sapling", "desc": "Aromatic hill herb", "how": "Drained soil.", "price": 199, "old": 250, "region": "Hill Stations", "tags": ["herb", "fragrant"], "emoji": "🪻"}, {"id": 144, "cat": "saplings", "name": "Geranium (Pelargonium)", "desc": "Hill-station classic", "how": "Cool nights.", "price": 149, "old": 185, "region": "Hill Stations", "tags": ["flower"], "emoji": "🌸"}, {"id": 145, "cat": "seeds", "name": "Marigold (Mixed)", "desc": "Pest-repellent, 100 seeds", "how": "Any sunny spot.", "price": 19, "old": 29, "region": "All India", "tags": ["flower", "companion"], "emoji": "🌼"}, {"id": 146, "cat": "seeds", "name": "Methi (Fenugreek)", "desc": "Iron-rich, 100g", "how": "25d.", "price": 15, "old": 25, "region": "All India", "tags": ["quick", "iron"], "emoji": "🌿"}, {"id": 147, "cat": "seeds", "name": "Sunflower (Dwarf)", "desc": "20 seeds", "how": "Full sun.", "price": 39, "old": 50, "region": "All India", "tags": ["flower"], "emoji": "🌻"}, {"id": 148, "cat": "seeds", "name": "Basil (Sweet)", "desc": "Italian basil, 50 seeds", "how": "Pinch tops.", "price": 35, "old": 45, "region": "All India", "tags": ["herb"], "emoji": "🌿"}, {"id": 149, "cat": "saplings", "name": "Aloe Vera (Indoor)", "desc": "Medicinal succulent", "how": "Bright light.", "price": 79, "old": 100, "region": "All India", "tags": ["medicinal", "indoor"], "emoji": "🌵"}, {"id": 150, "cat": "saplings", "name": "Snake Plant", "desc": "Air-purifying indoor", "how": "Low light OK.", "price": 199, "old": 250, "region": "All India", "tags": ["indoor", "easy"], "emoji": "🪴"}, {"id": 151, "cat": "saplings", "name": "Money Plant", "desc": "Lucky vine", "how": "Indirect light.", "price": 79, "old": 100, "region": "All India", "tags": ["indoor", "easy"], "emoji": "🪴"}, {"id": 152, "cat": "saplings", "name": "Tulsi (Rama)", "desc": "Sacred basil", "how": "Full sun.", "price": 99, "old": 125, "region": "All India", "tags": ["sacred", "medicinal"], "emoji": "🌿"}, {"id": 153, "cat": "minerals", "name": "NPK Fertilizer 500g", "desc": "Balanced 19-19-19", "how": "1 tsp/pot, monthly.", "price": 199, "old": 250, "region": "All India", "tags": ["nutrition"], "emoji": "🧪"}, {"id": 154, "cat": "minerals", "name": "Bone Meal 250g", "desc": "Phosphorus boost", "how": "Mix at planting.", "price": 149, "old": 185, "region": "All India", "tags": ["flowering"], "emoji": "🦴"}, {"id": 155, "cat": "minerals", "name": "Neem Cake 500g", "desc": "Organic pest deterrent", "how": "2 tbsp bi-weekly.", "price": 179, "old": 225, "region": "All India", "tags": ["organic", "pest"], "emoji": "🌿"}, {"id": 156, "cat": "minerals", "name": "Epsom Salt 1kg", "desc": "Magnesium for leaves", "how": "Foliar spray.", "price": 129, "old": 160, "region": "All India", "tags": ["leaves"], "emoji": "🧂"}, {"id": 157, "cat": "minerals", "name": "Mustard Cake 1kg", "desc": "Organic N", "how": "Soak 24h.", "price": 159, "old": 200, "region": "All India", "tags": ["organic", "nitrogen"], "emoji": "🥬"}, {"id": 158, "cat": "minerals", "name": "Seaweed Extract 500ml", "desc": "Liquid bio-stimulant", "how": "5ml/L water.", "price": 299, "old": 375, "region": "All India", "tags": ["organic", "growth"], "emoji": "🌊"}, {"id": 159, "cat": "compost", "name": "Vermicompost 5kg", "desc": "Premium worm castings", "how": "20% mix.", "price": 249, "old": 310, "region": "All India", "tags": ["organic"], "emoji": "🪱"}, {"id": 160, "cat": "compost", "name": "Cocopeat Block 1kg", "desc": "Expands to 15L", "how": "Soak first.", "price": 99, "old": 125, "region": "All India", "tags": ["medium"], "emoji": "🫛"}, {"id": 161, "cat": "compost", "name": "Cow Dung Compost 10kg", "desc": "Aged manure", "how": "Top-dress.", "price": 299, "old": 375, "region": "All India", "tags": ["organic"], "emoji": "🐄"}, {"id": 162, "cat": "compost", "name": "Leaf Mould 3kg", "desc": "Rich humus", "how": "Mulch.", "price": 149, "old": 185, "region": "All India", "tags": ["organic", "mulch"], "emoji": "🍂"}, {"id": 163, "cat": "compost", "name": "Perlite 1L", "desc": "Drainage amendment", "how": "20% mix.", "price": 119, "old": 150, "region": "All India", "tags": ["drainage"], "emoji": "⚪"}, {"id": 164, "cat": "tools", "name": "Hand Trowel", "desc": "Stainless steel", "how": "Rinse after use.", "price": 199, "old": 250, "region": "All India", "tags": ["essential"], "emoji": "🛠️"}, {"id": 165, "cat": "tools", "name": "Pruning Scissors", "desc": "Sharp curved blades", "how": "Oil monthly.", "price": 349, "old": 435, "region": "All India", "tags": ["essential"], "emoji": "✂️"}, {"id": 166, "cat": "tools", "name": "Watering Can 5L", "desc": "Long-spout", "how": "", "price": 449, "old": 560, "region": "All India", "tags": ["watering"], "emoji": "💧"}, {"id": 167, "cat": "tools", "name": "Terracotta Pots (3)", "desc": "6/8/10 inch", "how": "Soak first.", "price": 599, "old": 750, "region": "All India", "tags": ["breathable"], "emoji": "🪴"}, {"id": 168, "cat": "tools", "name": "pH Test Kit", "desc": "Soil acidity meter", "how": "Read leaflet.", "price": 249, "old": 310, "region": "All India", "tags": ["diagnostic"], "emoji": "🧪"}, {"id": 169, "cat": "tools", "name": "Spray Bottle 1L", "desc": "Misting", "how": "", "price": 149, "old": 185, "region": "All India", "tags": ["watering"], "emoji": "💦"}, {"id": 170, "cat": "tools", "name": "Garden Gloves", "desc": "Nitrile-coated", "how": "Air-dry.", "price": 199, "old": 250, "region": "All India", "tags": ["safety"], "emoji": "🧤"}, {"id": 171, "cat": "tools", "name": "Plant Labels (50)", "desc": "White waterproof tags", "how": "", "price": 149, "old": 185, "region": "All India", "tags": ["organize"], "emoji": "🏷️"}];
+/* Pre-loaded by shared/gf-db-bundle.js (build artifact of db/*.json).
+ * Fall back to [] only if the bundle didn't load — async loaders will fill it. */
+window.GF_PRODUCTS = window.GF_PRODUCTS || [];
 
 /* ── block 14 ─────────────────────────────────────────── */
 /* ── Shop catalog renderer (171 products from backend seed) ─────────────── */
 (function(){
   function badge(p){
-    var map={seeds:'SEEDS', saplings:'SAPLING', minerals:'MINERAL', compost:'COMPOST', tools:'TOOL'};
-    return map[p.cat] || (p.cat||'').toUpperCase();
+    var cfg=(window.GF_SHOP_CONFIG && window.GF_SHOP_CONFIG.badges) || {seeds:'SEEDS', saplings:'SAPLING', minerals:'MINERAL', compost:'COMPOST', tools:'TOOL'};
+    // For tools, prefer the sub-category as the badge (e.g. "HAND TOOLS",
+    // "IRRIGATION") so each card communicates its specific role.
+    if (p.cat === 'tools' && p.subcat){
+      return String(p.subcat).replace(/-/g,' ').toUpperCase();
+    }
+    return cfg[p.cat] || (p.cat||'').toUpperCase();
   }
   function bgFor(p){
-    var map={
+    var cfg=(window.GF_SHOP_CONFIG && window.GF_SHOP_CONFIG.cardGradients) || {
       seeds:    'linear-gradient(135deg,#E8F5E9,#C8E6C9)',
       saplings: 'linear-gradient(135deg,#E0F2F1,#A5D6A7)',
       minerals: 'linear-gradient(135deg,#E3F2FD,#BBDEFB)',
       compost:  'linear-gradient(135deg,#EFEBE9,#D7CCC8)',
-      tools:    'linear-gradient(135deg,#FFF3E0,#FFE0B2)'
+      tools:    'linear-gradient(135deg,#FFF3E0,#FFE0B2)',
+      "default":'linear-gradient(135deg,#F1F8E9,#DCEDC8)'
     };
-    return map[p.cat] || 'linear-gradient(135deg,#F1F8E9,#DCEDC8)';
+    return cfg[p.cat] || cfg["default"] || 'linear-gradient(135deg,#F1F8E9,#DCEDC8)';
   }
   function regionChip(r){
     if(!r || r==='All India') return '';
     return '<span style="font-size:8px;font-weight:900;background:rgba(255,255,255,.92);color:#37474F;padding:2px 6px;border-radius:8px;position:absolute;top:5px;left:5px;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 1px 3px rgba(0,0,0,.12)">📍 '+r+'</span>';
   }
+  function isLivingCat(cat){
+    var living=(window.GF_SHOP_CONFIG && window.GF_SHOP_CONFIG.livingCats) || ['seeds','saplings'];
+    return living.indexOf(cat)>=0;
+  }
   function cardHtml(p){
     // Companion plants only make ecological sense for living plants (seeds + saplings).
     // Tools / minerals / compost should not be tagged or clickable as "companions".
-    var isLiving = (p.cat==='seeds' || p.cat==='saplings');
+    var isLiving = isLivingCat(p.cat);
     var clickAttr = isLiving
       ? 'onclick="if(!event.target.closest(\'#ctrl-'+p.id+'\'))showCompanions('+p.id+')" style="cursor:pointer"'
       : '';
@@ -3387,7 +3999,7 @@ window.GF_PRODUCTS = [{"id": 1, "cat": "seeds", "name": "Tomato Seeds (Desi)", "
       ? '<div style="position:absolute;bottom:5px;right:5px;background:rgba(46,125,50,0.92);color:#fff;font-size:9px;font-weight:900;padding:2px 7px;border-radius:8px;letter-spacing:.3px;box-shadow:0 1px 3px rgba(0,0,0,.15)">🤝 COMPANIONS</div>'
       : '';
     return ''
-      + '<div class="product-card" data-cat="'+p.cat+'" data-region="'+(p.region||'')+'" data-pid="'+p.id+'" '+clickAttr+'>'
+      + '<div class="product-card" data-cat="'+p.cat+'" data-subcat="'+(p.subcat||'')+'" data-region="'+(p.region||'')+'" data-pid="'+p.id+'" '+clickAttr+'>'
       +   '<div class="product-img" style="background:'+bgFor(p)+';position:relative;font-size:42px;height:96px;display:flex;align-items:center;justify-content:center;">'
       +     regionChip(p.region)
       +     '<span>'+p.emoji+'</span>'
@@ -3445,7 +4057,67 @@ window.GF_PRODUCTS = [{"id": 1, "cat": "seeds", "name": "Tomato Seeds (Desi)", "
   // Initial render once DOM is ready
   function init(){
     if (!document.getElementById('product-grid')) { setTimeout(init,80); return; }
-    window.renderShopProducts();
+    // Load shop config (categories, regions, badges, gradients) + products + tools
+    // in parallel, then rebuild chrome and render cards.
+    Promise.all([
+      (typeof _gfLoadShopConfig==='function' ? _gfLoadShopConfig() : Promise.resolve()),
+      _loadProductsDB(),
+      _loadToolsDB()
+    ]).then(function(){
+      try{ if (typeof _gfRenderShopChrome==='function') _gfRenderShopChrome(); }catch(e){}
+      window.renderShopProducts();
+    });
+  }
+  // Generic DB loader: fetches all JSON files for a sub-folder, dedupes by id,
+  // caches in localStorage. JSON items override / extend window.GF_PRODUCTS.
+  function _mergeIntoGFProducts(items){
+    if (!Array.isArray(items) || !items.length) return;
+    window.GF_PRODUCTS = window.GF_PRODUCTS || [];
+    var byId = Object.create(null);
+    window.GF_PRODUCTS.forEach(function(p,i){ byId[p.id] = i; });
+    items.forEach(function(t){
+      if (byId[t.id] != null) window.GF_PRODUCTS[byId[t.id]] = t;
+      else window.GF_PRODUCTS.push(t);
+    });
+  }
+  function _resolveDBBase(subdir){
+    var s = document.currentScript || document.querySelector('script[src*="gf-app.js"]');
+    if (s && s.src) return s.src.replace(/\/shared\/gf-app\.js.*$/, '/db/'+subdir+'/');
+    return 'db/'+subdir+'/';
+  }
+  function _loadDBSet(subdir, files, cacheKey, loadedFlag){
+    if (window[loadedFlag]) return Promise.resolve();
+    var BASE = _resolveDBBase(subdir);
+    // Try cache first (instant render)
+    try{
+      var cached = localStorage.getItem(cacheKey);
+      if (cached){
+        var arr = JSON.parse(cached);
+        if (Array.isArray(arr) && arr.length) _mergeIntoGFProducts(arr);
+      }
+    }catch(e){}
+    return Promise.all(files.map(function(f){
+      return fetch(BASE + f + '.json', { cache:'force-cache' })
+        .then(function(r){ return r.ok ? r.json() : []; })
+        .catch(function(){ return []; });
+    })).then(function(results){
+      var all = [].concat.apply([], results);
+      if (all.length){
+        _mergeIntoGFProducts(all);
+        try{ localStorage.setItem(cacheKey, JSON.stringify(all)); }catch(e){}
+        window[loadedFlag] = true;
+      }
+    }).catch(function(){ /* offline / file:// — keep inline catalog */ });
+  }
+  function _loadToolsDB(){
+    return _loadDBSet('tools',
+      ['hand-tools','irrigation','containers','support','protection','diagnostics','propagation','pest-control','safety-gear'],
+      'gf_tools_db_v1', '_gfToolsLoaded');
+  }
+  function _loadProductsDB(){
+    return _loadDBSet('products',
+      ['seeds','saplings','minerals','compost'],
+      'gf_products_db_v1', '_gfProductsLoaded');
   }
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
   else init();
@@ -3453,6 +4125,11 @@ window.GF_PRODUCTS = [{"id": 1, "cat": "seeds", "name": "Tomato Seeds (Desi)", "
 
 /* ── block 15 ─────────────────────────────────────────── */
 (function(){
+  /* Climate data is loaded from db/climate/*.json on first run; the inline
+   * objects below act as a fallback when fetch is unavailable (file://).
+   * To edit zones, state mapping or RD buckets, edit those JSON files
+   * — no JS change required.
+   */
   var ZONES = {
     tropical:{e:'🌴',n:'Tropical Humid',s:'Long growing seasons · high humidity · dense layering thrives.',t:['Humid','Layered','Spice systems']},
     semiarid:{e:'🌾',n:'Semi-Arid',s:'Hot summers · moderate rain · drought-tolerant + drip works best.',t:['Drought-tolerant','Drip','Mulch-heavy']},
@@ -3480,6 +4157,29 @@ window.GF_PRODUCTS = [{"id": 1, "cat": "seeds", "name": "Tomato Seeds (Desi)", "
     {max:99999,name:'Very large',d:20,s:30,l:50}
   ];
 
+  // One-shot async load: fetch the climate DB and replace the inline fallback
+  // objects above. Safe to call multiple times — it's idempotent.
+  var _climateLoaded = false;
+  function _loadClimateDB(){
+    if (_climateLoaded) return Promise.resolve();
+    var base = (function(){
+      var s = document.currentScript || document.querySelector('script[src*="gf-app.js"]');
+      if (s && s.src) return s.src.replace(/\/shared\/gf-app\.js.*$/, '/db/climate/');
+      return 'db/climate/';
+    })();
+    var files = [
+      ['zones.json',           function(j){ if (j && typeof j==='object') ZONES = j; }],
+      ['state-zone-map.json',  function(j){ if (j && typeof j==='object') STATE_ZONE = j; }],
+      ['rd-buckets.json',      function(j){ if (Array.isArray(j) && j.length) BUCKETS = j; }]
+    ];
+    return Promise.all(files.map(function(pair){
+      return fetch(base + pair[0], { cache:'force-cache' })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(pair[1])
+        .catch(function(){ /* keep inline fallback */ });
+    })).then(function(){ _climateLoaded = true; });
+  }
+
   function bucketFor(n){
     var v = Math.max(10, Math.min(20000, Number(n) || 0));
     for (var i=0;i<BUCKETS.length;i++) if (v <= BUCKETS[i].max) return BUCKETS[i];
@@ -3489,6 +4189,16 @@ window.GF_PRODUCTS = [{"id": 1, "cat": "seeds", "name": "Tomato Seeds (Desi)", "
   function init(){
     var sel = document.getElementById('rd-mini-state');
     if (!sel) { setTimeout(init,120); return; }
+    // Refresh state dropdown after climate DB hydrates (in case it differs).
+    _loadClimateDB().then(function(){
+      if (sel.options.length <= 1){
+        var states = Object.keys(STATE_ZONE).sort();
+        sel.innerHTML = '<option value="">— select state —</option>' +
+          states.map(function(s){return '<option value="'+s+'">'+s+'</option>';}).join('');
+        sel.value = 'Telangana';
+        render();
+      }
+    });
     if (sel.options.length === 0){
       var states = Object.keys(STATE_ZONE).sort();
       sel.innerHTML = '<option value="">— select state —</option>' +
@@ -4241,6 +4951,28 @@ window.GF_PRODUCTS = [{"id": 1, "cat": "seeds", "name": "Tomato Seeds (Desi)", "
         setTimeout(function(){
           if (typeof _origSwitchTab === 'function') _origSwitchTab('shop', cat);
         }, 100);
+      }
+      // Honour ?product= — scroll-and-pulse the matching card once shop renders.
+      var wantProduct = p.get('product');
+      if (wantProduct && here()==='shop.html') {
+        var tries = 0;
+        var pulse = function(){
+          tries++;
+          var cards = document.querySelectorAll('#screen-shop .product-card');
+          if (!cards.length && tries < 40) { setTimeout(pulse, 80); return; }
+          var target = null, q = String(wantProduct).trim().toLowerCase();
+          cards.forEach(function(c){
+            var n = c.querySelector('.product-name');
+            if (n && n.textContent.trim().toLowerCase() === q) target = c;
+          });
+          if (!target) return;
+          // Ensure the card is visible (clear any active subcat/search filter on its row).
+          target.style.display = 'flex';
+          target.scrollIntoView({behavior:'smooth', block:'center'});
+          target.classList.add('product-pulse');
+          setTimeout(function(){ target.classList.remove('product-pulse'); }, 1600);
+        };
+        setTimeout(pulse, 200);
       }
     }catch(e){}
   });

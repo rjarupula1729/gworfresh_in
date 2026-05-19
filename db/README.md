@@ -10,15 +10,22 @@ db/
 ├── schemas/
 │   └── plant.schema.json      ← JSON Schema (draft-07) for every plant doc
 ├── plants/
-│   ├── vegetables.json        ← 30+ fruiting & root vegetables
-│   ├── leafy.json             ← 15+ leafy greens
-│   ├── herbs.json             ← 15+ culinary herbs
-│   ├── fruits.json            ← 10+ home-growable fruits
-│   └── index.js               ← unified catalog loader + helpers
+│   ├── vegetables.json        ← 50 fruiting, root, gourd, legume & tribal vegetables (incl. snake-gourd, parwal, suran, arbi, chow-chow, sem, bhut-jolokia, bamboo-shoot, banana-stem, kair, …)
+│   ├── leafy.json             ← 22 leafy greens (incl. gongura, bathua, agathi, kalmi-saag, drumstick-leaves, neem-leaves, perilla, ponganni, …)
+│   ├── herbs.json             ← 22 culinary + AYUSH medicinal herbs (incl. brahmi, ashwagandha, giloy, shatavari, aloe-vera, stevia, kalonji, …)
+│   ├── fruits.json            ← 35 home-growable fruits — tropical to temperate (mango, coconut, pineapple, cashew, tamarind, bael, litchi, jamun, custard-apple, amla, dragon-fruit, kokum, apple, peach, plum, apricot, walnut, …)
+│   ├── flowers.json           ← 16 edible / medicinal / pollinator-attracting flowers (marigold, hibiscus, rose, butterfly-pea, jasmine, neem, periwinkle, parijaat, mahua, lotus, …)
+│   ├── spices.json            ← 10 Indian spices (black-pepper, cardamom, cinnamon, clove, nutmeg, bay-leaf, fennel, cumin, sesame, mustard-seed)
+│   └── index.js               ← unified catalog loader + helpers (155 plants total · all 7 India regions covered)
+├── soils/                     ← 🆕 organic-only soil knowledge base
+│   ├── india-soils.json       ← 10 Indian soil varieties (alluvial, black-cotton, red, laterite, desert, mountain, peaty, saline-alkaline, NE-hill, coastal-sandy) — texture, pH, fertility, region-states, organicBoost recipes
+│   ├── compost-recipes.json   ← 12 organic composts (jeevamrit, beejamrit, ghan-jeevamrit, panchagavya, amrit-jal, NADEP, vermicompost, matka-khad, kunapajala, leaf-mould, coir-pith compost, bokashi)
+│   ├── mineral-amendments.json ← 13 natural mineral inputs (neem-cake, karanja-cake, mustard-cake, bone-meal, rock-phosphate, wood-ash, dolomite-lime, gypsum, biochar, seaweed-extract, basalt-rock-dust, dhaincha & sunhemp green-manure)
+│   └── weed-indicators.json   ← 15 bioindicator weeds → soil-condition diagnosis (plantain → compacted, dandelion → low-Ca, white-clover → low-N, chickweed → fertile-moist, oxalis → acidic, horsetail → waterlogged-acidic, bathua → rich, purslane → dry-disturbed, …)
 ├── companions.json            ← O(n²) companion / antagonist matrix
 └── formulas/
     ├── index.js               ← public API (recommendPlants, ranks, etc.)
-    ├── growthScore.js         ← per-plant suitability score
+    ├── growthScore.js         ← per-plant suitability score (now includes fSoil factor)
     ├── yieldEstimate.js       ← kg per plant per season
     ├── waterBudget.js         ← litres per plant per week
     ├── companionScore.js      ← garden-level synergy score
@@ -48,7 +55,7 @@ Required fields are marked **★**.
 | ★ `id`                   | string (slug)       | `"tomato-cherry"`                |
 | ★ `name`                 | string              | `"Cherry Tomato"`                |
 | `aliases`                | string[]            | `["Sannakaya","छोटा टमाटर"]`     |
-| ★ `category`             | enum                | `"vegetable"`/`"leafy"`/`"herb"`/`"fruit"` |
+| ★ `category`             | enum                | `"vegetable"`/`"leafy"`/`"herb"`/`"fruit"`/`"root"`/`"legume"`/`"flower"`/`"spice"` |
 | ★ `emoji`                | string              | `"🍅"`                            |
 | ★ `family`               | string              | `"Solanaceae"`                   |
 | ★ `difficulty`           | int 1-5             | `2`                              |

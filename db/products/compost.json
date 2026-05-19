@@ -1,0 +1,309 @@
+[
+  {
+    "id": 159,
+    "cat": "compost",
+    "name": "Vermicompost 5kg",
+    "desc": "Premium worm castings",
+    "how": "20% mix.",
+    "price": 249,
+    "old": 310,
+    "region": "All India",
+    "tags": [
+      "organic"
+    ],
+    "emoji": "🪱"
+  },
+  {
+    "id": 160,
+    "cat": "compost",
+    "name": "Cocopeat Block 1kg",
+    "desc": "Expands to 15L",
+    "how": "Soak first.",
+    "price": 99,
+    "old": 125,
+    "region": "All India",
+    "tags": [
+      "medium"
+    ],
+    "emoji": "🫛"
+  },
+  {
+    "id": 161,
+    "cat": "compost",
+    "name": "Cow Dung Compost 10kg",
+    "desc": "Aged manure",
+    "how": "Top-dress.",
+    "price": 299,
+    "old": 375,
+    "region": "All India",
+    "tags": [
+      "organic"
+    ],
+    "emoji": "🐄"
+  },
+  {
+    "id": 162,
+    "cat": "compost",
+    "name": "Leaf Mould 3kg",
+    "desc": "Rich humus",
+    "how": "Mulch.",
+    "price": 149,
+    "old": 185,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "mulch"
+    ],
+    "emoji": "🍂"
+  },
+  {
+    "id": 163,
+    "cat": "compost",
+    "name": "Perlite 1L",
+    "desc": "Drainage amendment",
+    "how": "20% mix.",
+    "price": 119,
+    "old": 150,
+    "region": "All India",
+    "tags": [
+      "drainage"
+    ],
+    "emoji": "⚪"
+  },
+  {
+    "id": 172,
+    "cat": "compost",
+    "name": "Instant Jeevamrit-Mix 500g",
+    "desc": "Dry pre-fermented ZBNF starter — no cow needed, 2 mins prep, replaces 200 L brew",
+    "how": "1 scoop + 1 L water · pour every 15 days · 25 doses per pack",
+    "price": 249,
+    "old": 320,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "zbnf",
+      "balcony"
+    ],
+    "emoji": "⚡"
+  },
+  {
+    "id": 173,
+    "cat": "compost",
+    "name": "Beejamrit Seed-Coat Sachets (10×)",
+    "desc": "Ready-to-dip Vrikshayurveda seed treatment · protects against fungus + boosts germination",
+    "how": "1 sachet in 200 ml water · dip seeds 5 min · dry · sow same day",
+    "price": 149,
+    "old": 199,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "seed-care"
+    ],
+    "emoji": "🌱"
+  },
+  {
+    "id": 174,
+    "cat": "compost",
+    "name": "Ghan-Jeevamrit Dry Pellets 1kg",
+    "desc": "Slow-release ZBNF in solid form — perfect for terrace pots, no fermentation smell",
+    "how": "2 tbsp per pot · mix top 2 cm · monthly · ~40 pots",
+    "price": 329,
+    "old": 420,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "zbnf",
+      "odourless"
+    ],
+    "emoji": "🧱"
+  },
+  {
+    "id": 175,
+    "cat": "compost",
+    "name": "Panchagavya Concentrate 500ml",
+    "desc": "Tamil-tradition foliar biostimulant · boosts flowering + fruiting · 5 panchagavya batches in 1 bottle",
+    "how": "30 ml per 1 L water · spray leaves every 15 days · ~16 L spray",
+    "price": 379,
+    "old": 480,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "foliar",
+      "flowering"
+    ],
+    "emoji": "🌼"
+  },
+  {
+    "id": 176,
+    "cat": "compost",
+    "name": "Amrit-Jal Ready Bottle 1L",
+    "desc": "Seedling-safe weekly liquid feed (Deepak Suchde formula) · open & pour",
+    "how": "100 ml per 1 L water · weekly · refrigerate after opening · ~10 weeks",
+    "price": 199,
+    "old": 260,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "seedling"
+    ],
+    "emoji": "💧"
+  },
+  {
+    "id": 177,
+    "cat": "compost",
+    "name": "NADEP-style Humus Compost 5kg",
+    "desc": "Maharashtra-pit method, factory-aged 120 days · best for clay & laterite soils",
+    "how": "2 handfuls per pot · mix top 5 cm · top-up every 6 months",
+    "price": 449,
+    "old": 580,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "humus",
+      "clay-soil"
+    ],
+    "emoji": "🪨"
+  },
+  {
+    "id": 178,
+    "cat": "compost",
+    "name": "Matka-Khad Effervescent Tablets (20×)",
+    "desc": "Drop-in tablets dissolve into traditional pot-manure — zero smell, zero prep",
+    "how": "1 tablet per 1 L water · pour around pots every 10 days",
+    "price": 219,
+    "old": 280,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "balcony",
+      "odourless"
+    ],
+    "emoji": "💊"
+  },
+  {
+    "id": 179,
+    "cat": "compost",
+    "name": "Kunapajala Amino-Boost 500ml",
+    "desc": "Vrikshayurveda (10th-c.) fermented amino-acid concentrate for fruiting plants",
+    "how": "40 ml per 1 L water · root drench every 15 days at flowering",
+    "price": 399,
+    "old": 510,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "fruiting",
+      "ayurveda"
+    ],
+    "emoji": "🧪"
+  },
+  {
+    "id": 180,
+    "cat": "compost",
+    "name": "Bokashi Starter Kit (Bran + Bin)",
+    "desc": "Apartment kitchen-waste composter · zero smell · 2-week cycle · re-fillable bran",
+    "how": "1 tbsp bran over wet waste · seal · empty into pot after 2 weeks",
+    "price": 899,
+    "old": 1150,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "apartment",
+      "zero-waste"
+    ],
+    "emoji": "♻️"
+  },
+  {
+    "id": 181,
+    "cat": "compost",
+    "name": "🎁 Busy Gardener Starter Combo",
+    "desc": "Best-seller bundle: Instant Jeevamrit + Amrit-Jal Bottle + Ghan-Jeevamrit Pellets + Seed-Coat Sachets — 3 months of organic feeding in one box",
+    "how": "Follow the QR-coded weekly schedule inside · serves ~15 pots",
+    "price": 899,
+    "old": 1226,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "combo",
+      "bestseller",
+      "gift"
+    ],
+    "emoji": "🎁"
+  },
+  {
+    "id": 182,
+    "cat": "compost",
+    "name": "🌍 Soil-Fix Combo (Acidic Soil)",
+    "desc": "For laterite / forest / peaty soils: Dolomite Lime + Wood Ash + Leaf-Mould — restores pH organically",
+    "how": "Apply per soil-test result · re-test after 30 days",
+    "price": 599,
+    "old": 790,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "combo",
+      "soil-fix",
+      "acidic"
+    ],
+    "emoji": "🌍"
+  },
+  {
+    "id": 183,
+    "cat": "compost",
+    "name": "🌍 Soil-Fix Combo (Compacted Clay)",
+    "desc": "For black-cotton & heavy clay: Natural Gypsum + Biochar + NADEP Humus — breaks compaction in 1 season",
+    "how": "Mix into top 10 cm of bed · water thoroughly",
+    "price": 749,
+    "old": 970,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "combo",
+      "soil-fix",
+      "clay"
+    ],
+    "emoji": "🌍"
+  },
+  {
+    "id": 184,
+    "cat": "compost",
+    "name": "🌍 Soil-Fix Combo (Sandy/Coastal)",
+    "desc": "For coastal sandy + arid soils: Coir-Pith Compost + Vermicompost + Seaweed Extract — boosts water-holding",
+    "how": "Mix 20% into soil · spray seaweed monthly",
+    "price": 649,
+    "old": 845,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "busy",
+      "ready-made",
+      "combo",
+      "soil-fix",
+      "sandy"
+    ],
+    "emoji": "🌍"
+  }
+]

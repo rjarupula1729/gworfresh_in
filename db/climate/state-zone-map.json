@@ -1,0 +1,40 @@
+{
+  "Kerala": "tropical",
+  "Goa": "tropical",
+  "Tamil Nadu": "tropical",
+  "Puducherry": "tropical",
+  "Odisha": "tropical",
+
+  "Karnataka": "semiarid",
+  "Andhra Pradesh": "semiarid",
+  "Telangana": "semiarid",
+  "Maharashtra": "semiarid",
+  "Madhya Pradesh": "semiarid",
+  "Chhattisgarh": "semiarid",
+  "Jharkhand": "semiarid",
+  "Uttar Pradesh": "semiarid",
+  "Bihar": "semiarid",
+  "Haryana": "semiarid",
+  "Punjab": "semiarid",
+
+  "Rajasthan": "desert",
+  "Gujarat": "desert",
+
+  "Himachal Pradesh": "hill",
+  "Uttarakhand": "hill",
+  "Jammu & Kashmir": "hill",
+  "Ladakh": "hill",
+  "Sikkim": "hill",
+
+  "Arunachal Pradesh": "rainforest",
+  "Assam": "rainforest",
+  "Meghalaya": "rainforest",
+  "Manipur": "rainforest",
+  "Mizoram": "rainforest",
+  "Nagaland": "rainforest",
+  "Tripura": "rainforest",
+  "West Bengal": "rainforest",
+
+  "Delhi": "urbanhybrid",
+  "Chandigarh": "urbanhybrid"
+}

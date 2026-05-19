@@ -1,0 +1,89 @@
+[
+  {
+    "id": 153,
+    "cat": "minerals",
+    "name": "NPK Fertilizer 500g",
+    "desc": "Balanced 19-19-19",
+    "how": "1 tsp/pot, monthly.",
+    "price": 199,
+    "old": 250,
+    "region": "All India",
+    "tags": [
+      "nutrition"
+    ],
+    "emoji": "🧪"
+  },
+  {
+    "id": 154,
+    "cat": "minerals",
+    "name": "Bone Meal 250g",
+    "desc": "Phosphorus boost",
+    "how": "Mix at planting.",
+    "price": 149,
+    "old": 185,
+    "region": "All India",
+    "tags": [
+      "flowering"
+    ],
+    "emoji": "🦴"
+  },
+  {
+    "id": 155,
+    "cat": "minerals",
+    "name": "Neem Cake 500g",
+    "desc": "Organic pest deterrent",
+    "how": "2 tbsp bi-weekly.",
+    "price": 179,
+    "old": 225,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "pest"
+    ],
+    "emoji": "🌿"
+  },
+  {
+    "id": 156,
+    "cat": "minerals",
+    "name": "Epsom Salt 1kg",
+    "desc": "Magnesium for leaves",
+    "how": "Foliar spray.",
+    "price": 129,
+    "old": 160,
+    "region": "All India",
+    "tags": [
+      "leaves"
+    ],
+    "emoji": "🧂"
+  },
+  {
+    "id": 157,
+    "cat": "minerals",
+    "name": "Mustard Cake 1kg",
+    "desc": "Organic N",
+    "how": "Soak 24h.",
+    "price": 159,
+    "old": 200,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "nitrogen"
+    ],
+    "emoji": "🥬"
+  },
+  {
+    "id": 158,
+    "cat": "minerals",
+    "name": "Seaweed Extract 500ml",
+    "desc": "Liquid bio-stimulant",
+    "how": "5ml/L water.",
+    "price": 299,
+    "old": 375,
+    "region": "All India",
+    "tags": [
+      "organic",
+      "growth"
+    ],
+    "emoji": "🌊"
+  }
+]
