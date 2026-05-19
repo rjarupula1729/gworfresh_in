@@ -425,7 +425,7 @@ if(typeof window!=='undefined'){
 function _gfBuildEnv(){
   var env = { skill: 2, season: (window.GFPlants && window.GFPlants.currentSeason ? window.GFPlants.currentSeason() : 'kharif'), climate: 'tropical' };
   try{
-    var wx = JSON.parse(localStorage.getItem('gf_weather_v1')||'null');
+    var wx = JSON.parse(localStorage.getItem('gf_weather_v2') || localStorage.getItem('gf_weather_v1') || 'null');
     if(wx && wx.tempC != null) env.tempC = Math.round(wx.tempC);
   }catch(e){}
   if(env.tempC == null) env.tempC = 28;
@@ -516,7 +516,7 @@ if(typeof window!=='undefined'){
    Falls back gracefully to a sane Hyderabad default if either permission
    is denied or the network is offline. Cached for 30 minutes in
    localStorage to avoid hammering the API on every page nav.            */
-var GF_WX_KEY='gf_weather_v1', GF_WX_TTL=30*60*1000;
+var GF_WX_KEY='gf_weather_v2', GF_WX_TTL=30*60*1000;
 function _wxIcon(code, isDay){
   // Open-Meteo WMO code → emoji
   if(code===0) return isDay?'☀️':'🌙';
@@ -535,16 +535,25 @@ function _renderWxPill(data){
   pill.textContent=data.icon+' '+data.city+' · '+data.temp+'°C';
 }
 function _fetchWeather(lat, lon){
-  // Reverse-geocode (best-effort) + current weather in parallel
-  var geoUrl='https://geocoding-api.open-meteo.com/v1/reverse?latitude='+lat+'&longitude='+lon+'&language=en&format=json';
+  // Reverse-geocode (best-effort) + current weather in parallel.
+  // BigDataCloud is the only free reverse-geocoder with no API key + CORS.
+  // Open-Meteo's geocoding API is forward-only (no /reverse endpoint), so we
+  // keep it as a last-resort fallback via nearest-city search.
+  var bdcUrl='https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+lat+'&longitude='+lon+'&localityLanguage=en';
   var wxUrl ='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current=temperature_2m,weather_code,is_day&timezone=auto';
   return Promise.all([
-    fetch(geoUrl).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;}),
+    fetch(bdcUrl).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;}),
     fetch(wxUrl ).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;})
   ]).then(function(arr){
     var g=arr[0], w=arr[1];
     if(!w || !w.current) throw new Error('no weather');
-    var city=(g && g.results && g.results[0] && (g.results[0].name||g.results[0].admin1)) || 'Your area';
+    // Preferred order: city → locality → principalSubdivision → countryName
+    var city = (g && (g.city || g.locality || g.principalSubdivision || g.countryName)) || '';
+    // Strip noisy suffixes like "Greater Hyderabad Municipal Corporation"
+    if(city){
+      city = city.replace(/^Greater\s+/i,'').replace(/\s+(Municipal Corporation|Division|District|Mandal|Rural|Urban)\b.*$/i,'').trim();
+    }
+    if(!city) city = 'Your area';
     var temp=Math.round(w.current.temperature_2m);
     var code=w.current.weather_code;
     var isDay=w.current.is_day===1;
@@ -1018,8 +1027,99 @@ function saveProfileDetails(){
   sv('userProfile',p);
   // reflect display name on profile header if provided
   if(p.display){const n=document.getElementById('profile-name');if(n)n.textContent=p.display;updateAvatars(p.display);}
+  // Apply preferred language across the whole app (Google Translate widget)
+  try{ if(typeof gfApplyLanguage==='function') gfApplyLanguage(p.lang||'en'); }catch(e){}
   showToast('✓ Profile saved');
   setTimeout(()=>goBack(),600);
+}
+
+/* ════════════════ i18n — preferred language via Google Translate ════════════════
+   Stores choice in localStorage('gf_lang') + the googtrans cookie that the
+   Google widget reads. The widget is injected hidden; we drive it through
+   the cookie so the UI stays in our control. Supports en/te/hi/ta/kn.   */
+var GF_LANG_KEY='gf_lang';
+function _gfSetCookie(name, value, days){
+  var exp = new Date(Date.now() + days*86400*1000).toUTCString();
+  // Set on host + on parent domain (needed by Google widget for some setups)
+  document.cookie = name+'='+value+';expires='+exp+';path=/';
+  var host = location.hostname.replace(/^www\./,'');
+  if(host && host.indexOf('.')>0){
+    document.cookie = name+'='+value+';expires='+exp+';path=/;domain=.'+host;
+  }
+}
+function gfApplyLanguage(code){
+  code = (code||'en').toLowerCase();
+  // Map our profile codes -> Google's ISO codes (same here, but kept for safety)
+  var map = { en:'en', te:'te', hi:'hi', ta:'ta', kn:'kn' };
+  var dst = map[code] || 'en';
+  try{ localStorage.setItem(GF_LANG_KEY, dst); }catch(e){}
+  if(dst === 'en'){
+    // Clear translation cookie + reload to revert to source language
+    _gfSetCookie('googtrans','', -1);
+    document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  } else {
+    _gfSetCookie('googtrans', '/en/'+dst, 365);
+  }
+  // Force a reload so the new cookie is applied page-wide on next paint
+  setTimeout(function(){ location.reload(); }, 350);
+}
+function _gfBootGoogleTranslate(){
+  // Skip on splash / iframe contexts to avoid double-init
+  if(window.top !== window) return;
+  // 1) Ensure a host element exists (hidden) for the widget bar
+  if(!document.getElementById('google_translate_element')){
+    var host = document.createElement('div');
+    host.id = 'google_translate_element';
+    host.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none';
+    document.body.appendChild(host);
+  }
+  // 2) Add CSS to hide the Google top banner / tooltip the widget adds
+  if(!document.getElementById('gf-gt-css')){
+    var css = document.createElement('style');
+    css.id = 'gf-gt-css';
+    css.textContent = ''
+      + '.goog-te-banner-frame.skiptranslate,.goog-te-gadget-icon{display:none!important}'
+      + 'body{top:0!important}'
+      + '#goog-gt-tt,.goog-tooltip,.goog-tooltip:hover{display:none!important}'
+      + '.goog-text-highlight{background:none!important;box-shadow:none!important}';
+    document.head.appendChild(css);
+  }
+  // 3) Define the init callback the widget script will call
+  window.googleTranslateElementInit = function(){
+    try{
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,te,hi,ta,kn',
+        autoDisplay: false,
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }catch(e){ console.warn('[gf-i18n] widget init failed', e); }
+  };
+  // 4) Inject the widget script (idempotent)
+  if(!document.getElementById('gf-gt-script')){
+    var s = document.createElement('script');
+    s.id = 'gf-gt-script';
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.async = true;
+    s.onerror = function(){ console.warn('[gf-i18n] could not load Google Translate widget'); };
+    document.head.appendChild(s);
+  }
+}
+if(typeof window!=='undefined'){
+  window.gfApplyLanguage = gfApplyLanguage;
+  // Ensure saved lang is reflected (cookie may have been cleared by browser)
+  document.addEventListener('DOMContentLoaded', function(){
+    try{
+      var saved = localStorage.getItem(GF_LANG_KEY) || '';
+      if(saved && saved !== 'en'){
+        // Re-affirm the cookie silently (no reload — cookie may already be present)
+        if(document.cookie.indexOf('googtrans=/en/'+saved) < 0){
+          _gfSetCookie('googtrans', '/en/'+saved, 365);
+        }
+      }
+      _gfBootGoogleTranslate();
+    }catch(e){}
+  });
 }
 
 // ============ FAMILY MEMBERS ============
