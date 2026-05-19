@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1B5E20">
+<title>GrowFresh — My Garden</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/gf.css">
+<link rel="stylesheet" href="shared/gf-extras.css">
+</head>
+<body>
+<div class="phone">
+<div class="status-bar"><span id="status-time">9:41</span><span>GrowFresh 🌱</span><span>▲▲▲ 🔋</span></div>
+<div class="screen active" id="screen-garden">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">My Garden</div></div>
+  <div class="garden-hero">
+    <div class="garden-hero-top"><div><div class="garden-hero-title">🌿 My Garden</div><div class="garden-hero-sub">Track your plants daily</div></div><button class="add-plant-btn" onclick="showAddPlant()">＋ Add Plant</button></div>
+    <div class="garden-stats"><div class="garden-stat"><div class="stat-num" id="stat-plants">0</div><div class="stat-label">Plants</div></div><div class="garden-stat"><div class="stat-num" id="stat-harvest">0</div><div class="stat-label">Harvest Soon</div></div><div class="garden-stat"><div class="stat-num" id="stat-savings">₹0</div><div class="stat-label">Est. Savings</div></div></div>
+  </div>
+  <div class="reminders-banner" id="reminders-banner" style="display:none"><div class="reminders-title">🔔 Today's Care Tasks</div><div id="reminders-list"></div></div>
+  <div class="scroll-body"><div class="garden-body">
+    <div id="plants-list"></div>
+    <div class="empty-state" id="empty-garden" style="flex:none;padding:26px 14px"><div class="empty-icon">🪴</div><div class="empty-title">No plants yet</div><div class="empty-sub">Add your first plant and get daily care reminders!</div><button class="empty-btn" onclick="showAddPlant()">＋ Add First Plant</button></div>
+  </div></div>
+  </div>
+<div class="screen" id="screen-expert">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Expert Connect</div></div>
+  <div class="expert-hero"><div class="expert-hero-title">👨‍🌾 Book a Garden Expert</div><div class="expert-hero-sub">Home visits & video calls · Hyderabad</div></div>
+  <div class="how-works"><div class="hw-step"><div class="hw-icon">📋</div><div class="hw-text">Pick Expert</div></div><div class="hw-step"><div class="hw-icon">📅</div><div class="hw-text">Book Slot</div></div><div class="hw-step"><div class="hw-icon">🏡</div><div class="hw-text">Home Visit</div></div><div class="hw-step"><div class="hw-icon">🌱</div><div class="hw-text">Grow Better</div></div></div>
+  <div class="scroll-body"><div style="padding:13px">
+    <div class="expert-card">
+      <div class="expert-top"><div class="expert-avatar">👨‍🌾</div><div><div class="expert-name">Ravi Kumar</div><div class="expert-spec">Urban Gardening Specialist</div><div class="expert-rating"><span>⭐⭐⭐⭐⭐</span><span style="font-size:10px;color:var(--muted);font-weight:700;margin-left:4px">4.9 · 87 visits</span></div></div></div>
+      <div class="expert-tags"><div class="expert-tag">🍅 Vegetables</div><div class="expert-tag">🪴 Balcony Setup</div><div class="expert-tag">🌿 Organic</div></div>
+      <div class="expert-footer"><div class="expert-price">₹399 <span>/ home visit</span></div><button class="book-btn" onclick="showBooking('Ravi Kumar','₹399')">Book Now</button></div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-top"><div class="expert-avatar">👩‍🌾</div><div><div class="expert-name">Lakshmi Devi</div><div class="expert-spec">Kitchen Garden Expert</div><div class="expert-rating"><span>⭐⭐⭐⭐⭐</span><span style="font-size:10px;color:var(--muted);font-weight:700;margin-left:4px">4.8 · 64 visits</span></div></div></div>
+      <div class="expert-tags"><div class="expert-tag">🌶️ Chilli & Spices</div><div class="expert-tag">🌱 Seedlings</div><div class="expert-tag">💧 Watering Tips</div></div>
+      <div class="expert-footer"><div class="expert-price">₹299 <span>/ video call</span></div><button class="book-btn" onclick="showBooking('Lakshmi Devi','₹299')">Book Now</button></div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-top"><div class="expert-avatar">🧑‍🌾</div><div><div class="expert-name">Suresh Reddy</div><div class="expert-spec">Organic Farming Advisor</div><div class="expert-rating"><span>⭐⭐⭐⭐</span><span style="font-size:10px;color:var(--muted);font-weight:700;margin-left:4px">4.7 · 42 visits</span></div></div></div>
+      <div class="expert-tags"><div class="expert-tag">🌿 Soil Health</div><div class="expert-tag">🐛 Pest Control</div><div class="expert-tag">🧪 Fertilizers</div></div>
+      <div class="expert-footer"><div class="expert-price">₹499 <span>/ home visit</span></div><button class="book-btn" onclick="showBooking('Suresh Reddy','₹499')">Book Now</button></div>
+    </div>
+  </div></div>
+</div>
+<div class="screen" id="screen-calendar">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Your Plant Timeline</div></div>
+  <div class="scroll-body">
+    <div style="padding:14px">
+      <!-- MY PLANTS TIMELINE -->
+      <div id="my-plants-timeline" style="margin-bottom:20px"></div>
+      
+      <!-- SEASONAL GUIDE -->
+      <div style="margin-top:20px">
+        <div style="font-size:14px;font-weight:900;color:var(--text);margin-bottom:12px">📅 Hyderabad Planting Guide</div>
+        <div class="cal-hero-sub" style="margin-bottom:12px">Month-by-month · What to plant when</div>
+        
+        <div class="month-card"><div class="month-card-top"><div class="month-name">🌸 March – April</div><div class="season-pill season-spring">Pre-Summer</div></div><div class="veggie-chips"><div class="veggie-chip">🌶️ Chilli</div><div class="veggie-chip">🍆 Brinjal</div><div class="veggie-chip">🫑 Capsicum</div><div class="veggie-chip">🍅 Tomato</div></div></div>
+        <div class="month-card"><div class="month-card-top"><div class="month-name">☀️ May – June</div><div class="season-pill season-summer">Summer</div></div><div class="veggie-chips"><div class="veggie-chip">🥒 Cucumber</div><div class="veggie-chip">🌽 Ridge Gourd</div><div class="veggie-chip">🎃 Bitter Gourd</div></div></div>
+        <div class="month-card"><div class="month-card-top"><div class="month-name">🌧️ July – September</div><div class="season-pill season-monsoon">Monsoon</div></div><div class="veggie-chips"><div class="veggie-chip">🌿 Methi</div><div class="veggie-chip">🥬 Spinach</div><div class="veggie-chip">🍃 Curry Leaf</div></div></div>
+        <div class="month-card" style="border:2px solid var(--green)"><div class="month-card-top"><div class="month-name">🍂 October – January</div><div class="season-pill season-winter">⭐ Best Season</div></div><div class="veggie-chips"><div class="veggie-chip">🍅 Tomato</div><div class="veggie-chip">🥬 Spinach</div><div class="veggie-chip">🌿 Coriander</div><div class="veggie-chip">🫛 Peas</div><div class="veggie-chip">🥕 Carrot</div></div></div>
+        <div class="month-card"><div class="month-card-top"><div class="month-name">🌺 February – March</div><div class="season-pill season-spring">Spring</div></div><div class="veggie-chips"><div class="veggie-chip">🌶️ Chilli</div><div class="veggie-chip">🍆 Brinjal</div><div class="veggie-chip">🌿 Coriander</div></div></div>
+      </div>
+    </div>
+  </div>
+  </div>
+<div class="screen" id="screen-analyzer">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Space Analyzer</div></div>
+  <div class="analyzer-hero"><div class="analyzer-hero-title">📸 AI Space Analyzer</div><div class="analyzer-hero-sub">Photo your balcony → Get plant recommendations</div></div>
+  <div class="scroll-body"><div class="analyzer-body">
+    <div class="upload-zone" onclick="runAnalyzer()">
+      <div class="upload-icon" id="upload-icon">📸</div>
+      <div class="upload-title" id="upload-title">Take or Upload a Photo</div>
+      <div class="upload-sub" id="upload-sub">Photo your balcony or garden space and our AI will suggest the best plants for you</div>
+    </div>
+    <button class="analyze-btn" onclick="runAnalyzer()" id="analyze-btn">🔍 Analyze My Space</button>
+    <div class="analyzer-result" id="analyzer-result">
+      <div class="result-title">✅ AI Analysis Complete — Your Balcony Can Fit:</div>
+      <div class="result-row"><div class="result-emoji">🍅</div><div class="result-info"><div class="result-plant">Tomato Plants</div><div class="result-pots">4 pots recommended · East-facing spot ✅</div></div><button class="result-add-btn" onclick="addAnalyzerToCart(59,'Tomato Seeds','🍅')">Add ₹59</button></div>
+      <div class="result-row"><div class="result-emoji">🌶️</div><div class="result-info"><div class="result-plant">Chilli Plants</div><div class="result-pots">3 pots · Excellent light for chilli ✅</div></div><button class="result-add-btn" onclick="addAnalyzerToCart(49,'Chilli Seeds','🌶️')">Add ₹49</button></div>
+      <div class="result-row"><div class="result-emoji">🌿</div><div class="result-info"><div class="result-plant">Coriander Box</div><div class="result-pots">2 small pots · Window sill ok ✅</div></div><button class="result-add-btn" onclick="addAnalyzerToCart(39,'Coriander Seeds','🌿')">Add ₹39</button></div>
+      <div class="result-row"><div class="result-emoji">🥬</div><div class="result-info"><div class="result-plant">Spinach</div><div class="result-pots">2 pots · Great for partial shade ✅</div></div><button class="result-add-btn" onclick="addAnalyzerToCart(45,'Spinach Seeds','🥬')">Add ₹45</button></div>
+      <button class="add-all-btn" onclick="addAllAnalyzer()">🛒 Add All to Cart — ₹192</button>
+    </div>
+  </div></div>
+</div>
+<div class="screen" id="screen-soil">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Soil Health Dashboard</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+
+    <div style="background:var(--grad-fresh);border-radius:var(--radius);padding:18px;color:white;box-shadow:var(--shadow-md);margin-bottom:14px">
+      <div style="font-size:11px;font-weight:800;opacity:0.9;letter-spacing:0.5px;text-transform:uppercase">♻️ Soil Recovery Score</div>
+      <div style="font-size:42px;font-weight:900;margin:4px 0">72<span style="font-size:18px">/100</span></div>
+      <div style="background:rgba(255,255,255,0.2);height:10px;border-radius:5px;overflow:hidden"><div style="width:72%;height:100%;background:#FFC837"></div></div>
+      <div style="font-size:11px;font-weight:700;margin-top:8px;opacity:0.9">🌱 Healthy & Improving · You're regenerating soil!</div>
+    </div>
+
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">Your Soil Impact</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm)">
+        <div style="font-size:24px">🪱</div>
+        <div style="font-size:11px;font-weight:800;color:var(--muted);margin-top:4px">Compost Made</div>
+        <div style="font-size:18px;font-weight:900;color:#5D4037">12.5 kg</div>
+        <div style="font-size:10px;color:var(--muted);font-weight:600">This month</div>
+      </div>
+      <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm)">
+        <div style="font-size:24px">🦋</div>
+        <div style="font-size:11px;font-weight:800;color:var(--muted);margin-top:4px">Biodiversity</div>
+        <div style="font-size:18px;font-weight:900;color:var(--purple)">+8 species</div>
+        <div style="font-size:10px;color:var(--muted);font-weight:600">Birds, bees, worms</div>
+      </div>
+      <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm)">
+        <div style="font-size:24px">💧</div>
+        <div style="font-size:11px;font-weight:800;color:var(--muted);margin-top:4px">Water Saved</div>
+        <div style="font-size:18px;font-weight:900;color:var(--blue)">340 L</div>
+        <div style="font-size:10px;color:var(--muted);font-weight:600">vs supermarket</div>
+      </div>
+      <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm)">
+        <div style="font-size:24px">🌍</div>
+        <div style="font-size:11px;font-weight:800;color:var(--muted);margin-top:4px">CO₂ Reduced</div>
+        <div style="font-size:18px;font-weight:900;color:var(--green)">4.2 kg</div>
+        <div style="font-size:10px;color:var(--muted);font-weight:600">Carbon offset</div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">🌱 Compost Tracker</div>
+    <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px"><div style="font-size:13px;font-weight:800">Kitchen Waste Composted</div><div style="font-size:13px;font-weight:900;color:var(--green)">8.2 kg</div></div>
+      <div style="background:var(--bg);height:8px;border-radius:4px;overflow:hidden;margin-bottom:14px"><div style="width:75%;height:100%;background:linear-gradient(90deg,var(--green-light),var(--green))"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px"><div style="font-size:13px;font-weight:800">Brown Material (leaves)</div><div style="font-size:13px;font-weight:900;color:#8D6E63">4.3 kg</div></div>
+      <div style="background:var(--bg);height:8px;border-radius:4px;overflow:hidden"><div style="width:55%;height:100%;background:linear-gradient(90deg,#43A047,#1B5E20)"></div></div>
+      <button onclick="showToast('♻️ Log new compost batch!')" style="margin-top:14px;width:100%;padding:10px;background:var(--green);color:white;border:none;border-radius:10px;font-weight:900;font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif">+ Log Compost Batch</button>
+    </div>
+
+    <div style="background:var(--grad-fresh);border-radius:var(--radius);padding:14px;color:white;box-shadow:var(--shadow-sm)">
+      <div style="font-size:24px">🏆</div>
+      <div style="font-size:14px;font-weight:900;margin-top:4px">Soil Hero Badge Earned!</div>
+      <div style="font-size:12px;opacity:0.95;margin-top:4px">You've improved soil for 3 months straight · +200 GrowPoints</div>
+    </div>
+  </div></div>
+  </div>
+<div class="screen" id="screen-compost">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Seasonal Growing Guide</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+
+    <div style="background:var(--grad-sky,linear-gradient(135deg,#42A5F5,#1976D2));border-radius:var(--radius);padding:14px;color:white;box-shadow:var(--shadow-md);margin-bottom:14px">
+      <div style="font-size:12px;font-weight:800;opacity:0.9;letter-spacing:0.5px;text-transform:uppercase">📍 Hyderabad · This Month</div>
+      <div style="font-size:16px;font-weight:900;margin-top:4px">What to plant &amp; how to feed it</div>
+      <div style="font-size:11px;opacity:0.9;margin-top:4px;font-weight:600">Curated by community growers + soil experts</div>
+    </div>
+
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">🌟 Top Picks This Season</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:var(--grad-harvest);border-radius:var(--radius);padding:12px;color:white;cursor:pointer;box-shadow:var(--shadow-sm)" onclick="gotoProduct('Cow Dung Compost 5kg','compost')">
+        <div style="font-size:13px;font-weight:900;margin-bottom:6px">🐄 Cow Dung</div>
+        <div style="font-size:10px;line-height:1.5">
+          <div style="font-weight:700">All Season</div>
+          <div style="opacity:0.9;margin-top:4px">Nitrogen rich · Tomato, Chilli</div>
+          <div style="font-weight:700;margin-top:6px">₹149</div>
+        </div>
+      </div>
+      <div style="background:var(--grad-sky);border-radius:var(--radius);padding:12px;color:white;cursor:pointer;box-shadow:var(--shadow-sm)" onclick="gotoProduct('Fish Waste Emulsion 1L','compost')">
+        <div style="font-size:13px;font-weight:900;margin-bottom:6px">🐟 Fish Waste</div>
+        <div style="font-size:10px;line-height:1.5">
+          <div style="font-weight:700">Growth Phase</div>
+          <div style="opacity:0.9;margin-top:4px">Phosphorus boost · Fruiting</div>
+          <div style="font-weight:700;margin-top:6px">₹199</div>
+        </div>
+      </div>
+      <div style="background:var(--grad-fresh);border-radius:var(--radius);padding:12px;color:white;cursor:pointer;box-shadow:var(--shadow-sm)" onclick="gotoProduct('Coconut Coir Dust 3kg','compost')">
+        <div style="font-size:13px;font-weight:900;margin-bottom:6px">🥥 Coconut Coir</div>
+        <div style="font-size:10px;line-height:1.5">
+          <div style="font-weight:700">Summer Special</div>
+          <div style="opacity:0.9;margin-top:4px">Water retention · Cooling</div>
+          <div style="font-weight:700;margin-top:6px">₹129</div>
+        </div>
+      </div>
+      <div style="background:var(--grad-sky);border-radius:var(--radius);padding:12px;color:white;cursor:pointer;box-shadow:var(--shadow-sm)" onclick="gotoProduct('Wood Charcoal Powder 2kg','compost')">
+        <div style="font-size:13px;font-weight:900;margin-bottom:6px">🪨 Wood Charcoal</div>
+        <div style="font-size:10px;line-height:1.5">
+          <div style="font-weight:700">All Season</div>
+          <div style="opacity:0.9;margin-top:4px">Drainage + pH balance</div>
+          <div style="font-weight:700;margin-top:6px">₹179</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);border-left:4px solid var(--orange);margin-bottom:14px">
+      <div style="font-size:12px;font-weight:900;color:var(--text);margin-bottom:8px">📅 Hyderabad Seasonal Tips</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.7">
+        <div>🌞 <strong>Summer (Apr-Jun):</strong> Use Coconut Coir for retention, Fish Waste for blooming</div>
+        <div>🌧️ <strong>Monsoon (Jul-Sep):</strong> Neem Cake to prevent fungal, Cow Dung for nutrients</div>
+        <div>❄️ <strong>Winter (Oct-Mar):</strong> Vermicompost for microbes, NPK Mix for growth</div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">💬 Community Discussions</div>
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px">
+      <div class="profile-row" onclick="showToast('💬 Discussion thread coming soon!')"><div class="profile-row-icon">🐄</div><div class="profile-row-text"><div class="profile-row-title">Best cow dung supplier in Gachibowli?</div><div class="profile-row-sub">Priya · 24 replies · 2 hrs ago</div></div><div class="profile-row-arrow">›</div></div>
+      <div class="profile-row" onclick="showToast('💬 Discussion thread coming soon!')"><div class="profile-row-icon">♻️</div><div class="profile-row-text"><div class="profile-row-title">DIY vermicompost setup tips</div><div class="profile-row-sub">Amit · 18 replies · 5 hrs ago</div></div><div class="profile-row-arrow">›</div></div>
+      <div class="profile-row" onclick="showToast('💬 Discussion thread coming soon!')"><div class="profile-row-icon">🌿</div><div class="profile-row-text"><div class="profile-row-title">Neem cake vs neem oil — which is better?</div><div class="profile-row-sub">Sunita · 32 replies · 1 day ago</div></div><div class="profile-row-arrow">›</div></div>
+    </div>
+
+    <button onclick="switchTab('shop','compost')" style="width:100%;padding:13px;background:var(--green);color:white;border:none;border-radius:var(--radius);font-weight:900;font-size:14px;font-family:'Nunito',sans-serif;cursor:pointer">🛒 Shop All Compost & Minerals</button>
+  </div></div>
+  </div>
+<div class="bottom-nav"><a class="nav-item" href="growfresh-app.html" style="text-decoration:none;color:inherit"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></a><a class="nav-item" href="shop.html" style="text-decoration:none;color:inherit"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></a><a class="nav-item active" href="garden.html" style="text-decoration:none;color:inherit"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></a><a class="nav-item" href="community.html" style="text-decoration:none;color:inherit"><div class="nav-icon">👥</div><div class="nav-label">Community</div></a><a class="nav-item" href="profile.html" style="text-decoration:none;color:inherit"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></a></div>
+</div><!-- /phone -->
+<!-- GLOBAL BOTTOM NAV — always visible on every page -->
+<div class="bottom-nav" id="globalBottomNav" style="display:none">
+  <div class="nav-item" data-tab="home" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+  <div class="nav-item" data-tab="shop" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div>
+  <div class="nav-item" data-tab="garden" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div>
+  <div class="nav-item" data-tab="community" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div>
+  <div class="nav-item" data-tab="profile" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div>
+</div>
+
+<!-- SPLASH -->
+
+
+<!-- LOGIN -->
+
+
+<!-- HOME -->
+
+
+<!-- SHOP -->
+
+
+<!-- CART -->
+
+
+<!-- ════════════ WISHLIST ════════════ -->
+
+
+<!-- ════════════ FUTURE PLANTS ════════════ -->
+
+
+<!-- UPI -->
+
+
+<!-- SUCCESS -->
+
+
+<!-- GARDEN -->
+
+
+<!-- EXPERT BOOKING -->
+
+
+<!-- SEASONAL CALENDAR -->
+
+
+<!-- SPACE ANALYZER -->
+
+
+<!-- SUBSCRIPTIONS -->
+
+
+<!-- MORE FEATURES -->
+
+
+<!-- ================ NEW: WELLNESS TRACKER ================ -->
+
+
+<!-- ================ NEW: HEALTHY EATING ================ -->
+
+
+<!-- ================ NEW: LEARN & GROW ================ -->
+
+
+<!-- ================ NEW: KIDS ZONE · FARMING GAMES ================ -->
+
+
+<!-- ================ R&D LAB · GEO-ADAPTIVE GARDEN PLANNER (preview) ================ -->
+
+
+<!-- ================ R&D FULL PROTOTYPE (embedded inside phone frame) ================ -->
+
+
+<!-- ================ NEW: SOIL HEALTH DASHBOARD ================ -->
+
+
+<!-- ================ NEW: REWARDS / GROWPOINTS ================ -->
+
+
+<!-- ================ NEW: FAMILY & ECOSYSTEM ================ -->
+
+
+<!-- COMMUNITY -->
+
+
+<!-- ================ SEASONAL GROWING GUIDE ================ -->
+
+
+<!-- ================ NEW: AI LIFESTYLE COACH PAGE ================ -->
+
+
+<!-- PROFILE -->
+
+
+<!-- ================ NEW: EDIT PROFILE ================ -->
+
+
+<!-- ================ NEW: FAMILY MEMBERS ================ -->
+
+
+
+<!-- ADD PLANT MODAL -->
+<div class="modal-overlay" id="add-plant-modal">
+  <div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">🌱 Add Plant to My Garden</div>
+    <div class="plant-options" id="plant-options">
+      <div class="plant-option" onclick="selectPlantType(this,'Tomato','🍅',60,120)"><div class="plant-option-emoji">🍅</div><div class="plant-option-name">Tomato</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Chilli','🌶️',45,80)"><div class="plant-option-emoji">🌶️</div><div class="plant-option-name">Chilli</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Coriander','🌿',21,40)"><div class="plant-option-emoji">🌿</div><div class="plant-option-name">Coriander</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Spinach','🥬',30,60)"><div class="plant-option-emoji">🥬</div><div class="plant-option-name">Spinach</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Brinjal','🍆',55,100)"><div class="plant-option-emoji">🍆</div><div class="plant-option-name">Brinjal</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Capsicum','🫑',60,90)"><div class="plant-option-emoji">🫑</div><div class="plant-option-name">Capsicum</div></div>
+    </div>
+    <input class="modal-input" id="plant-location" placeholder="Location (e.g. Balcony Pot 1)"/>
+    <input class="modal-input" id="plant-days" type="number" placeholder="Days since planted (0 = today)" min="0"/>
+    <button class="modal-btn" onclick="addPlant()">🌱 Add to My Garden</button>
+    <button class="modal-cancel" onclick="hideAddPlant()">Cancel</button>
+  </div>
+</div>
+
+<!-- COMPANION PLANTS MODAL -->
+<div class="modal-overlay" id="companions-modal" onclick="if(event.target===this)hideCompanions()">
+  <div class="modal-sheet" style="max-height:88vh;overflow:hidden;display:flex;flex-direction:column">
+    <div class="modal-handle"></div>
+    <div id="companions-body" style="overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px"></div>
+    <button class="modal-cancel" onclick="hideCompanions()" style="margin-top:8px">Close</button>
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="booking-sheet"><div class="modal-handle"></div>
+    <div class="modal-title">📅 Book <span id="booking-expert-name">Expert</span></div>
+    <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Select Date</div>
+    <div class="date-btns" id="date-btns"></div>
+    <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Select Time Slot</div>
+    <div class="time-slots">
+      <div class="time-slot" onclick="selectSlot(this)">9:00 AM</div>
+      <div class="time-slot" onclick="selectSlot(this)">10:30 AM</div>
+      <div class="time-slot booked">12:00 PM</div>
+      <div class="time-slot" onclick="selectSlot(this)">2:00 PM</div>
+      <div class="time-slot" onclick="selectSlot(this)">3:30 PM</div>
+      <div class="time-slot booked">5:00 PM</div>
+    </div>
+    <button class="confirm-book-btn" onclick="confirmBooking()">✅ Confirm Booking — <span id="booking-price">₹399</span></button>
+    <button class="modal-cancel" onclick="hideBooking()">Cancel</button>
+  </div>
+</div>
+
+<!-- WRITE POST MODAL -->
+<div class="write-modal" id="write-modal">
+  <div class="write-sheet">
+    <div class="write-header"><div class="write-title">✍️ Share with Community</div><button class="write-close" onclick="hideWritePost()">✕</button></div>
+    <div class="post-type-pills"><div class="post-type-pill active" onclick="selectPostType(this,'tip')">💡 Tip</div><div class="post-type-pill" onclick="selectPostType(this,'harvest')">🍅 Harvest</div><div class="post-type-pill" onclick="selectPostType(this,'question')">❓ Question</div><div class="post-type-pill" onclick="selectPostType(this,'idea')">🌟 Idea</div></div>
+    <textarea class="write-textarea" id="post-text" placeholder="Share your garden tip, harvest, question or idea..."></textarea>
+    <div style="font-size:10px;font-weight:800;color:var(--muted);margin-bottom:7px">TAG A PLANT</div>
+    <div class="write-plant-select"><div class="write-plant-chip active" onclick="selectPostPlant(this,'')">🌾 General</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🍅 Tomato')">🍅 Tomato</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🌶️ Chilli')">🌶️ Chilli</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🌿 Coriander')">🌿 Coriander</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🥬 Spinach')">🥬 Spinach</div></div>
+    <button class="write-submit-btn" onclick="submitPost()">📤 Post to Community</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     GROWFRESH ↔ POSTGRES API BRIDGE
+     Mirrors UI actions (login, cart, plant, screen views) into the
+     backend so every interaction is persisted to Postgres in real time.
+
+     Usage:
+       1. Start backend:  cd backend && npm run dev   (port 5000)
+       2. Open this file:  http://localhost:8765/growfresh-app.html?api=http://localhost:5000
+          (or leave ?api off – defaults to http://localhost:5000)
+       3. Watch live:     ./scripts/db-watch.sh
+     ════════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     FLOATING BACK BUTTON  — mid-left, always reachable on mobile
+     Auto-hides on top-level tabs (home/shop/garden/community/profile)
+     so it never overlaps the bottom-nav targets.
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     USER-AVATAR → PROFILE (defensive binding)
+     Ensures the top-right "P" badge always opens the profile screen,
+     even if inline onclick is stripped by a re-render or a touch
+     handler swallows the tap on real mobile devices.
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SHOP & HOME SEARCH BARS — PRODUCT/FUNCTION FILTERS
+     Shop: filters product cards by name/desc/category
+     Home: global search (products + features/screens)
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     WISHLIST & FUTURE PLANTS MODULE
+     • ❤️ overlay button on every product card → save to Wishlist
+     • 🌱 overlay button on every product card → save to Future Plants
+     • Two dedicated screens (#screen-wishlist, #screen-future)
+     • Counts surfaced on Profile + Cart
+     • Persists in localStorage; rendered on screen entry
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     🏆 GROWPOINTS REWARDS ENGINE
+     Awards points for:
+       • Each WFH micro-break completed         (+5 each)
+       • All 5 breaks done in one day (bonus)   (+25)
+       • First visit to each Urban Living card   (+15–20)
+       • First wishlist add of the day           (+5)
+       • Each plant added to garden              (+20)
+       • Each order placed                       (+30 + 5% of cart value)
+     Confetti + toast when points awarded. Live total surfaces on
+     the Rewards screen + a header pill on Home.
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     🌆 URBAN LIVING ACTIVITY MODALS
+     One focused micro-activity per Healthy Urban Living card.
+     Completing each activity awards GrowPoints via gfRewards.award().
+     Activities:
+       stress     → 60-second guided breath + 3 mindful actions
+       meeting    → 3 quick garden micro-tasks (water · check · photo)
+       balcony    → pick 1 apartment-friendly herb to grow
+       family     → plan a fresh meal from this week's harvest
+       challenge  → join 7-day urban grow challenge
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+
+<!-- ================ RARE PLANT CHALLENGE MODULE ================ -->
+
+
+
+<!-- ================ 1 HOUR FOR YOURSELF — ACHIEVEMENT & SHARE ================ -->
+
+
+
+<!-- ================ OPEN-POST HELPER + REACTION SIMULATOR + FOLLOWERS FEED ================ -->
+
+
+
+<!-- ================ COMMUNITIES HUB — create, join, invite ================ -->
+
+
+
+
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     R&D LAB · GEO-ADAPTIVE GARDEN PLANNER (mini in-app preview)
+     Standalone module — drives the #screen-rd controls. Kept short
+     and self-contained; the full prototype lives in growfresh-rd.html
+     ════════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     R&D FULL PROTOTYPE — lazy iframe loader for #screen-rdfull
+     Only fetches growfresh-rd.html the first time the screen opens.
+     ════════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ============== KIDS FARMING GAMES ENGINE ============== -->
+
+
+<!-- ============== COMPANION PLANTS ENGINE ============== -->
+<!-- Implements the M(i,j) compatibility matrix from the Mathematical Ecology -->
+<!-- Blueprint. When user taps a product image, we show a popup with         -->
+<!-- ecologically-compatible plants that thrive together (self-sustaining).  -->
+<script src="shared/gf-app.js"></script>
+</body>
+</html>

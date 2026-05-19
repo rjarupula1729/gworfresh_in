@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1B5E20">
+<title>GrowFresh — Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/gf.css">
+<link rel="stylesheet" href="shared/gf-extras.css">
+</head>
+<body>
+<div class="phone">
+<div class="status-bar"><span id="status-time">9:41</span><span>GrowFresh 🌱</span><span>▲▲▲ 🔋</span></div>
+<div class="screen active" id="screen-profile">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Profile</div></div>
+  <div class="profile-header"><div class="profile-top"><div class="profile-avatar" id="profile-avatar">P</div><div><div class="profile-name" id="profile-name">User</div><div class="profile-phone" id="profile-phone">—</div><div class="profile-method" id="profile-method">—</div></div></div></div>
+  <div class="profile-body">
+    <div class="profile-section"><div class="profile-section-label">My Activity</div><div class="profile-card"><div class="profile-row" onclick="showScreen('orders')"><div class="profile-row-icon">📦</div><div class="profile-row-text"><div class="profile-row-title">Order Tracking</div><div class="profile-row-sub">Track your deliveries & history</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="showScreen('wishlist')"><div class="profile-row-icon">❤️</div><div class="profile-row-text"><div class="profile-row-title">Wishlist</div><div class="profile-row-sub">Saved items to buy later</div></div><div class="wf-count-badge" id="wishlist-count-badge">0</div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="showScreen('future')"><div class="profile-row-icon">🌱</div><div class="profile-row-text"><div class="profile-row-title">Future Plants</div><div class="profile-row-sub">Plan what to grow next season</div></div><div class="wf-count-badge" id="future-count-badge">0</div><div class="profile-row-arrow">›</div></div></div></div>
+    <div class="profile-section"><div class="profile-section-label">Personal</div><div class="profile-card"><div class="profile-row" onclick="showScreen('editprofile')"><div class="profile-row-icon">✏️</div><div class="profile-row-text"><div class="profile-row-title">Edit Profile Details</div><div class="profile-row-sub">DOB, address, preferences, language</div></div><div class="profile-row-arrow">›</div></div><div class="profile-row" onclick="showScreen('familymembers')"><div class="profile-row-icon">👨‍👩‍👧</div><div class="profile-row-text"><div class="profile-row-title">Family Members</div><div class="profile-row-sub">Add & manage family for shared garden</div></div><div class="profile-row-arrow">›</div></div></div></div>
+    <div class="profile-section"><div class="profile-section-label">Account</div><div class="profile-card"><div class="profile-row" style="cursor:default"><div class="profile-row-icon">🔒</div><div class="profile-row-text"><div class="profile-row-title">Stay Logged In</div><div class="profile-row-sub" id="session-info-text">Active</div></div><div style="font-size:10px;font-weight:800;color:var(--green);background:var(--green-pale);padding:3px 8px;border-radius:8px;">ON</div></div></div></div>
+    <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
+    <div style="text-align:center;font-size:11px;color:var(--muted);font-weight:700;margin-top:10px">GrowFresh v5.0 Complete Stages 1-5 · Hyderabad 🌱</div>
+  </div>
+  </div>
+<div class="screen" id="screen-editprofile">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Edit Profile</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+
+    <!-- LOCKED LOGIN INFO -->
+    <div style="background:var(--green-pale);border-radius:var(--radius);padding:12px;margin-bottom:14px;border-left:4px solid var(--green)">
+      <div style="font-size:11px;font-weight:900;color:var(--green-deep);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px">🔒 Login Info (Cannot be changed)</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--muted);font-weight:700">Username</div>
+        <div style="font-size:12px;font-weight:800;color:var(--text)" id="ep-username">—</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--muted);font-weight:700">Phone</div>
+        <div style="font-size:12px;font-weight:800;color:var(--text)" id="ep-phone">—</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">
+        <div style="font-size:11px;color:var(--muted);font-weight:700">Email</div>
+        <div style="font-size:12px;font-weight:800;color:var(--text)" id="ep-email">—</div>
+      </div>
+    </div>
+
+    <!-- EDITABLE FIELDS -->
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">Personal Details</div>
+    <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);margin-bottom:14px">
+      <div class="input-group"><div class="input-label">Display Name</div><input class="full-input" id="ep-display" type="text" placeholder="e.g. Raj Kumar"/></div>
+      <div class="input-group"><div class="input-label">Date of Birth</div><input class="full-input" id="ep-dob" type="date"/></div>
+      <div class="input-group"><div class="input-label">Gender</div>
+        <select class="full-input" id="ep-gender" style="padding:13px 14px">
+          <option value="">Select...</option><option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option>
+        </select>
+      </div>
+      <div class="input-group" style="margin-bottom:0"><div class="input-label">Preferred Language</div>
+        <select class="full-input" id="ep-lang" style="padding:13px 14px">
+          <option>English</option><option>తెలుగు (Telugu)</option><option>हिंदी (Hindi)</option><option>தமிழ் (Tamil)</option><option>ಕನ್ನಡ (Kannada)</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">Address & Location</div>
+    <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);margin-bottom:14px">
+      <div class="input-group"><div class="input-label">Flat / House Number</div><input class="full-input" id="ep-house" type="text" placeholder="e.g. 401, Sunshine Apartments"/></div>
+      <div class="input-group"><div class="input-label">Area / Locality</div><input class="full-input" id="ep-area" type="text" placeholder="e.g. Gachibowli"/></div>
+      <div class="input-group"><div class="input-label">City</div><input class="full-input" id="ep-city" type="text" value="Hyderabad"/></div>
+      <div class="input-group" style="margin-bottom:0"><div class="input-label">Pincode</div><input class="full-input" id="ep-pin" type="text" placeholder="500032" maxlength="6"/></div>
+    </div>
+
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">Garden Preferences</div>
+    <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);margin-bottom:14px">
+      <div class="input-group"><div class="input-label">Garden Space Type</div>
+        <select class="full-input" id="ep-space" style="padding:13px 14px">
+          <option>Balcony</option><option>Terrace</option><option>Backyard</option><option>Window Sill</option><option>Indoor only</option>
+        </select>
+      </div>
+      <div class="input-group"><div class="input-label">Approx Space Size</div>
+        <select class="full-input" id="ep-size" style="padding:13px 14px">
+          <option>Small (under 50 sq.ft)</option><option>Medium (50-150 sq.ft)</option><option>Large (150+ sq.ft)</option>
+        </select>
+      </div>
+      <div class="input-group" style="margin-bottom:0"><div class="input-label">Experience Level</div>
+        <select class="full-input" id="ep-exp" style="padding:13px 14px">
+          <option>Beginner — just starting out</option><option>Intermediate — growing 6+ months</option><option>Expert — 2+ years experience</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">Health & Wellness Goals</div>
+    <div style="background:var(--white);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-sm);margin-bottom:14px">
+      <div class="input-group" style="margin-bottom:10px"><div class="input-label">Dietary Preference</div>
+        <select class="full-input" id="ep-diet" style="padding:13px 14px">
+          <option>Vegetarian</option><option>Vegan</option><option>Eggetarian</option><option>Non-vegetarian</option><option>No preference</option>
+        </select>
+      </div>
+      <div style="font-size:11px;font-weight:800;color:var(--muted);margin:8px 0 6px">Primary Goal</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <label style="background:var(--bg);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px"><input type="checkbox" class="ep-goal" value="grow"/> 🌱 Grow my own food</label>
+        <label style="background:var(--bg);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px"><input type="checkbox" class="ep-goal" value="health"/> ❤️ Better health</label>
+        <label style="background:var(--bg);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px"><input type="checkbox" class="ep-goal" value="save"/> 💰 Save money</label>
+        <label style="background:var(--bg);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px"><input type="checkbox" class="ep-goal" value="eco"/> 🌍 Sustainability</label>
+        <label style="background:var(--bg);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px"><input type="checkbox" class="ep-goal" value="kids"/> 👧 Teach kids</label>
+      </div>
+    </div>
+
+    <button onclick="saveProfileDetails()" style="width:100%;padding:14px;background:var(--green);color:white;border:none;border-radius:var(--radius);font-weight:900;font-size:15px;font-family:'Nunito',sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(46,125,50,0.25)">💾 Save Changes</button>
+  </div></div>
+</div>
+<div class="screen" id="screen-orders">
+  <div class="page-header"><button class="back-btn" onclick="switchTab('profile')">←</button><div class="page-title">Order Tracking</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px">Active Orders</div>
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px">
+      <div style="padding:14px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:900;color:var(--text)">Order #GF00042</div>
+          <div style="background:var(--orange-pale);color:var(--orange);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">🚚 Out for Delivery</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:8px">Tomato Seeds × 1, Chilli Sapling × 2</div>
+        <div style="background:var(--bg);border-radius:9px;padding:9px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:6px">
+            <span>📍 Your Location</span><span>🔄 2 stops left</span>
+          </div>
+          <div style="background:var(--green-pale);border-radius:8px;height:5px;overflow:hidden"><div style="height:100%;background:var(--green);width:60%"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--green);font-weight:800">✅ Arriving in 45 mins · Driver 5⭐</div>
+      </div>
+    </div>
+    
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;margin-top:16px">Past Orders</div>
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:10px">
+      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--text)">Order #GF00041</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">23 Apr 2026 · ₹399 · 2 items</div>
+        </div>
+        <div style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">✅ Delivered</div>
+      </div>
+    </div>
+    
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:10px">
+      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--text)">Order #GF00040</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">18 Apr 2026 · ₹249 · 1 item</div>
+        </div>
+        <div style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">✅ Delivered</div>
+      </div>
+    </div>
+    
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden">
+      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--text)">Order #GF00039</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:2px">10 Apr 2026 · ₹599 · 3 items</div>
+        </div>
+        <div style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px">✅ Delivered</div>
+      </div>
+    </div>
+  </div></div>
+</div>
+<div class="screen" id="screen-rewards">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">GrowPoints & Rewards</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+
+    <div style="background:var(--grad-sun);border-radius:var(--radius);padding:18px;color:white;box-shadow:var(--shadow-md);margin-bottom:14px;text-align:center">
+      <div style="font-size:11px;font-weight:800;opacity:0.9;letter-spacing:0.5px;text-transform:uppercase">Your GrowPoints</div>
+      <div style="font-size:48px;font-weight:900;margin:4px 0" id="rewards-total">0</div>
+      <div style="font-size:12px;opacity:0.9;font-weight:700">≈ ₹<span id="rewards-inr">0</span> redeemable value</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:14px">
+        <button onclick="showToast('🎁 Redeem flow coming soon!')" style="background:white;color:#6A1B9A;border:none;border-radius:8px;padding:9px 16px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Nunito',sans-serif">Redeem</button>
+        <button onclick="showToast('💝 Gift to friend coming soon!')" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.5);border-radius:8px;padding:9px 16px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Nunito',sans-serif">Gift</button>
+      </div>
+    </div>
+
+    <!-- LIVE EARNINGS HISTORY (populated by the rewards engine) -->
+    <div id="rewards-history-wrap" style="margin-bottom:16px;display:none">
+      <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">Recent Earnings</div>
+      <div id="rewards-history-list" style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden"></div>
+    </div>
+
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">How You Earned</div>
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:16px">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:800">🔥 Daily care streak (15 days)</div><div style="font-size:11px;color:var(--muted);font-weight:600">+10 pts/day</div></div><div style="color:var(--green);font-weight:900">+150</div></div>
+      <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:800">♻️ Composted 5 kg waste</div><div style="font-size:11px;color:var(--muted);font-weight:600">Soil hero bonus</div></div><div style="color:var(--green);font-weight:900">+200</div></div>
+      <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:800">🥗 Healthy meal logged 7 days</div><div style="font-size:11px;color:var(--muted);font-weight:600">Wellness streak</div></div><div style="color:var(--green);font-weight:900">+100</div></div>
+      <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:800">📸 Shared 3 community posts</div><div style="font-size:11px;color:var(--muted);font-weight:600">Engagement bonus</div></div><div style="color:var(--green);font-weight:900">+75</div></div>
+    </div>
+
+    <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px">🎁 Available Rewards</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div onclick="showToast('🎁 Coming soon!')" style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);cursor:pointer;text-align:center">
+        <div style="font-size:36px">🌱</div>
+        <div style="font-size:12px;font-weight:900;margin-top:6px">Free Seed Pack</div>
+        <div style="font-size:11px;color:var(--purple);font-weight:800;margin-top:2px">500 pts</div>
+      </div>
+      <div onclick="showToast('🎁 Coming soon!')" style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);cursor:pointer;text-align:center">
+        <div style="font-size:36px">🪴</div>
+        <div style="font-size:12px;font-weight:900;margin-top:6px">Pot + Soil Bundle</div>
+        <div style="font-size:11px;color:var(--purple);font-weight:800;margin-top:2px">1,200 pts</div>
+      </div>
+      <div onclick="showToast('🛡️ Insurance partner coming soon!')" style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);cursor:pointer;text-align:center;border:2px solid var(--green)">
+        <div style="font-size:36px">🛡️</div>
+        <div style="font-size:12px;font-weight:900;margin-top:6px">10% Insurance Off</div>
+        <div style="font-size:11px;color:var(--purple);font-weight:800;margin-top:2px">2,000 pts</div>
+      </div>
+      <div onclick="showToast('🎁 Coming soon!')" style="background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm);cursor:pointer;text-align:center">
+        <div style="font-size:36px">👨‍🌾</div>
+        <div style="font-size:12px;font-weight:900;margin-top:6px">Expert Home Visit</div>
+        <div style="font-size:11px;color:var(--purple);font-weight:800;margin-top:2px">3,000 pts</div>
+      </div>
+    </div>
+
+    <div style="background:var(--grad-harvest);border-radius:var(--radius);padding:14px;color:white;box-shadow:var(--shadow-sm)">
+      <div style="font-size:13px;font-weight:900">🏆 Hyderabad Leaderboard</div>
+      <div style="font-size:11px;opacity:0.95;margin-top:4px">You rank <strong>#42</strong> out of 1,200 growers this month</div>
+      <button onclick="showToast('🏆 Leaderboard — coming soon!')" style="margin-top:8px;background:white;color:var(--orange-deep);border:none;border-radius:8px;padding:7px 12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Nunito',sans-serif">View Full Ranking</button>
+    </div>
+  </div></div>
+  </div>
+<div class="screen" id="screen-subs">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">Monthly Kits</div></div>
+  <div class="subs-hero"><div class="subs-hero-title">📦 Monthly Garden Kits</div><div class="subs-hero-sub">Auto-delivered every month · Cancel anytime</div></div>
+  <div class="scroll-body"><div class="subs-body">
+    <div class="sub-card">
+      <div class="sub-name">🌱 Seed of the Month</div>
+      <div class="sub-price">₹199 <span>/ month</span></div>
+      <div class="sub-features">
+        <div class="sub-feature">✅ 3 seasonal seed packets</div>
+        <div class="sub-feature">✅ Planting guide card</div>
+        <div class="sub-feature">✅ Hyderabad-specific tips</div>
+        <div class="sub-feature">✅ Free delivery</div>
+      </div>
+      <button class="sub-btn" onclick="subscribePlan('Seed of the Month','₹199')">Subscribe ₹199/month</button>
+    </div>
+    <div class="sub-card popular">
+      <div class="sub-popular-badge">⭐ Most Popular</div>
+      <div class="sub-name">🌿 Grow Box</div>
+      <div class="sub-price">₹399 <span>/ month</span></div>
+      <div class="sub-features">
+        <div class="sub-feature">✅ 2 ready-to-plant saplings</div>
+        <div class="sub-feature">✅ Potting soil bag</div>
+        <div class="sub-feature">✅ Organic fertilizer sachet</div>
+        <div class="sub-feature">✅ Monthly care tips video</div>
+        <div class="sub-feature">✅ Free delivery</div>
+      </div>
+      <button class="sub-btn" onclick="subscribePlan('Grow Box','₹399')">Subscribe ₹399/month</button>
+    </div>
+    <div class="sub-card">
+      <div class="sub-name">🏡 Full Garden Kit</div>
+      <div class="sub-price">₹699 <span>/ month</span></div>
+      <div class="sub-features">
+        <div class="sub-feature">✅ 3 saplings (seasonal variety)</div>
+        <div class="sub-feature">✅ 2 pots + soil bags</div>
+        <div class="sub-feature">✅ Fertilizer + pest control</div>
+        <div class="sub-feature">✅ 1 expert WhatsApp tip session</div>
+        <div class="sub-feature">✅ Priority free delivery</div>
+      </div>
+      <button class="sub-btn" onclick="subscribePlan('Full Garden Kit','₹699')">Subscribe ₹699/month</button>
+    </div>
+  </div></div>
+</div>
+<div class="screen" id="screen-rd">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">🧪 R&amp;D Lab</div><div class="page-subtitle">Concept preview</div></div>
+  <div class="scroll-body"><div style="padding:14px">
+
+    <!-- Coming-soon hero -->
+    <div style="background:linear-gradient(135deg,#2E7D32,#1B5E20);border-radius:var(--radius);padding:16px;color:#fff;box-shadow:var(--shadow-md);margin-bottom:14px">
+      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:4px 10px;border-radius:999px;font-size:10.5px;font-weight:900;letter-spacing:.5px;text-transform:uppercase">🚧 Coming Soon</div>
+      <div style="font-size:18px;font-weight:900;margin-top:8px;line-height:1.2">Geo-Adaptive Garden Planner</div>
+      <div style="font-size:12.5px;font-weight:700;opacity:.95;margin-top:4px;line-height:1.45">Tell us your <b>state</b> and <b>space</b>. We'll suggest the right ecology model, the right space split, and the right plants — tuned to your climate.</div>
+    </div>
+
+    <!-- Inputs (mini) -->
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:900;margin-bottom:10px">📍 Your conditions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div>
+          <div style="font-size:11px;font-weight:800;color:var(--muted);margin-bottom:4px">State</div>
+          <select id="rd-mini-state" style="width:100%;padding:9px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);font:800 13px Nunito,sans-serif;color:var(--text);outline:none"></select>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:800;color:var(--muted);margin-bottom:4px">Space (sq ft)</div>
+          <input id="rd-mini-space" type="number" min="10" max="20000" value="120" style="width:100%;padding:9px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);font:800 13px Nunito,sans-serif;color:var(--text);outline:none">
+        </div>
+      </div>
+    </div>
+
+    <!-- Zone result -->
+    <div id="rd-mini-zone" style="background:linear-gradient(135deg,#43A047,#1B5E20);border-radius:var(--radius);padding:14px;color:#fff;box-shadow:var(--shadow);margin-bottom:12px">
+      <div id="rd-mini-zico" style="font-size:30px;line-height:1">🌱</div>
+      <div id="rd-mini-zname" style="font-size:16px;font-weight:900;margin:6px 0 2px">Detecting…</div>
+      <div id="rd-mini-zsub" style="font-size:11.5px;font-weight:700;opacity:.95">Pick a state to start.</div>
+      <div id="rd-mini-ztags" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px"></div>
+    </div>
+
+    <!-- Allocation -->
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:900;margin-bottom:4px">📐 Smart space split</div>
+      <div style="font-size:11.5px;color:var(--muted);font-weight:700;margin-bottom:8px">For <b id="rd-mini-sumspace" style="color:var(--text)">120</b> sq ft · <span id="rd-mini-bname">Small</span> garden</div>
+      <div id="rd-mini-bar" style="display:flex;width:100%;height:16px;border-radius:999px;overflow:hidden;border:1px solid var(--border);margin-bottom:8px"></div>
+      <div id="rd-mini-buckets" style="display:grid;gap:8px"></div>
+    </div>
+
+    <!-- Continuous Harvest — compact preview -->
+    <div style="background:linear-gradient(180deg,var(--white),#F1F8E9);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+        <div style="font-size:13px;font-weight:900">🍌 Continuous Harvest</div>
+        <span style="font-size:9px;font-weight:900;color:#E65100;background:#FFF3E0;border:1px solid #FFE0B2;padding:1px 7px;border-radius:999px;letter-spacing:.4px;text-transform:uppercase;margin-left:auto">Concept</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--muted);font-weight:700;line-height:1.45;margin-bottom:10px">Beyond "what to plant" → <b style="color:var(--text)">"how to keep food coming every week."</b> Blend daily-rotation, seasonal, and perennial yields to shrink harvest gaps to zero.</div>
+
+      <!-- Food Security mini-grid -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px">
+          <div style="font-size:10px;font-weight:800;color:var(--muted)">Annual fruit %</div>
+          <div style="font:900 18px Nunito,sans-serif;color:var(--green-deep)">18<span style="font-size:11px;color:var(--muted)">%</span></div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px">
+          <div style="font-size:10px;font-weight:800;color:var(--muted)">Self-sufficient days</div>
+          <div style="font:900 18px Nunito,sans-serif;color:var(--blue)">~66</div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px">
+          <div style="font-size:10px;font-weight:800;color:var(--muted)">Nutrient diversity</div>
+          <div style="font:900 18px Nunito,sans-serif;color:#7B1FA2">7<span style="font-size:11px;color:var(--muted)">/10</span></div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px">
+          <div style="font-size:10px;font-weight:800;color:var(--muted)">Climate resilience</div>
+          <div style="font:900 18px Nunito,sans-serif;color:#EF6C00">B+</div>
+        </div>
+      </div>
+
+      <!-- Future Harvest 5-year mini timeline -->
+      <div style="font-size:10.5px;font-weight:900;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin:4px 0 4px">Future Harvest · 5-yr view</div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:54px 22px 1fr;gap:6px;padding:7px 9px;font:700 11.5px Nunito,sans-serif;border-bottom:1px solid var(--border)"><div style="font-weight:900;color:var(--green-deep)">3 mo</div><div>🥬</div><div>Leafy veg &amp; herbs · daily picks</div></div>
+        <div style="display:grid;grid-template-columns:54px 22px 1fr;gap:6px;padding:7px 9px;font:700 11.5px Nunito,sans-serif;border-bottom:1px solid var(--border)"><div style="font-weight:900;color:var(--green-deep)">8 mo</div><div>🍈</div><div>Papaya · chilli · tomato</div></div>
+        <div style="display:grid;grid-template-columns:54px 22px 1fr;gap:6px;padding:7px 9px;font:700 11.5px Nunito,sans-serif;border-bottom:1px solid var(--border)"><div style="font-weight:900;color:var(--green-deep)">1.5 yr</div><div>🍌</div><div>Banana cycle begins</div></div>
+        <div style="display:grid;grid-template-columns:54px 22px 1fr;gap:6px;padding:7px 9px;font:700 11.5px Nunito,sans-serif;border-bottom:1px solid var(--border)"><div style="font-weight:900;color:var(--green-deep)">3 yr</div><div>🥭</div><div>First mango yield · guava · pomegranate</div></div>
+        <div style="display:grid;grid-template-columns:54px 22px 1fr;gap:6px;padding:7px 9px;font:700 11.5px Nunito,sans-serif"><div style="font-weight:900;color:var(--green-deep)">5 yr</div><div>🌰</div><div>Tamarind · jackfruit · food-forest stability</div></div>
+      </div>
+    </div>
+
+    <!-- Open full prototype (in-app, embedded inside the phone frame) -->
+    <a href="#" onclick="event.preventDefault();showScreen('rdfull')" style="display:block;text-align:center;background:var(--green);color:#fff;border-radius:12px;padding:12px;font-weight:900;font-size:13px;text-decoration:none;box-shadow:0 2px 6px rgba(46,125,50,.25);margin-bottom:10px">🔬 Open full R&amp;D prototype →</a>
+
+    <!-- Roadmap mini -->
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px">
+      <div style="font-size:13px;font-weight:900;margin-bottom:8px">🛣️ What's next</div>
+      <div style="font-size:12px;font-weight:700;color:var(--text);line-height:1.55">
+        • <b>Continuous Harvest Engine</b> — zero-gap daily/seasonal/perennial mix<br>
+        • <b>Family Nutrition Mapping</b> — yield → diet coverage %<br>
+        • <b>Food Forest Simulator</b> — canopy spread over years<br>
+        • <b>Plant Lifetime ROI</b> — mango 20-yr · banana monthly · tamarind decadal<br>
+        • <b>Resilient Garden mode</b> — drought · disease · single-season failure<br>
+        • <b>Geo-Success Validator</b> (community telemetry)<br>
+        • <b>Health-Goal Engine</b> (immunity · diabetes · stress)<br>
+        • <b>Sustainability Score</b> (oxygen · heat · water · food)<br>
+        • <b>Companion Planting AI</b>
+      </div>
+    </div>
+
+  </div></div>
+  </div>
+<div class="screen" id="screen-rdfull">
+  <div class="page-header"><button class="back-btn" onclick="goBack()">←</button><div class="page-title">🧪 R&amp;D · Full Prototype</div><div class="page-subtitle">Concept preview</div></div>
+  <div class="scroll-body" style="padding:0;overflow:hidden">
+    <iframe id="rdfull-frame" data-src="growfresh-rd.html" src="about:blank" title="GrowFresh R&amp;D Full Prototype" style="width:100%;height:100%;border:0;display:block;background:#f6f8f7" loading="lazy"></iframe>
+  </div>
+  </div>
+<div class="bottom-nav"><a class="nav-item" href="growfresh-app.html" style="text-decoration:none;color:inherit"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></a><a class="nav-item" href="shop.html" style="text-decoration:none;color:inherit"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></a><a class="nav-item" href="garden.html" style="text-decoration:none;color:inherit"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></a><a class="nav-item" href="community.html" style="text-decoration:none;color:inherit"><div class="nav-icon">👥</div><div class="nav-label">Community</div></a><a class="nav-item active" href="profile.html" style="text-decoration:none;color:inherit"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></a></div>
+</div><!-- /phone -->
+<!-- GLOBAL BOTTOM NAV — always visible on every page -->
+<div class="bottom-nav" id="globalBottomNav" style="display:none">
+  <div class="nav-item" data-tab="home" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+  <div class="nav-item" data-tab="shop" onclick="switchTab('shop')"><div class="nav-icon">🛒</div><div class="nav-label">Shop</div></div>
+  <div class="nav-item" data-tab="garden" onclick="switchTab('garden')"><div class="nav-icon">🌿</div><div class="nav-label">Garden</div></div>
+  <div class="nav-item" data-tab="community" onclick="switchTab('community')"><div class="nav-icon">👥</div><div class="nav-label">Community</div></div>
+  <div class="nav-item" data-tab="profile" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></div>
+</div>
+
+<!-- SPLASH -->
+
+
+<!-- LOGIN -->
+
+
+<!-- HOME -->
+
+
+<!-- SHOP -->
+
+
+<!-- CART -->
+
+
+<!-- ════════════ WISHLIST ════════════ -->
+
+
+<!-- ════════════ FUTURE PLANTS ════════════ -->
+
+
+<!-- UPI -->
+
+
+<!-- SUCCESS -->
+
+
+<!-- GARDEN -->
+
+
+<!-- EXPERT BOOKING -->
+
+
+<!-- SEASONAL CALENDAR -->
+
+
+<!-- SPACE ANALYZER -->
+
+
+<!-- SUBSCRIPTIONS -->
+
+
+<!-- MORE FEATURES -->
+
+
+<!-- ================ NEW: WELLNESS TRACKER ================ -->
+
+
+<!-- ================ NEW: HEALTHY EATING ================ -->
+
+
+<!-- ================ NEW: LEARN & GROW ================ -->
+
+
+<!-- ================ NEW: KIDS ZONE · FARMING GAMES ================ -->
+
+
+<!-- ================ R&D LAB · GEO-ADAPTIVE GARDEN PLANNER (preview) ================ -->
+
+
+<!-- ================ R&D FULL PROTOTYPE (embedded inside phone frame) ================ -->
+
+
+<!-- ================ NEW: SOIL HEALTH DASHBOARD ================ -->
+
+
+<!-- ================ NEW: REWARDS / GROWPOINTS ================ -->
+
+
+<!-- ================ NEW: FAMILY & ECOSYSTEM ================ -->
+
+
+<!-- COMMUNITY -->
+
+
+<!-- ================ SEASONAL GROWING GUIDE ================ -->
+
+
+<!-- ================ NEW: AI LIFESTYLE COACH PAGE ================ -->
+
+
+<!-- PROFILE -->
+
+
+<!-- ================ NEW: EDIT PROFILE ================ -->
+
+
+<!-- ================ NEW: FAMILY MEMBERS ================ -->
+
+
+
+<!-- ADD PLANT MODAL -->
+<div class="modal-overlay" id="add-plant-modal">
+  <div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title">🌱 Add Plant to My Garden</div>
+    <div class="plant-options" id="plant-options">
+      <div class="plant-option" onclick="selectPlantType(this,'Tomato','🍅',60,120)"><div class="plant-option-emoji">🍅</div><div class="plant-option-name">Tomato</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Chilli','🌶️',45,80)"><div class="plant-option-emoji">🌶️</div><div class="plant-option-name">Chilli</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Coriander','🌿',21,40)"><div class="plant-option-emoji">🌿</div><div class="plant-option-name">Coriander</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Spinach','🥬',30,60)"><div class="plant-option-emoji">🥬</div><div class="plant-option-name">Spinach</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Brinjal','🍆',55,100)"><div class="plant-option-emoji">🍆</div><div class="plant-option-name">Brinjal</div></div>
+      <div class="plant-option" onclick="selectPlantType(this,'Capsicum','🫑',60,90)"><div class="plant-option-emoji">🫑</div><div class="plant-option-name">Capsicum</div></div>
+    </div>
+    <input class="modal-input" id="plant-location" placeholder="Location (e.g. Balcony Pot 1)"/>
+    <input class="modal-input" id="plant-days" type="number" placeholder="Days since planted (0 = today)" min="0"/>
+    <button class="modal-btn" onclick="addPlant()">🌱 Add to My Garden</button>
+    <button class="modal-cancel" onclick="hideAddPlant()">Cancel</button>
+  </div>
+</div>
+
+<!-- COMPANION PLANTS MODAL -->
+<div class="modal-overlay" id="companions-modal" onclick="if(event.target===this)hideCompanions()">
+  <div class="modal-sheet" style="max-height:88vh;overflow:hidden;display:flex;flex-direction:column">
+    <div class="modal-handle"></div>
+    <div id="companions-body" style="overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px"></div>
+    <button class="modal-cancel" onclick="hideCompanions()" style="margin-top:8px">Close</button>
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="booking-sheet"><div class="modal-handle"></div>
+    <div class="modal-title">📅 Book <span id="booking-expert-name">Expert</span></div>
+    <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Select Date</div>
+    <div class="date-btns" id="date-btns"></div>
+    <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Select Time Slot</div>
+    <div class="time-slots">
+      <div class="time-slot" onclick="selectSlot(this)">9:00 AM</div>
+      <div class="time-slot" onclick="selectSlot(this)">10:30 AM</div>
+      <div class="time-slot booked">12:00 PM</div>
+      <div class="time-slot" onclick="selectSlot(this)">2:00 PM</div>
+      <div class="time-slot" onclick="selectSlot(this)">3:30 PM</div>
+      <div class="time-slot booked">5:00 PM</div>
+    </div>
+    <button class="confirm-book-btn" onclick="confirmBooking()">✅ Confirm Booking — <span id="booking-price">₹399</span></button>
+    <button class="modal-cancel" onclick="hideBooking()">Cancel</button>
+  </div>
+</div>
+
+<!-- WRITE POST MODAL -->
+<div class="write-modal" id="write-modal">
+  <div class="write-sheet">
+    <div class="write-header"><div class="write-title">✍️ Share with Community</div><button class="write-close" onclick="hideWritePost()">✕</button></div>
+    <div class="post-type-pills"><div class="post-type-pill active" onclick="selectPostType(this,'tip')">💡 Tip</div><div class="post-type-pill" onclick="selectPostType(this,'harvest')">🍅 Harvest</div><div class="post-type-pill" onclick="selectPostType(this,'question')">❓ Question</div><div class="post-type-pill" onclick="selectPostType(this,'idea')">🌟 Idea</div></div>
+    <textarea class="write-textarea" id="post-text" placeholder="Share your garden tip, harvest, question or idea..."></textarea>
+    <div style="font-size:10px;font-weight:800;color:var(--muted);margin-bottom:7px">TAG A PLANT</div>
+    <div class="write-plant-select"><div class="write-plant-chip active" onclick="selectPostPlant(this,'')">🌾 General</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🍅 Tomato')">🍅 Tomato</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🌶️ Chilli')">🌶️ Chilli</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🌿 Coriander')">🌿 Coriander</div><div class="write-plant-chip" onclick="selectPostPlant(this,'🥬 Spinach')">🥬 Spinach</div></div>
+    <button class="write-submit-btn" onclick="submitPost()">📤 Post to Community</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     GROWFRESH ↔ POSTGRES API BRIDGE
+     Mirrors UI actions (login, cart, plant, screen views) into the
+     backend so every interaction is persisted to Postgres in real time.
+
+     Usage:
+       1. Start backend:  cd backend && npm run dev   (port 5000)
+       2. Open this file:  http://localhost:8765/growfresh-app.html?api=http://localhost:5000
+          (or leave ?api off – defaults to http://localhost:5000)
+       3. Watch live:     ./scripts/db-watch.sh
+     ════════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     FLOATING BACK BUTTON  — mid-left, always reachable on mobile
+     Auto-hides on top-level tabs (home/shop/garden/community/profile)
+     so it never overlaps the bottom-nav targets.
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     USER-AVATAR → PROFILE (defensive binding)
+     Ensures the top-right "P" badge always opens the profile screen,
+     even if inline onclick is stripped by a re-render or a touch
+     handler swallows the tap on real mobile devices.
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SHOP & HOME SEARCH BARS — PRODUCT/FUNCTION FILTERS
+     Shop: filters product cards by name/desc/category
+     Home: global search (products + features/screens)
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     WISHLIST & FUTURE PLANTS MODULE
+     • ❤️ overlay button on every product card → save to Wishlist
+     • 🌱 overlay button on every product card → save to Future Plants
+     • Two dedicated screens (#screen-wishlist, #screen-future)
+     • Counts surfaced on Profile + Cart
+     • Persists in localStorage; rendered on screen entry
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     🏆 GROWPOINTS REWARDS ENGINE
+     Awards points for:
+       • Each WFH micro-break completed         (+5 each)
+       • All 5 breaks done in one day (bonus)   (+25)
+       • First visit to each Urban Living card   (+15–20)
+       • First wishlist add of the day           (+5)
+       • Each plant added to garden              (+20)
+       • Each order placed                       (+30 + 5% of cart value)
+     Confetti + toast when points awarded. Live total surfaces on
+     the Rewards screen + a header pill on Home.
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     🌆 URBAN LIVING ACTIVITY MODALS
+     One focused micro-activity per Healthy Urban Living card.
+     Completing each activity awards GrowPoints via gfRewards.award().
+     Activities:
+       stress     → 60-second guided breath + 3 mindful actions
+       meeting    → 3 quick garden micro-tasks (water · check · photo)
+       balcony    → pick 1 apartment-friendly herb to grow
+       family     → plan a fresh meal from this week's harvest
+       challenge  → join 7-day urban grow challenge
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+
+<!-- ================ RARE PLANT CHALLENGE MODULE ================ -->
+
+
+
+<!-- ================ 1 HOUR FOR YOURSELF — ACHIEVEMENT & SHARE ================ -->
+
+
+
+<!-- ================ OPEN-POST HELPER + REACTION SIMULATOR + FOLLOWERS FEED ================ -->
+
+
+
+<!-- ================ COMMUNITIES HUB — create, join, invite ================ -->
+
+
+
+
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     R&D LAB · GEO-ADAPTIVE GARDEN PLANNER (mini in-app preview)
+     Standalone module — drives the #screen-rd controls. Kept short
+     and self-contained; the full prototype lives in growfresh-rd.html
+     ════════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     R&D FULL PROTOTYPE — lazy iframe loader for #screen-rdfull
+     Only fetches growfresh-rd.html the first time the screen opens.
+     ════════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ============== KIDS FARMING GAMES ENGINE ============== -->
+
+
+<!-- ============== COMPANION PLANTS ENGINE ============== -->
+<!-- Implements the M(i,j) compatibility matrix from the Mathematical Ecology -->
+<!-- Blueprint. When user taps a product image, we show a popup with         -->
+<!-- ecologically-compatible plants that thrive together (self-sustaining).  -->
+<script src="shared/gf-app.js"></script>
+</body>
+</html>
