@@ -607,7 +607,34 @@ function showScreen(name,opts){
   if(!opts.fromBack && curName && curName!==name){_navHistory.push(curName);}
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const el=document.getElementById('screen-'+name);if(el)el.classList.add('active');
-  if(name==='garden')renderGarden();
+  // ── Per-screen render dispatch ───────────────────────────────
+  // Every data-driven screen MUST have its render hook here so that
+  // cross-page navigation (?screen=calendar etc.) also paints content,
+  // not just switchTab() in-page calls.
+  try {
+    if(name==='garden') renderGarden();
+    else if(name==='calendar' && typeof renderPlantTimeline==='function') renderPlantTimeline();
+    else if(name==='cart' && typeof renderCartItems==='function'){
+      // Mirror goToCart()'s empty-state toggle so cart is never blank
+      var items=Object.values(cart||{});
+      var qty=items.reduce(function(s,i){return s+i.qty;},0);
+      var ct=document.getElementById('cart-count-text'); if(ct) ct.textContent=qty+' item'+(qty!==1?'s':'');
+      var em=document.getElementById('empty-cart'), sc=document.getElementById('cart-scroll');
+      if(em && sc){
+        if(qty===0){em.style.display='flex';sc.style.display='none';}
+        else{em.style.display='none';sc.style.display='block';renderCartItems();}
+      }
+    }
+    else if(name==='wishlist' || name==='future'){
+      // Both render functions are private to the wishlist/future IIFE but
+      // refreshAll exposes them indirectly. Call it if available.
+      if(typeof window.refreshAll==='function') window.refreshAll();
+    }
+    else if(name==='editprofile') loadProfileForEdit();
+    else if(name==='familymembers') renderFamilyMembers();
+    else if(name==='kids' && typeof window.renderStars==='function') window.renderStars();
+    else if(name==='aicoach' && typeof window.gfRefreshAiCoach==='function') window.gfRefreshAiCoach();
+  } catch(e) { console.warn('[gf] render hook failed for screen', name, e); }
   if(name==='community'){
     // Always reset to the default "All" filter when entering Community fresh — don't
     // carry over a Tips/Harvest/Questions selection from a previous visit.
@@ -627,8 +654,6 @@ function showScreen(name,opts){
       if(_ss){ _ss.value=''; if(typeof window.onShopSearch==='function') window.onShopSearch(''); }
     }catch(e){}
   }
-  if(name==='editprofile')loadProfileForEdit();
-  if(name==='familymembers')renderFamilyMembers();
   _updateNav(name);
 }
 function goBack(){
@@ -1693,6 +1718,8 @@ function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;',
   // Expose so renderShopProducts() (in a different IIFE, declared later in the file)
   // can re-trigger the wish/future button injection after every grid rebuild.
   window.gfBindShopActions = bindShop;
+  // Also expose refreshAll so showScreen's wishlist/future hooks can call it.
+  window.refreshAll = refreshAll;
   var _ss = window.showScreen;
   if (typeof _ss === 'function'){
     window.showScreen = function(){ var r = _ss.apply(this, arguments); try{ bindShop(); }catch(e){} return r; };
