@@ -1053,7 +1053,11 @@ function _gfSetCookie(name, value, days){
 }
 function gfApplyLanguage(code){
   code = (code||'en').toLowerCase();
-  var map = { en:'en', te:'te', hi:'hi', ta:'ta', kn:'kn' };
+  // Kannada removed — Google Translate widget produces duplicated UI on
+  // certain emoji + Kannada-glyph combinations. English/Telugu/Hindi/Tamil
+  // only for now. Users wanting Kannada can use the browser's built-in
+  // translate (Chrome menu → Translate).
+  var map = { en:'en', te:'te', hi:'hi', ta:'ta' };
   var dst = map[code] || 'en';
   try{ localStorage.setItem(GF_LANG_KEY, dst); }catch(e){}
   if(dst === 'en'){
@@ -1062,8 +1066,6 @@ function gfApplyLanguage(code){
   } else {
     _gfSetCookie('googtrans', '/en/'+dst, 365);
   }
-  // Always reload — letting Google re-scan a clean DOM avoids the nested
-  // <font> duplication that an in-place select toggle produces.
   setTimeout(function(){ location.reload(); }, 150);
 }
 function _gfKillBanner(){
@@ -1118,7 +1120,7 @@ function _gfBootGoogleTranslate(){
     try{
       new google.translate.TranslateElement({
         pageLanguage: 'en',
-        includedLanguages: 'en,te,hi,ta,kn',
+        includedLanguages: 'en,te,hi,ta',
         autoDisplay: false,
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE
       }, 'google_translate_element');
@@ -1144,6 +1146,13 @@ if(typeof window!=='undefined'){
   // Re-affirm cookie ASAP (before any text is painted in source language)
   try{
     var _saved = localStorage.getItem(GF_LANG_KEY) || '';
+    // Migrate users who previously picked 'kn' (now unsupported) back to English
+    if(_saved === 'kn'){
+      _saved = 'en';
+      try{ localStorage.setItem(GF_LANG_KEY, 'en'); }catch(e){}
+      _gfSetCookie('googtrans','', -1);
+      document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
     if(_saved && _saved !== 'en' && document.cookie.indexOf('googtrans=/en/'+_saved) < 0){
       _gfSetCookie('googtrans', '/en/'+_saved, 365);
     }
